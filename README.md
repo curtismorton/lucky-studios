@@ -81,3 +81,4 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 
 Lucky Studios embodies a **playful and cultural** aesthetic - modern, bold, but approachable. The design emphasizes premium quality while maintaining an inviting, non-corporate feel.
 
+# lucky-studios
