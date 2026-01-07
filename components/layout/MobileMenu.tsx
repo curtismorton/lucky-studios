@@ -2,6 +2,8 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -73,20 +75,31 @@ export default function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) 
               <X className="h-6 w-6 sm:h-8 sm:w-8" />
             </motion.button>
 
+            {/* Logo */}
+            <motion.div
+              variants={itemVariants}
+              className="mb-8 sm:mb-12"
+            >
+              <Logo size="md" />
+            </motion.div>
+
             {/* Menu Items */}
             <nav className="flex flex-col items-center gap-6 sm:gap-8">
               {links.map((link, index) => (
-                <motion.a
+                <motion.div
                   key={link.name}
-                  href={link.href}
                   variants={itemVariants}
-                  onClick={onClose}
-                  className="font-heading text-3xl sm:text-4xl font-bold text-white transition-colors hover:text-gradient-accent touch-manipulation min-h-[44px] flex items-center"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {link.name}
-                </motion.a>
+                  <Link
+                    href={link.href}
+                    onClick={onClose}
+                    className="font-heading text-3xl sm:text-4xl font-bold text-white transition-colors hover:text-gradient-accent touch-manipulation min-h-[44px] flex items-center"
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
               <motion.button
                 variants={itemVariants}

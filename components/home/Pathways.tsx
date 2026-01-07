@@ -1,38 +1,40 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mic, Building, Video, ArrowRight } from "lucide-react";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
 import Link from "next/link";
-import { cardHover, buttonHover, buttonTap } from "@/lib/animations";
+import { User, Building2, Mic } from "lucide-react";
+import { cardHover } from "@/lib/animations";
 
 interface Pathway {
   title: string;
   description: string;
   href: string;
-  icon: typeof Mic;
+  icon: typeof User;
   accentColor: "orange" | "purple" | "cyan";
 }
 
 const pathways: Pathway[] = [
   {
     title: "I'm a Creator",
-    description: "Join our network and grow your audience",
+    description: "Join our network and amplify your voice with professional production and distribution.",
     href: "/creators",
-    icon: Mic,
+    icon: User,
     accentColor: "orange",
   },
   {
     title: "I'm a Brand",
-    description: "Partner with us on branded content",
+    description: "Partner with us to reach engaged audiences through authentic storytelling.",
     href: "/brands",
-    icon: Building,
+    icon: Building2,
     accentColor: "purple",
   },
   {
     title: "Book the Studio",
-    description: "Rent our London Bridge space",
+    description: "Access our state-of-the-art recording facilities for your next project.",
     href: "/studio",
-    icon: Video,
+    icon: Mic,
     accentColor: "cyan",
   },
 ];
@@ -41,97 +43,75 @@ const accentStyles = {
   orange: {
     bg: "bg-accent-orange/10",
     text: "text-accent-orange",
-    border: "border-accent-orange/30",
+    border: "border-accent-orange/50",
     glow: "hover:glow-orange",
-    hoverBorder: "hover:border-accent-orange/50",
   },
   purple: {
     bg: "bg-accent-purple/10",
     text: "text-accent-purple",
-    border: "border-accent-purple/30",
+    border: "border-accent-purple/50",
     glow: "hover:glow-purple",
-    hoverBorder: "hover:border-accent-purple/50",
   },
   cyan: {
     bg: "bg-accent-cyan/10",
     text: "text-accent-cyan",
-    border: "border-accent-cyan/30",
+    border: "border-accent-cyan/50",
     glow: "hover:glow-cyan",
-    hoverBorder: "hover:border-accent-cyan/50",
   },
 };
 
 export default function Pathways() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 md:py-32">
-      {/* Section Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-16 text-center"
-      >
-        <h2 className="font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-          Find Your <span className="text-gradient-accent">Path</span>
-        </h2>
-      </motion.div>
+    <section ref={ref} className="relative px-4 py-24 md:py-32">
+      <div className="mx-auto max-w-6xl">
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="mb-12 sm:mb-16 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl"
+        >
+          Find Your{" "}
+          <span className="text-gradient-accent">Pathway</span>
+        </motion.h2>
 
-      {/* Pathway Cards */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {pathways.map((pathway, index) => {
-          const Icon = pathway.icon;
-          const styles = accentStyles[pathway.accentColor];
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {pathways.map((pathway, index) => {
+            const Icon = pathway.icon;
+            const styles = accentStyles[pathway.accentColor];
 
-          return (
-            <motion.div
-              key={pathway.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <Link href={pathway.href}>
-                <motion.div
-                  className={`group relative overflow-hidden rounded-2xl border ${styles.border} ${styles.hoverBorder} bg-background-secondary/50 backdrop-blur-sm p-6 sm:p-8 transition-all duration-300 ${styles.glow} touch-manipulation`}
-                  whileHover={cardHover}
-                >
-                  {/* Icon Circle */}
-                  <div className="mb-6">
+            return (
+              <motion.div
+                key={pathway.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Link href={pathway.href}>
+                  <motion.div
+                    whileHover={cardHover}
+                    className={`group relative rounded-2xl border border-background-tertiary bg-background-secondary p-8 transition-all duration-300 ${styles.border} hover:bg-background-tertiary ${styles.glow}`}
+                  >
                     <div
-                      className={`inline-flex h-16 w-16 items-center justify-center rounded-full ${styles.bg} transition-transform duration-300 group-hover:scale-110`}
+                      className={`mb-6 inline-flex rounded-xl ${styles.bg} p-4 ${styles.text} transition-transform duration-300 group-hover:scale-110`}
                     >
-                      <Icon className={`h-8 w-8 ${styles.text}`} />
+                      <Icon className="h-6 w-6" />
                     </div>
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="mb-3 font-heading text-xl sm:text-2xl font-semibold text-white">
-                    {pathway.title}
-                  </h3>
-                  <p className="mb-6 font-body text-text-secondary">
-                    {pathway.description}
-                  </p>
-
-                  {/* Arrow */}
-                  <div className={`relative inline-flex items-center gap-2 ${styles.text} font-body text-sm font-medium`}>
-                    <span>Learn more</span>
-                    <div className="opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
-                      <ArrowRight className="h-4 w-4" />
-                    </div>
-                  </div>
-
-                  {/* Hover Glow Effect */}
-                  <div
-                    className={`pointer-events-none absolute inset-0 -z-10 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${styles.bg}`}
-                  />
-                </motion.div>
-              </Link>
-            </motion.div>
-          );
-        })}
+                    <h3 className="mb-3 font-heading text-xl font-semibold">
+                      {pathway.title}
+                    </h3>
+                    <p className="font-body text-text-secondary">
+                      {pathway.description}
+                    </p>
+                  </motion.div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
 }
-

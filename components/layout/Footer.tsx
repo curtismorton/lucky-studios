@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
+import Logo from "@/components/ui/Logo";
 
 const footerNav = [
   { name: "Our Shows", href: "#shows" },
@@ -27,6 +28,17 @@ export default function Footer() {
   return (
     <footer className="relative border-t border-background-tertiary bg-background">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Logo Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 flex justify-center"
+        >
+          <Logo size="md" />
+        </motion.div>
+        
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
           {/* Navigation Column */}
           <motion.div
