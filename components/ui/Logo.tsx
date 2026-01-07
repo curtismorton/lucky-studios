@@ -28,8 +28,8 @@ export default function Logo({
 }: LogoProps) {
   const dimensions = sizeMap[size];
   
-  // For SVG, we'll use a standard path - user will add the actual file
-  const logoSrc = "/images/LOGO.svg";
+  // For PNG, we'll use a standard path - user will add the actual file
+  const logoSrc = "/images/LOGO.png";
   
   const logoElement = (
     <motion.div
@@ -45,7 +45,7 @@ export default function Logo({
         height={dimensions.height}
         className="object-contain"
         priority
-        unoptimized={logoSrc.endsWith('.svg')}
+        unoptimized={false}
       />
     </motion.div>
   );
