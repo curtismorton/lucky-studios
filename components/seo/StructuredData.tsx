@@ -1,7 +1,57 @@
 import { Show } from "@/lib/data/shows";
 
-interface OrganizationSchemaProps {
-  shows?: Show[];aq
+export function OrganizationSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Lucky Studios",
+    url: "https://luckystudios.com",
+    logo: "https://luckystudios.com/logo.png",
+    description:
+      "London's creator-first podcast network. Professional podcast production, studio rental, and network partnerships.",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "London Bridge",
+      addressLocality: "London",
+      addressRegion: "London",
+      postalCode: "SE1",
+      addressCountry: "GB",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+44-20-1234-5678",
+      contactType: "Customer Service",
+      email: "hello@weareluckystudios.com",
+    },
+    sameAs: [
+      "https://twitter.com/luckystudios",
+      "https://instagram.com/luckystudios",
+      "https://linkedin.com/company/luckystudios",
+      "https://youtube.com/@luckystudios",
+    ],
+    parentOrganization: {
+      "@type": "Organization",
+      name: "Socially Powerful",
+      url: "https://sociallypowerful.com",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function LocalBusinessSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Lucky Studios",
+    description:
+      "Professional podcast studio rental in London Bridge. Equipped with Sony A7 IV cameras, Shure SM7B microphones, and full production support.",
+    address: {
       "@type": "PostalAddress",
       streetAddress: "London Bridge",
       addressLocality: "London",
@@ -77,11 +127,15 @@ export function PodcastSeriesSchema({ show }: PodcastSeriesSchemaProps) {
       : undefined,
   };
 
+  // Remove undefined values
+  const cleanedSchema = Object.fromEntries(
+    Object.entries(schema).filter(([_, value]) => value !== undefined)
+  );
+
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(cleanedSchema) }}
     />
   );
 }
-
