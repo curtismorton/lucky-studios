@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Play, Phone } from "lucide-react";
+import Link from "next/link";
 import { buttonHover, buttonTap } from "@/lib/animations";
 import Logo from "@/components/ui/Logo";
 
@@ -63,19 +64,6 @@ export default function Hero() {
           <Logo size="lg" showLink={false} />
         </motion.div>
 
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-4 py-2 backdrop-blur-sm"
-        >
-          <span className="text-xl">🎲</span>
-          <span className="font-body text-xs sm:text-sm font-medium text-text-secondary">
-            London's Creator-First Podcast Network
-          </span>
-        </motion.div>
-
         {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -87,7 +75,9 @@ export default function Hero() {
           }}
         >
           Stories Worth{" "}
-          <span className="text-gradient-accent">Listening To</span>
+          <span className="bg-gradient-to-r from-accent-orange via-accent-purple to-accent-cyan bg-clip-text text-transparent animate-gradient">
+            Listening To
+          </span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -108,14 +98,16 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto"
         >
-          <motion.button
-            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-accent-orange px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:glow-orange touch-manipulation min-h-[44px]"
-            whileHover={buttonHover}
-            whileTap={buttonTap}
-          >
-            <Play className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="whitespace-nowrap">Explore Our Shows</span>
-          </motion.button>
+          <Link href="/shows">
+            <motion.button
+              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-accent-orange px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:glow-orange touch-manipulation min-h-[44px]"
+              whileHover={buttonHover}
+              whileTap={buttonTap}
+            >
+              <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="whitespace-nowrap">Explore Our Shows</span>
+            </motion.button>
+          </Link>
           <motion.button
             className="flex items-center justify-center gap-2 rounded-full border-2 border-accent-orange bg-black px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-orange/10 hover:glow-orange touch-manipulation min-h-[44px]"
             whileHover={buttonHover}
