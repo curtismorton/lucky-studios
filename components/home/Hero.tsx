@@ -117,7 +117,7 @@ export default function Hero() {
             <span className="whitespace-nowrap">Explore Our Shows</span>
           </motion.button>
           <motion.button
-            className="flex items-center justify-center gap-2 rounded-full border-2 border-accent-orange bg-transparent px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-orange/10 hover:glow-orange touch-manipulation min-h-[44px]"
+            className="flex items-center justify-center gap-2 rounded-full border-2 border-accent-orange bg-black px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-orange/10 hover:glow-orange touch-manipulation min-h-[44px]"
             whileHover={buttonHover}
             whileTap={buttonTap}
           >
