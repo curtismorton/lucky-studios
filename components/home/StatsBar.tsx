@@ -1,91 +1,72 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
-interface Stat {
-  value: number;
+interface StatItem {
+  value: string;
   label: string;
-  suffix: string;
-  decimals?: number;
+  suffix?: string;
+  prefix?: string;
 }
 
-const stats: Stat[] = [
-  { value: 5, label: "Organic Views", suffix: "M+", decimals: 0 },
-  { value: 10, label: "Original Shows", suffix: "+", decimals: 0 },
-  { value: 1.1, label: "Unique Viewers", suffix: "M", decimals: 1 },
-  { value: 4.8, label: "Spotify Rating", suffix: "★", decimals: 1 },
+const stats: StatItem[] = [
+  { value: "5", label: "Organic Views", suffix: "M+" },
+  { value: "10", label: "Original Shows", suffix: "+" },
+  { value: "1.1", label: "Unique Viewers", suffix: "M" },
+  { value: "4.8", label: "Spotify Rating", suffix: "★" },
 ];
 
-function StatItem({
-  stat,
-  index,
-  isInView,
+function AnimatedNumber({
+  value,
+  suffix,
+  prefix,
 }: {
-  stat: Stat;
-  index: number;
-  isInView: boolean;
+  value: string;
+  suffix?: string;
+  prefix?: string;
 }) {
-  const [count, setCount] = useState(0);
-  const frameRef = useRef<number>();
+  const [displayValue, setDisplayValue] = useState("0");
+  const isNumeric = !isNaN(parseFloat(value)) && isFinite(parseFloat(value));
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!isNumeric) {
+      setDisplayValue(value);
+      return;
+    }
 
+    const numValue = parseFloat(value);
     const duration = 2000; // 2 seconds
-    const startTime = Date.now();
-    const startValue = 0;
-    const endValue = stat.value;
+    const steps = 60;
+    const increment = numValue / steps;
+    let current = 0;
+    let step = 0;
 
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      const currentValue = startValue + (endValue - startValue) * easeOutQuart;
-
-      if (stat.decimals === 0) {
-        setCount(Math.floor(currentValue));
+    const timer = setInterval(() => {
+      step++;
+      current += increment;
+      if (step >= steps) {
+        setDisplayValue(value);
+        clearInterval(timer);
       } else {
-        setCount(parseFloat(currentValue.toFixed(stat.decimals)));
+        // Format based on original value
+        if (value.includes(".")) {
+          setDisplayValue(current.toFixed(1));
+        } else {
+          setDisplayValue(Math.floor(current).toString());
+        }
       }
+    }, duration / steps);
 
-      if (progress < 1) {
-        frameRef.current = requestAnimationFrame(animate);
-      } else {
-        setCount(endValue);
-      }
-    };
-
-    frameRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
-      }
-    };
-  }, [isInView, stat.value, stat.decimals]);
+    return () => clearInterval(timer);
+  }, [value, isNumeric]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="text-center"
-    >
-      <div className="mb-2 font-heading text-2xl sm:text-3xl font-bold md:text-4xl lg:text-5xl">
-        <span className="text-gradient-accent">
-          {stat.decimals === 0
-            ? `${count}${stat.suffix}`
-            : `${count.toFixed(stat.decimals)}${stat.suffix}`}
-        </span>
-      </div>
-      <div className="font-body text-xs font-medium uppercase tracking-wider text-text-muted">
-        {stat.label}
-      </div>
-    </motion.div>
+    <span>
+      {prefix}
+      {displayValue}
+      {suffix}
+    </span>
   );
 }
 
@@ -94,27 +75,49 @@ export default function StatsBar() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <motion.section
+    <section
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8"
+      className="relative px-4 py-12 md:py-16 overflow-hidden"
     >
-      <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 backdrop-blur-sm p-4 sm:p-6 md:p-8 lg:p-12">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4 md:gap-4">
-          {stats.map((stat, index) => (
-            <StatItem
-              key={stat.label}
-              stat={stat}
-              index={index}
-              isInView={isInView}
-            />
-          ))}
-        </div>
+      <div className="mx-auto max-w-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="relative rounded-2xl border border-background-tertiary bg-background-secondary/80 backdrop-blur-sm p-8 md:p-12"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="text-center"
+              >
+                <div className="mb-2 font-heading text-3xl md:text-4xl font-bold text-accent-orange">
+                  {isInView ? (
+                    <AnimatedNumber
+                      value={stat.value}
+                      suffix={stat.suffix}
+                      prefix={stat.prefix}
+                    />
+                  ) : (
+                    <span>
+                      {stat.prefix}
+                      {stat.value}
+                      {stat.suffix}
+                    </span>
+                  )}
+                </div>
+                <div className="font-body text-sm md:text-base text-text-secondary">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }
-
