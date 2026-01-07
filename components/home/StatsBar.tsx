@@ -38,17 +38,21 @@ function AnimatedNumber({
     const numValue = parseFloat(value);
     const duration = 2000; // 2 seconds
     const steps = 60;
-    const increment = numValue / steps;
-    let current = 0;
+    const stepDuration = duration / steps;
     let step = 0;
 
     const timer = setInterval(() => {
       step++;
-      current += increment;
+      const progress = Math.min(step / steps, 1); // Ensure we never exceed 1
+      
       if (step >= steps) {
+        // On final step, use exact target value to avoid floating-point errors
         setDisplayValue(value);
         clearInterval(timer);
       } else {
+        // Calculate current value based on progress (avoids accumulation errors)
+        const current = numValue * progress;
+        
         // Format based on original value
         if (value.includes(".")) {
           setDisplayValue(current.toFixed(1));
@@ -56,7 +60,7 @@ function AnimatedNumber({
           setDisplayValue(Math.floor(current).toString());
         }
       }
-    }, duration / steps);
+    }, stepDuration);
 
     return () => clearInterval(timer);
   }, [value, isNumeric]);
