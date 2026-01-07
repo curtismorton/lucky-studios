@@ -75,7 +75,7 @@ export default function Hero() {
           }}
         >
           Stories Worth{" "}
-          <span className="bg-gradient-to-r from-accent-orange via-accent-purple to-accent-cyan bg-clip-text text-transparent animate-gradient">
+          <span className="text-gradient-rainbow">
             Listening To
           </span>
         </motion.h1>

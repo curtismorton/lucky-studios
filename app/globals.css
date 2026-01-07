@@ -130,21 +130,28 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
   }
   
-  .animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient 3s ease infinite;
+  .text-gradient-rainbow {
+    background: linear-gradient(
+      90deg,
+      #FF6B35 0%,
+      #8B5CF6 33.33%,
+      #06B6D4 66.66%,
+      #FF6B35 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 3s ease infinite;
   }
 }
 
-@keyframes gradient {
+@keyframes gradient-shift {
   0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
   100% {
-    background-position: 0% 50%;
+    background-position: 200% 50%;
   }
 }
 
