@@ -1,15 +1,7 @@
 {
-<<<<<<< HEAD
-    "folders": [
-        {
-            "path": "."
-        }
-    ]
-=======
 	"folders": [
 		{
 			"path": "."
 		}
 	]
->>>>>>> brand-update
 }

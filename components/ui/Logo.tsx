@@ -28,11 +28,7 @@ export default function Logo({
 }: LogoProps) {
   const dimensions = sizeMap[size];
   
-<<<<<<< HEAD
   // Using LOGO.png
-=======
-  // For PNG, we'll use a standard path - user will add the actual file
->>>>>>> brand-update
   const logoSrc = "/images/LOGO.png";
   
   const logoElement = (
@@ -49,10 +45,7 @@ export default function Logo({
         height={dimensions.height}
         className="object-contain"
         priority
-<<<<<<< HEAD
         unoptimized={true}
-=======
->>>>>>> brand-update
       />
     </motion.div>
   );
