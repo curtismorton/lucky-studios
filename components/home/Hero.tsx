@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Play, Phone } from "lucide-react";
 import { buttonHover, buttonTap } from "@/lib/animations";
+import Logo from "@/components/ui/Logo";
 
 export default function Hero() {
   return (
@@ -52,11 +53,21 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
-        {/* Badge */}
+        {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="mb-8 flex justify-center"
+        >
+          <Logo size="lg" showLink={false} />
+        </motion.div>
+
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="mb-8 inline-flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-4 py-2 backdrop-blur-sm"
         >
           <span className="text-xl">🎲</span>

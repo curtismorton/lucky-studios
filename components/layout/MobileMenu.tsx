@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import Logo from "@/components/ui/Logo";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -72,6 +73,14 @@ export default function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) 
             >
               <X className="h-6 w-6 sm:h-8 sm:w-8" />
             </motion.button>
+
+            {/* Logo */}
+            <motion.div
+              variants={itemVariants}
+              className="mb-8 sm:mb-12"
+            >
+              <Logo size="md" />
+            </motion.div>
 
             {/* Menu Items */}
             <nav className="flex flex-col items-center gap-6 sm:gap-8">

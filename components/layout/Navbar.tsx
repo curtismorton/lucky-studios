@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import { buttonHover, buttonTap } from "@/lib/animations";
+import Logo from "@/components/ui/Logo";
 
 const navLinks = [
   { name: "Our Shows", href: "#shows" },
@@ -42,14 +43,7 @@ export default function Navbar() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
             {/* Logo */}
-            <motion.a
-              href="/"
-              className="font-heading text-xl font-bold tracking-tight"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="text-gradient-accent">LUCKY STUDIOS</span>
-            </motion.a>
+            <Logo size="sm" className="h-12" />
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:gap-8">

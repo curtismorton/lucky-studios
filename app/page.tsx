@@ -33,6 +33,7 @@ export default function Home() {
                 bgColor: "bg-accent-orange/10",
                 textColor: "text-accent-orange",
                 glowClass: "hover:glow-orange",
+                color: "orange",
               },
               {
                 icon: Users,
@@ -41,6 +42,7 @@ export default function Home() {
                 bgColor: "bg-accent-purple/10",
                 textColor: "text-accent-purple",
                 glowClass: "hover:glow-purple",
+                color: "purple",
               },
               {
                 icon: Play,
@@ -49,6 +51,7 @@ export default function Home() {
                 bgColor: "bg-accent-cyan/10",
                 textColor: "text-accent-cyan",
                 glowClass: "hover:glow-cyan",
+                color: "cyan",
               },
               {
                 icon: Sparkles,
@@ -57,9 +60,20 @@ export default function Home() {
                 bgColor: "bg-accent-green/10",
                 textColor: "text-accent-green",
                 glowClass: "hover:glow-green",
+                color: "green",
               },
             ].map((feature, index) => {
               const Icon = feature.icon;
+              
+              // Predefined mapping for hover border colors (Tailwind-safe)
+              const colorStyles = {
+                orange: "hover:border-accent-orange/50",
+                purple: "hover:border-accent-purple/50",
+                cyan: "hover:border-accent-cyan/50",
+                green: "hover:border-accent-green/50",
+              };
+              
+              const hoverBorderClass = colorStyles[feature.color as keyof typeof colorStyles] || colorStyles.orange;
 
               return (
                 <motion.div
@@ -68,7 +82,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group relative rounded-2xl border border-background-tertiary bg-background-secondary p-8 transition-all duration-300 hover:border-accent-orange/50 hover:bg-background-tertiary"
+                  className={`group relative rounded-2xl border border-background-tertiary bg-background-secondary p-8 transition-all duration-300 ${hoverBorderClass} hover:bg-background-tertiary ${feature.glowClass}`}
                 >
                   <div
                     className={`mb-4 inline-flex rounded-xl ${feature.bgColor} p-3 ${feature.textColor} transition-transform duration-300 group-hover:scale-110`}
