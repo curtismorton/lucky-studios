@@ -3,15 +3,17 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 import { buttonHover, buttonTap } from "@/lib/animations";
+import Logo from "@/components/ui/Logo";
 
 const navLinks = [
-  { name: "Our Shows", href: "#shows" },
-  { name: "For Creators", href: "#creators" },
-  { name: "For Brands", href: "#brands" },
-  { name: "The Studio", href: "#studio" },
-  { name: "About", href: "#about" },
+  { name: "Our Shows", href: "/shows" },
+  { name: "For Creators", href: "/creators" },
+  { name: "For Brands", href: "/brands" },
+  { name: "The Studio", href: "/studio" },
+  { name: "About", href: "/about" },
 ];
 
 export default function Navbar() {
@@ -42,26 +44,19 @@ export default function Navbar() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
             {/* Logo */}
-            <motion.a
-              href="/"
-              className="font-heading text-xl font-bold tracking-tight"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <span className="text-gradient-accent">LUCKY STUDIOS</span>
-            </motion.a>
+            <Logo size="sm" className="h-12" />
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:gap-8">
               {navLinks.map((link) => (
-                <motion.a
-                  key={link.name}
-                  href={link.href}
-                  className="link-underline font-body text-sm font-medium text-text-secondary transition-colors hover:text-white"
-                  whileHover={{ y: -2 }}
-                >
-                  {link.name}
-                </motion.a>
+                <motion.div key={link.name} whileHover={{ y: -2 }}>
+                  <Link
+                    href={link.href}
+                    className="link-underline font-body text-sm font-medium text-text-secondary transition-colors hover:text-white"
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               ))}
               <motion.button
                 className="rounded-full bg-accent-orange px-6 py-2.5 font-heading text-sm font-semibold text-white transition-all duration-300 hover:glow-orange"

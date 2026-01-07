@@ -50,7 +50,7 @@ export const metadata: Metadata = {
       "Professional podcast production, studio rental, and network partnerships in London Bridge. Join the network behind 5M+ views.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/images/LOGO.svg",
         width: 1200,
         height: 630,
         alt: "Lucky Studios - London's Creator-First Podcast Network",
@@ -62,8 +62,17 @@ export const metadata: Metadata = {
     title: "Lucky Studios | London's Creator-First Podcast Network",
     description:
       "Professional podcast production, studio rental, and network partnerships in London Bridge.",
-    images: ["/og-image.jpg"],
+    images: ["/images/LOGO.svg"],
     creator: "@luckystudios",
+  },
+  icons: {
+    icon: [
+      { url: "/images/LOGO.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [
+      { url: "/images/LOGO.svg", type: "image/svg+xml" },
+    ],
   },
   robots: {
     index: true,

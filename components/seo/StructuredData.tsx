@@ -1,50 +1,39 @@
 import { Show } from "@/lib/data/shows";
 
-interface OrganizationSchemaProps {
-  shows?: Show[];
-}
-
-export function OrganizationSchema({ shows = [] }: OrganizationSchemaProps) {
+export function OrganizationSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Lucky Studios",
-    description:
-      "London's creator-first podcast network. Professional podcast production, studio rental, and network partnerships.",
     url: "https://luckystudios.com",
     logo: "https://luckystudios.com/logo.png",
+    description:
+      "London's creator-first podcast network. Professional podcast production, studio rental, and network partnerships.",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "London Bridge",
+      addressLocality: "London",
+      addressRegion: "London",
+      postalCode: "SE1",
+      addressCountry: "GB",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+44-20-1234-5678",
+      contactType: "Customer Service",
+      email: "hello@weareluckystudios.com",
+    },
     sameAs: [
       "https://twitter.com/luckystudios",
       "https://instagram.com/luckystudios",
       "https://linkedin.com/company/luckystudios",
       "https://youtube.com/@luckystudios",
     ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: "+44-20-1234-5678",
-      contactType: "Customer Service",
-      email: "hello@weareluckystudios.com",
-      areaServed: "GB",
-      availableLanguage: "English",
-    },
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "London Bridge",
-      addressRegion: "London",
-      addressCountry: "GB",
-    },
     parentOrganization: {
       "@type": "Organization",
       name: "Socially Powerful",
       url: "https://sociallypowerful.com",
     },
-    aggregateRating: shows.length > 0
-      ? {
-          "@type": "AggregateRating",
-          ratingValue: "4.8",
-          reviewCount: "150",
-        }
-      : undefined,
   };
 
   return (
@@ -59,11 +48,9 @@ export function LocalBusinessSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": "https://luckystudios.com/#business",
     name: "Lucky Studios",
-    image: "https://luckystudios.com/studio.jpg",
     description:
-      "Professional podcast recording studio in London Bridge. Equipment includes Sony A7 IV cameras, Shure SM7B microphones, and professional lighting.",
+      "Professional podcast studio rental in London Bridge. Equipped with Sony A7 IV cameras, Shure SM7B microphones, and full production support.",
     address: {
       "@type": "PostalAddress",
       streetAddress: "London Bridge",
@@ -140,11 +127,15 @@ export function PodcastSeriesSchema({ show }: PodcastSeriesSchemaProps) {
       : undefined,
   };
 
+  // Remove undefined values
+  const cleanedSchema = Object.fromEntries(
+    Object.entries(schema).filter(([_, value]) => value !== undefined)
+  );
+
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(cleanedSchema) }}
     />
   );
 }
-
