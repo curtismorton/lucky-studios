@@ -52,18 +52,6 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-4 py-2 backdrop-blur-sm"
-        >
-          <span className="text-xl">🎲</span>
-          <span className="font-body text-xs sm:text-sm font-medium text-text-secondary">
-            London's Creator-First Podcast Network
-          </span>
-        </motion.div>
 
         {/* Headline */}
         <motion.h1
@@ -106,7 +94,7 @@ export default function Hero() {
             <span className="whitespace-nowrap">Explore Our Shows</span>
           </motion.button>
           <motion.button
-            className="flex items-center justify-center gap-2 rounded-full border-2 border-accent-orange bg-transparent px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-orange/10 hover:glow-orange touch-manipulation min-h-[44px]"
+            className="flex items-center justify-center gap-2 rounded-full border-2 border-accent-orange bg-black px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-orange/10 hover:glow-orange touch-manipulation min-h-[44px]"
             whileHover={buttonHover}
             whileTap={buttonTap}
           >

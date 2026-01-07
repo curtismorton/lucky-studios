@@ -28,8 +28,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["var(--font-syne)", "sans-serif"],
-        body: ["var(--font-space-grotesk)", "sans-serif"],
+        heading: ["var(--font-syne)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        body: ["var(--font-space-grotesk)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
