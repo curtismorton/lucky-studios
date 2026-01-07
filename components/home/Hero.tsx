@@ -54,8 +54,6 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">
-<<<<<<< HEAD
-=======
         {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -65,7 +63,6 @@ export default function Hero() {
         >
           <Logo size="lg" showLink={false} />
         </motion.div>
->>>>>>> brand-update
 
         {/* Headline */}
         <motion.h1
@@ -112,17 +109,6 @@ export default function Hero() {
             </motion.button>
           </Link>
           <motion.button
-<<<<<<< HEAD
-            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-accent-orange px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:glow-orange touch-manipulation min-h-[44px]"
-            whileHover={buttonHover}
-            whileTap={buttonTap}
-          >
-            <Play className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="whitespace-nowrap">Explore Our Shows</span>
-          </motion.button>
-          <motion.button
-=======
->>>>>>> brand-update
             className="flex items-center justify-center gap-2 rounded-full border-2 border-accent-orange bg-black px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-orange/10 hover:glow-orange touch-manipulation min-h-[44px]"
             whileHover={buttonHover}
             whileTap={buttonTap}
