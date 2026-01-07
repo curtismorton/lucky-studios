@@ -45,7 +45,6 @@ export default function Logo({
         height={dimensions.height}
         className="object-contain"
         priority
-        unoptimized={false}
       />
     </motion.div>
   );

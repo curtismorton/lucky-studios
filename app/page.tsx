@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mic, Play, Users, Sparkles } from "lucide-react";
 import Hero from "@/components/home/Hero";
+import StatsBar from "@/components/home/StatsBar";
+import Pathways from "@/components/home/Pathways";
+import ShowsGrid from "@/components/home/ShowsGrid";
 
 export default function Home() {
   return (
@@ -10,97 +12,14 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Features Section */}
-      <section className="relative px-4 py-24 md:py-32">
-        <div className="mx-auto max-w-6xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 sm:mb-16 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl"
-          >
-            What Makes Us{" "}
-            <span className="text-gradient-accent">Lucky</span>
-          </motion.h2>
+      {/* Stats Bar */}
+      <StatsBar />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {[
-              {
-                icon: Mic,
-                title: "Premium Content",
-                description: "Curated shows that push boundaries and spark conversations.",
-                bgColor: "bg-accent-orange/10",
-                textColor: "text-accent-orange",
-                glowClass: "hover:glow-orange",
-                color: "orange",
-              },
-              {
-                icon: Users,
-                title: "Diverse Voices",
-                description: "Amplifying perspectives from all walks of life.",
-                bgColor: "bg-accent-purple/10",
-                textColor: "text-accent-purple",
-                glowClass: "hover:glow-purple",
-                color: "purple",
-              },
-              {
-                icon: Play,
-                title: "Immersive Experience",
-                description: "High-quality production that draws you in.",
-                bgColor: "bg-accent-cyan/10",
-                textColor: "text-accent-cyan",
-                glowClass: "hover:glow-cyan",
-                color: "cyan",
-              },
-              {
-                icon: Sparkles,
-                title: "Cultural Impact",
-                description: "Shows that matter and conversations that resonate.",
-                bgColor: "bg-accent-green/10",
-                textColor: "text-accent-green",
-                glowClass: "hover:glow-green",
-                color: "green",
-              },
-            ].map((feature, index) => {
-              const Icon = feature.icon;
-              
-              // Predefined mapping for hover border colors (Tailwind-safe)
-              const colorStyles = {
-                orange: "hover:border-accent-orange/50",
-                purple: "hover:border-accent-purple/50",
-                cyan: "hover:border-accent-cyan/50",
-                green: "hover:border-accent-green/50",
-              };
-              
-              const hoverBorderClass = colorStyles[feature.color as keyof typeof colorStyles] || colorStyles.orange;
+      {/* Pathways Section */}
+      <Pathways />
 
-              return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className={`group relative rounded-2xl border border-background-tertiary bg-background-secondary p-8 transition-all duration-300 ${hoverBorderClass} hover:bg-background-tertiary ${feature.glowClass}`}
-                >
-                  <div
-                    className={`mb-4 inline-flex rounded-xl ${feature.bgColor} p-3 ${feature.textColor} transition-transform duration-300 group-hover:scale-110`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mb-3 font-heading text-xl font-semibold">
-                    {feature.title}
-                  </h3>
-                  <p className="font-body text-text-secondary">
-                    {feature.description}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Shows Grid */}
+      <ShowsGrid />
 
       {/* CTA Section */}
       <section className="relative px-4 py-24 md:py-32">
