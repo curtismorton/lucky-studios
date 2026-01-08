@@ -2,13 +2,15 @@
 
 import { motion, type HTMLMotionProps } from "framer-motion";
 import { useTilt } from "@/lib/hooks/useTilt";
+import type { ReactNode } from "react";
 
-interface TiltCardProps extends HTMLMotionProps<"div"> {
+interface TiltCardProps extends Omit<HTMLMotionProps<"div">, "children"> {
   wrapperClassName?: string;
   perspective?: number;
   maxTilt?: number;
   glowSize?: number;
   glowClassName?: string;
+  children?: ReactNode;
 }
 
 export default function TiltCard({
