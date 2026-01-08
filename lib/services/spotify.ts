@@ -137,18 +137,5 @@ export async function getSpotifyShowData(
   };
 }
 
-/**
- * Format duration from milliseconds to MM:SS or HH:MM:SS
- */
-export function formatDuration(ms: number): string {
-  const seconds = Math.floor(ms / 1000);
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  }
-  return `${minutes}:${secs.toString().padStart(2, "0")}`;
-}
+// formatDuration has been moved to lib/utils/duration.ts to avoid bundling server-only code in client components
 

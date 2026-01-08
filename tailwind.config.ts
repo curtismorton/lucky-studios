@@ -28,8 +28,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["var(--font-sora)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
-        body: ["var(--font-ibm-plex)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        heading: ["Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS", "sans-serif"],
+        body: ["Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS", "sans-serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

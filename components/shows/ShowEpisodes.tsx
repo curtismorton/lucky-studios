@@ -5,7 +5,7 @@ import { Play } from "lucide-react";
 import { type Episode } from "@/lib/data/shows";
 import { type Show } from "@/lib/data/shows";
 import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
-import { formatDuration } from "@/lib/services/spotify";
+import { formatDuration } from "@/lib/utils/duration";
 
 interface ShowEpisodesProps {
   episodes?: Episode[]; // Fallback episodes from static data

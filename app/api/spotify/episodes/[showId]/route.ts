@@ -8,13 +8,28 @@ export async function GET(
   try {
     const { showId } = params;
     const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get("limit") || "10", 10);
-
+    
     if (!showId) {
       return NextResponse.json(
         { error: "Show ID is required" },
         { status: 400 }
       );
+    }
+
+    // Validate and parse limit parameter
+    const limitParam = searchParams.get("limit");
+    let limit = 10; // Default value
+    
+    if (limitParam) {
+      const parsed = parseInt(limitParam, 10);
+      // Validate: must be a positive integer between 1 and 50 (Spotify API limit)
+      if (isNaN(parsed) || parsed < 1 || parsed > 50) {
+        return NextResponse.json(
+          { error: "Limit must be a positive integer between 1 and 50" },
+          { status: 400 }
+        );
+      }
+      limit = parsed;
     }
 
     const episodes = await getSpotifyEpisodes(showId, limit);
