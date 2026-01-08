@@ -13,7 +13,8 @@ interface UseSpotifyShowResult {
 export function useSpotifyShow(showId: string | undefined): UseSpotifyShowResult {
   const [show, setShow] = useState<SpotifyShow | null>(null);
   const [episodes, setEpisodes] = useState<SpotifyEpisode[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Initialize loading to false if no showId, true if showId exists
+  const [loading, setLoading] = useState(!!showId);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

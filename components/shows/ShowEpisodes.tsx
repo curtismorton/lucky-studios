@@ -18,7 +18,7 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
   // Use Spotify episodes if available, otherwise fall back to static episodes
   const episodes = spotifyEpisodes.length > 0 
     ? spotifyEpisodes.map((ep, index) => ({
-        number: ep.episode_number || index + 1,
+        number: ep.episode_number ?? index + 1,
         title: ep.name,
         duration: formatDuration(ep.duration_ms),
         date: ep.release_date,
@@ -52,7 +52,7 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
         <div className="space-y-4">
           {episodes.map((episode, index) => (
             <motion.div
-              key={episode.number || index}
+              key={episode.number ?? index}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
