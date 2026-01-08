@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Syne, Space_Grotesk } from "next/font/google";
+import { IBM_Plex_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { OrganizationSchema } from "@/components/seo/StructuredData";
 
-const syne = Syne({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-syne",
+  variable: "--font-sora",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-ibm-plex",
   display: "swap",
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -102,7 +102,7 @@ export default function RootLayout({
         <OrganizationSchema />
       </head>
       <body
-        className={`${syne.variable} ${spaceGrotesk.variable} font-body antialiased bg-background`}
+        className={`${sora.variable} ${ibmPlexSans.variable} font-body antialiased bg-background`}
       >
         <Navbar />
         {children}
@@ -111,4 +111,3 @@ export default function RootLayout({
     </html>
   );
 }
-

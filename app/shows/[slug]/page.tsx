@@ -5,6 +5,7 @@ import ShowHero from "@/components/shows/ShowHero";
 import ShowAbout from "@/components/shows/ShowAbout";
 import ShowHosts from "@/components/shows/ShowHosts";
 import ShowEpisodes from "@/components/shows/ShowEpisodes";
+import ShowAnalytics from "@/components/shows/ShowAnalytics";
 import SponsorCTA from "@/components/shows/SponsorCTA";
 import { PodcastSeriesSchema } from "@/components/seo/StructuredData";
 
@@ -73,9 +74,8 @@ export default function ShowPage({ params }: { params: { slug: string } }) {
       <ShowHero show={show} />
       <ShowAbout show={show} />
       {show.hosts && show.hosts.length > 0 && <ShowHosts hosts={show.hosts} />}
-      {show.episodes && show.episodes.length > 0 && (
-        <ShowEpisodes episodes={show.episodes} />
-      )}
+      <ShowEpisodes episodes={show.episodes} show={show} />
+      <ShowAnalytics show={show} />
       <SponsorCTA />
     </main>
   );

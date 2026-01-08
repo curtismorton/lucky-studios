@@ -19,6 +19,7 @@ export interface Show {
   slug: string;
   title: string;
   tagline: string;
+  teaser?: string;
   genre: 'entertainment' | 'football' | 'lifestyle';
   stat: string;
   featured: boolean;
@@ -31,6 +32,7 @@ export interface Show {
     apple?: string;
     youtube?: string;
   };
+  spotifyShowId?: string; // Spotify show ID for API integration
 }
 
 export const shows: Show[] = [
@@ -38,7 +40,8 @@ export const shows: Show[] = [
     id: '1',
     slug: 'behind-the-screens',
     title: 'Behind the Screens',
-    tagline: 'Entertainment',
+    tagline: 'The stories behind your favorite creators',
+    teaser: 'A quick hit on how creators turn raw ideas into viral moments.',
     genre: 'entertainment',
     stat: '5M+ views',
     featured: true,
@@ -58,12 +61,14 @@ export const shows: Show[] = [
       apple: 'https://podcasts.apple.com/show/example',
       youtube: 'https://youtube.com/@behindthescreens',
     },
+    spotifyShowId: '', // Add your Spotify show ID here
   },
   {
     id: '2',
     slug: 'back-post',
     title: 'Back Post',
-    tagline: 'Football',
+    tagline: 'Football talk with a twist',
+    teaser: 'Weekend breakdowns, culture, and the data that changed the table.',
     genre: 'football',
     stat: 'William Hill Partner',
     featured: false,
@@ -82,12 +87,14 @@ export const shows: Show[] = [
       apple: 'https://podcasts.apple.com/show/example2',
       youtube: 'https://youtube.com/@backpost',
     },
+    spotifyShowId: '', // Add your Spotify show ID here (e.g., '4rOoJ6Egrf8K2IrywzwOMk')
   },
   {
     id: '3',
-    slug: 'dont-get-me-started',
+    slug: 'abby-boom',
     title: "Don't Get Me Started with Abby Boom",
-    tagline: 'Lifestyle',
+    tagline: 'Unfiltered conversations',
+    teaser: 'Unscripted takes on modern life, momentum, and what really matters.',
     genre: 'lifestyle',
     stat: '10M+ Season 1',
     featured: false,
@@ -106,12 +113,14 @@ export const shows: Show[] = [
       apple: 'https://podcasts.apple.com/show/example3',
       youtube: 'https://youtube.com/@abbyboom',
     },
+    spotifyShowId: '', // Add your Spotify show ID here
   },
   {
     id: '4',
     slug: 'coming-soon',
     title: 'Coming Soon',
     tagline: 'New Show',
+    teaser: 'New series in development. First drop landing soon.',
     genre: 'entertainment',
     stat: 'Stay tuned',
     featured: false,
@@ -126,4 +135,3 @@ export const shows: Show[] = [
 export function getShowBySlug(slug: string): Show | undefined {
   return shows.find((show) => show.slug === slug);
 }
-

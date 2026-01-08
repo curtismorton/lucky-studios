@@ -8,6 +8,18 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'luckystudios.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'i.scdn.co', // Spotify CDN for images
+      },
+      {
+        protocol: 'https',
+        hostname: 'image-cdn-ak.spotifycdn.com', // Spotify image CDN
+      },
+      {
+        protocol: 'https',
+        hostname: 'image-cdn-fa.spotifycdn.com', // Spotify image CDN alternative
+      },
     ],
   },
   // Optimize production builds

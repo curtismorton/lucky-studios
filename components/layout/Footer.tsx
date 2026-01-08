@@ -5,16 +5,15 @@ import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 
 const footerNav = [
-  { name: "Our Shows", href: "#shows" },
-  { name: "For Creators", href: "#creators" },
-  { name: "For Brands", href: "#brands" },
-  { name: "The Studio", href: "#studio" },
-  { name: "About", href: "#about" },
+  { name: "Our Shows", href: "/shows" },
+  { name: "For Creators", href: "/creators" },
+  { name: "For Brands", href: "/brands" },
+  { name: "The Studio", href: "/studio" },
+  { name: "About", href: "/about" },
 ];
 
 const contactInfo = [
-  { label: "Email", value: "hello@luckystudios.com", href: "mailto:hello@luckystudios.com" },
-  { label: "Phone", value: "+44 20 1234 5678", href: "tel:+442012345678" },
+  { label: "Email", value: "hello@weareluckystudios.com", href: "mailto:hello@weareluckystudios.com" },
 ];
 
 const socialLinks = [
@@ -149,4 +148,3 @@ export default function Footer() {
     </footer>
   );
 }
-

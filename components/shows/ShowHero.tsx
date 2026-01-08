@@ -2,7 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Music, Youtube } from "lucide-react";
+import Image from "next/image";
 import { type Show } from "@/lib/data/shows";
+import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
 
 const genreStyles = {
   entertainment: {
@@ -22,30 +24,50 @@ const genreStyles = {
   },
 };
 
+const genreLabels = {
+  entertainment: "Entertainment",
+  football: "Football",
+  lifestyle: "Lifestyle",
+};
+
 interface ShowHeroProps {
   show: Show;
 }
 
 export default function ShowHero({ show }: ShowHeroProps) {
   const genreStyle = genreStyles[show.genre];
+  const genreLabel = genreLabels[show.genre];
+  const { show: spotifyShow } = useSpotifyShow(show.spotifyShowId);
+  const coverImage = spotifyShow?.images?.[0]?.url;
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-        {/* Artwork */}
+        {/* Artwork - Spotify cover art or placeholder */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           className="relative aspect-square w-full overflow-hidden rounded-3xl"
         >
-          <div
-            className={`h-full w-full bg-gradient-to-br ${
-              show.featured
-                ? "from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30"
-                : genreStyle.bg
-            }`}
-          />
+          {coverImage ? (
+            <Image
+              src={coverImage}
+              alt={show.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
+          ) : (
+            <div
+              className={`h-full w-full bg-gradient-to-br ${
+                show.featured
+                  ? "from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30"
+                  : genreStyle.bg
+              }`}
+            />
+          )}
         </motion.div>
 
         {/* Info */}
@@ -60,7 +82,7 @@ export default function ShowHero({ show }: ShowHeroProps) {
             <span
               className={`inline-flex rounded-full border px-4 py-2 text-sm font-medium ${genreStyle.bg} ${genreStyle.text} ${genreStyle.border}`}
             >
-              {show.tagline}
+              {genreLabel}
             </span>
           </div>
 
@@ -70,6 +92,9 @@ export default function ShowHero({ show }: ShowHeroProps) {
           </h1>
 
           {/* Stat */}
+          <p className="mb-4 font-body text-lg text-text-secondary">
+            {show.tagline}
+          </p>
           <p className="mb-8 font-body text-lg text-text-secondary">
             {show.stat}
           </p>
@@ -132,4 +157,3 @@ export default function ShowHero({ show }: ShowHeroProps) {
     </section>
   );
 }
-

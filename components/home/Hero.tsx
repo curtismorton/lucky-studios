@@ -1,16 +1,89 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useScroll, useTransform } from "framer-motion";
 import { Play, Phone } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { buttonHover, buttonTap } from "@/lib/animations";
 import Logo from "@/components/ui/Logo";
 
 export default function Hero() {
+  const heroRef = useRef<HTMLElement | null>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const [timecode, setTimecode] = useState("00:00:00");
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const spotlight = useMotionTemplate`radial-gradient(600px at ${mouseX}px ${mouseY}px, rgba(6, 182, 212, 0.18), transparent 65%)`;
+  const gridY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const scanlineY = useTransform(scrollYProgress, [0, 1], ["0%", "-12%"]);
+  const waveY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const waveOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [0.7, 0.35, 0]);
+
+  useEffect(() => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (rect) {
+      mouseX.set(rect.width / 2);
+      mouseY.set(rect.height / 2);
+    }
+  }, [mouseX, mouseY]);
+
+  useEffect(() => {
+    const start = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      const hours = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+      const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+      const seconds = String(elapsed % 60).padStart(2, "0");
+      setTimecode(`${hours}:${minutes}:${seconds}`);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleMouseMove = (event: MouseEvent<HTMLElement>) => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) {
+      return;
+    }
+    mouseX.set(event.clientX - rect.left);
+    mouseY.set(event.clientY - rect.top);
+  };
+
+  const handleMouseLeave = () => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) {
+      return;
+    }
+    mouseX.set(rect.width / 2);
+    mouseY.set(rect.height / 2);
+  };
+
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      {/* Animated Gradient Orbs */}
-      <div className="absolute inset-0">
+    <section
+      ref={heroRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden"
+    >
+      {/* Animated Background */}
+      <div className="pointer-events-none absolute inset-0">
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{ background: spotlight }}
+        />
+        <motion.div
+          className="absolute inset-0 bg-tech-grid opacity-20"
+          style={{ y: gridY }}
+        />
+        <motion.div
+          className="absolute inset-0 bg-scanlines opacity-15"
+          style={{ y: scanlineY }}
+        />
         <motion.div
           className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-accent-orange/20 blur-3xl"
           animate={{
@@ -50,6 +123,56 @@ export default function Hero() {
             ease: "easeInOut",
           }}
         />
+        <motion.svg
+          viewBox="0 0 1200 200"
+          className="absolute left-1/2 top-1/2 w-[120%] -translate-x-1/2 -translate-y-1/2 opacity-60 blur-[1px]"
+          style={{ y: waveY, opacity: waveOpacity }}
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#FF6B35" stopOpacity="0.7" />
+              <stop offset="50%" stopColor="#8B5CF6" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.7" />
+            </linearGradient>
+          </defs>
+          <motion.path
+            d="M0 100 C 120 60, 240 140, 360 100 C 480 60, 600 140, 720 100 C 840 60, 960 140, 1080 100 C 1140 80, 1200 110, 1200 110"
+            stroke="url(#waveGradient)"
+            strokeWidth="2"
+            fill="none"
+            strokeDasharray="10 12"
+            animate={{ strokeDashoffset: [0, -88] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.path
+            d="M0 120 C 150 90, 300 150, 450 110 C 600 70, 750 150, 900 110 C 1050 70, 1200 140, 1200 140"
+            stroke="url(#waveGradient)"
+            strokeWidth="1.5"
+            fill="none"
+            strokeDasharray="6 10"
+            animate={{ strokeDashoffset: [0, -72] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            opacity="0.7"
+          />
+        </motion.svg>
+      </div>
+
+      {/* HUD Details */}
+      <div className="pointer-events-none absolute left-6 top-6 z-20 flex items-center gap-4 text-[11px] uppercase tracking-[0.3em] text-text-secondary">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+          <span className="text-red-400">REC</span>
+        </div>
+        <div className="flex items-end gap-1">
+          <span className="h-2 w-1 rounded-sm bg-text-secondary/70" />
+          <span className="h-3 w-1 rounded-sm bg-text-secondary/80" />
+          <span className="h-4 w-1 rounded-sm bg-text-secondary/90" />
+          <span className="h-5 w-1 rounded-sm bg-text-secondary" />
+        </div>
+      </div>
+      <div className="pointer-events-none absolute right-6 top-6 z-20 font-mono text-xs text-text-muted">
+        {timecode}
       </div>
 
       {/* Content */}
@@ -69,15 +192,13 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-6 font-heading font-bold leading-tight tracking-tight"
+          className="mb-6 font-heading font-bold leading-[1.02] tracking-tight"
           style={{
             fontSize: "clamp(3rem, 8vw, 6rem)",
           }}
         >
-          Stories Worth{" "}
-          <span className="text-gradient-rainbow">
-            Listening To
-          </span>
+          Stories that{" "}
+          <span className="text-gradient-rainbow">move culture.</span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -87,8 +208,8 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mb-8 sm:mb-12 mx-auto max-w-2xl font-body text-base sm:text-lg text-text-secondary md:text-xl px-2"
         >
-          We build hit podcasts. From concept to millions of views - Lucky
-          Studios is where creators and brands find their voice.
+          Lucky Studios turns ideas into shows audiences binge. Strategy,
+          production, and distribution for creators and brands.
         </motion.p>
 
         {/* Buttons */}
@@ -135,4 +256,3 @@ export default function Hero() {
     </section>
   );
 }
-
