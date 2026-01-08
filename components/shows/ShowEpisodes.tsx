@@ -18,6 +18,7 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
   // Use Spotify episodes if available, otherwise fall back to static episodes
   const episodes = spotifyEpisodes.length > 0 
     ? spotifyEpisodes.map((ep, index) => ({
+        id: ep.id, // Include Spotify ID for stable keys
         number: ep.episode_number ?? index + 1,
         title: ep.name,
         duration: formatDuration(ep.duration_ms),
@@ -50,9 +51,12 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
           Latest Episodes
         </h2>
         <div className="space-y-4">
-          {episodes.map((episode, index) => (
+          {episodes.map((episode, index) => {
+            // Use stable key: Spotify ID for Spotify episodes, or episode number for fallback episodes
+            const stableKey = (episode as any).id ?? `episode-${episode.number ?? index}`;
+            return (
             <motion.div
-              key={episode.number ?? index}
+              key={stableKey}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -93,7 +97,8 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
                 </p>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </motion.div>
     </section>
