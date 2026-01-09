@@ -1,14 +1,11 @@
-import { Metadata } from "next";
+"use client";
+
 import { motion } from "framer-motion";
 import { Home, Search } from "lucide-react";
 import Link from "next/link";
 
-export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = {
-  title: "Page Not Found | Lucky Studios",
-  description: "The page you're looking for doesn't exist.",
-};
+// Note: Metadata exports are not supported in not-found.tsx files in Next.js
+// The 404 page title will use the default from layout.tsx
 
 export default function NotFound() {
   return (
