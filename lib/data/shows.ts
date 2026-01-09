@@ -57,11 +57,11 @@ export const shows: Show[] = [
       { number: 40, title: 'Indie Film Success Stories', duration: '55:20', date: '2024-01-01' },
     ],
     platforms: {
-      spotify: 'https://open.spotify.com/show/example',
+      spotify: 'https://open.spotify.com/show/2VzsxXgrdcP7QpQ3yLwxr7',
       apple: 'https://podcasts.apple.com/show/example',
       youtube: 'https://youtube.com/@behindthescreens',
     },
-    spotifyShowId: '', // Add your Spotify show ID here
+    spotifyShowId: '2VzsxXgrdcP7QpQ3yLwxr7',
   },
   {
     id: '2',
@@ -83,11 +83,11 @@ export const shows: Show[] = [
       { number: 26, title: 'Championship Stories', duration: '42:10', date: '2023-12-31' },
     ],
     platforms: {
-      spotify: 'https://open.spotify.com/show/example2',
+      spotify: 'https://open.spotify.com/show/6z7TZBmzHJrgx1Mx8zbywv',
       apple: 'https://podcasts.apple.com/show/example2',
       youtube: 'https://youtube.com/@backpost',
     },
-    spotifyShowId: '', // Add your Spotify show ID here (e.g., '4rOoJ6Egrf8K2IrywzwOMk')
+    spotifyShowId: '6z7TZBmzHJrgx1Mx8zbywv',
   },
   {
     id: '3',
@@ -109,11 +109,11 @@ export const shows: Show[] = [
       { number: 33, title: 'Setting Boundaries', duration: '55:45', date: '2023-12-30' },
     ],
     platforms: {
-      spotify: 'https://open.spotify.com/show/example3',
+      spotify: 'https://open.spotify.com/show/31T31fbr6LrQbe5SmYATHq',
       apple: 'https://podcasts.apple.com/show/example3',
       youtube: 'https://youtube.com/@abbyboom',
     },
-    spotifyShowId: '', // Add your Spotify show ID here
+    spotifyShowId: '31T31fbr6LrQbe5SmYATHq',
   },
   {
     id: '4',
