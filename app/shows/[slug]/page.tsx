@@ -11,11 +11,9 @@ import { PodcastSeriesSchema } from "@/components/seo/StructuredData";
 
 export const dynamic = 'force-dynamic';
 
-export async function generateStaticParams() {
-  return shows.map((show) => ({
-    slug: show.slug,
-  }));
-}
+// Note: generateStaticParams is removed because force-dynamic takes precedence
+// and renders the route dynamically, making static generation impossible.
+// If static generation is desired, remove force-dynamic instead.
 
 export async function generateMetadata({
   params,
