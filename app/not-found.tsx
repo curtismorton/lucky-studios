@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Home, Search } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Page Not Found | Lucky Studios",
   description: "The page you're looking for doesn't exist.",

@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import BrandsPageClient from "./BrandsPageClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "For Brands",
   description:

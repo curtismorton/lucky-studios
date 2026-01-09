@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import StudioPageClient from "./StudioPageClient";
 import { LocalBusinessSchema } from "@/components/seo/StructuredData";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "The Studio",
   description:

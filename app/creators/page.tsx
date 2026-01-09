@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import CreatorsPageClient from "./CreatorsPageClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "For Creators",
   description:

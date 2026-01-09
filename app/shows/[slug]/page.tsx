@@ -9,6 +9,8 @@ import ShowAnalytics from "@/components/shows/ShowAnalytics";
 import SponsorCTA from "@/components/shows/SponsorCTA";
 import { PodcastSeriesSchema } from "@/components/seo/StructuredData";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
   return shows.map((show) => ({
     slug: show.slug,

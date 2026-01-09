@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import ContactPageClient from "./ContactPageClient";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
