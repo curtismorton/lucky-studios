@@ -3,10 +3,10 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Hero from "@/components/home/Hero";
-import StatsBar from "@/components/home/StatsBar";
-import Pathways from "@/components/home/Pathways";
+import SocialProofBar from "@/components/home/SocialProofBar";
+import TransformationSection from "@/components/home/TransformationSection";
 import ShowsGrid from "@/components/home/ShowsGrid";
-import Testimonials from "@/components/home/Testimonials";
+import Pathways from "@/components/home/Pathways";
 
 export default function Home() {
   const ctaRef = useRef<HTMLElement | null>(null);
@@ -28,17 +28,17 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Stats Bar */}
-      <StatsBar />
+      {/* Social Proof Bar */}
+      <SocialProofBar />
 
-      {/* Pathways Section */}
-      <Pathways />
+      {/* Raw to Polished Transformation Section */}
+      <TransformationSection />
 
       {/* Shows Grid */}
       <ShowsGrid />
 
-      {/* Testimonials */}
-      <Testimonials />
+      {/* Two Paths Section */}
+      <Pathways />
 
       {/* CTA Section */}
       <section
