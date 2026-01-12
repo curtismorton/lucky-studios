@@ -95,7 +95,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center md:justify-start gap-4"
             >
-              <Link href="#">
+              <Link href="/contact">
                 <motion.button
                   className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-accent-amber px-8 py-4 font-heading text-base font-semibold text-white transition-all duration-300 hover:glow-amber touch-manipulation min-h-[44px] shadow-[0_4px_20px_rgba(245,158,11,0.3)]"
                   whileHover={buttonHover}
