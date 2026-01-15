@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Play, Phone } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
@@ -11,6 +11,14 @@ import FeaturedShowCard from "@/components/home/FeaturedShowCard";
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  
+  const waveY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const waveOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [0.7, 0.35, 0]);
 
   return (
     <section
@@ -47,6 +55,48 @@ export default function Hero() {
             delay: 4,
           }}
         />
+        
+        {/* Sound wave patterns in background - Two layered waves for depth */}
+        <motion.svg
+          viewBox="0 0 1200 200"
+          className="absolute left-1/2 top-1/2 w-[120%] -translate-x-1/2 -translate-y-1/2 opacity-20 blur-[1px]"
+          style={{ y: waveY, opacity: waveOpacity }}
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="soundWaveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.4" />
+              <stop offset="50%" stopColor="#D97706" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#B87333" stopOpacity="0.4" />
+            </linearGradient>
+            <linearGradient id="soundWaveGradientSecondary" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.3" />
+              <stop offset="50%" stopColor="#D97706" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#B87333" stopOpacity="0.3" />
+            </linearGradient>
+          </defs>
+          {/* Primary wave path */}
+          <motion.path
+            d="M0 100 C 120 60, 240 140, 360 100 C 480 60, 600 140, 720 100 C 840 60, 960 140, 1080 100 C 1140 80, 1200 110, 1200 110"
+            stroke="url(#soundWaveGradient)"
+            strokeWidth="2"
+            fill="none"
+            strokeDasharray="10 12"
+            animate={{ strokeDashoffset: [0, -88] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          />
+          {/* Secondary wave path - creates layered depth effect */}
+          <motion.path
+            d="M0 120 C 150 90, 300 150, 450 110 C 600 70, 750 150, 900 110 C 1050 70, 1200 140, 1200 140"
+            stroke="url(#soundWaveGradientSecondary)"
+            strokeWidth="1.5"
+            fill="none"
+            strokeDasharray="6 10"
+            animate={{ strokeDashoffset: [0, -72] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+            opacity="0.7"
+          />
+        </motion.svg>
       </div>
 
       {/* Content */}
