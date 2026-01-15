@@ -33,7 +33,7 @@ function HostImageItem({
 
   return (
     <motion.div
-      className="absolute"
+      className="absolute pointer-events-auto"
       style={{
         left: `calc(50% + ${x}px)`,
         top: `calc(50% + ${y}px)`,
@@ -47,7 +47,7 @@ function HostImageItem({
       }}
     >
       <motion.div
-        className="relative h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-2 border-accent-amber/50 shadow-lg"
+        className="relative h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-2 border-accent-amber/50 shadow-lg pointer-events-auto cursor-pointer"
         whileHover={{ scale: 1.1, borderColor: "#F59E0B" }}
         animate={{
           boxShadow: [
@@ -104,7 +104,7 @@ export default function HostImages({
   const angleStep = (2 * Math.PI) / displayHosts.length;
 
   return (
-    <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${className}`}>
+    <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto ${className}`}>
       {displayHosts.map((host, index) => {
         const angle = index * angleStep - Math.PI / 2;
         return (

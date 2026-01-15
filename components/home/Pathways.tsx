@@ -51,18 +51,24 @@ const accentStyles = {
     text: "text-accent-orange",
     border: "border-accent-orange/50",
     glow: "hover:glow-orange",
+    hoverBorder: "hover:border-accent-orange/50",
+    hoverBg: "hover:bg-accent-orange/10",
   },
   purple: {
     bg: "bg-accent-purple/10",
     text: "text-accent-purple",
     border: "border-accent-purple/50",
     glow: "hover:glow-purple",
+    hoverBorder: "hover:border-accent-purple/50",
+    hoverBg: "hover:bg-accent-purple/10",
   },
   cyan: {
     bg: "bg-accent-cyan/10",
     text: "text-accent-cyan",
     border: "border-accent-cyan/50",
     glow: "hover:glow-cyan",
+    hoverBorder: "hover:border-accent-cyan/50",
+    hoverBg: "hover:bg-accent-cyan/10",
   },
 };
 
@@ -156,7 +162,7 @@ export default function Pathways() {
                       
                       <Link href={pathway.href}>
                         <motion.button
-                          className={`flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:border-accent-orange/50 hover:bg-accent-orange/10 ${styles.border}`}
+                          className={`flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 ${styles.hoverBorder} ${styles.hoverBg} ${styles.border}`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >

@@ -49,7 +49,7 @@ const config: Config = {
         "glow-purple": "0 0 20px rgba(139, 92, 246, 0.4)",
         "glow-cyan": "0 0 20px rgba(6, 182, 212, 0.4)",
         "glow-green": "0 0 20px rgba(16, 185, 129, 0.4)",
-        "glow-accent": "0 0 30px rgba(255, 107, 53, 0.3)",
+        "glow-accent": "0 0 30px rgba(245, 158, 11, 0.3)",
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease-in-out",
