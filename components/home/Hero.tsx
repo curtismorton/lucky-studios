@@ -56,81 +56,113 @@ export default function Hero() {
           }}
         />
         
-        {/* Sound wave patterns in background - Two layered waves for depth */}
-        <motion.svg
-          viewBox="0 0 1200 200"
-          className="absolute left-1/2 top-1/2 w-[120%] -translate-x-1/2 -translate-y-1/2 opacity-20 blur-[1px]"
-          style={{ y: waveY, opacity: waveOpacity }}
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient id="soundWaveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.4" />
-              <stop offset="50%" stopColor="#D97706" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#B87333" stopOpacity="0.4" />
-            </linearGradient>
-            <linearGradient id="soundWaveGradientSecondary" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="#D97706" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#B87333" stopOpacity="0.3" />
-            </linearGradient>
-          </defs>
-          {/* Primary wave path */}
-          <motion.path
-            d="M0 100 C 120 60, 240 140, 360 100 C 480 60, 600 140, 720 100 C 840 60, 960 140, 1080 100 C 1140 80, 1200 110, 1200 110"
-            stroke="url(#soundWaveGradient)"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray="10 12"
-            animate={{ strokeDashoffset: [0, -88] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          />
-          {/* Secondary wave path - creates layered depth effect */}
-          <motion.path
-            d="M0 120 C 150 90, 300 150, 450 110 C 600 70, 750 150, 900 110 C 1050 70, 1200 140, 1200 140"
-            stroke="url(#soundWaveGradientSecondary)"
-            strokeWidth="1.5"
-            fill="none"
-            strokeDasharray="6 10"
-            animate={{ strokeDashoffset: [0, -72] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-            opacity="0.7"
-          />
-        </motion.svg>
-      </div>
-
-      {/* Floating Logo - positioned creatively */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: -20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute top-6 right-4 md:top-12 md:right-12 z-20 pointer-events-none"
-      >
-        <motion.div
-          animate={{
-            y: [0, -8, 0],
-            rotate: [0, 1.5, -1.5, 0],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="relative"
-        >
-          <div className="absolute inset-0 bg-accent-amber/20 blur-2xl rounded-full scale-150" />
-          <div className="relative backdrop-blur-sm bg-background/40 rounded-xl md:rounded-2xl p-2 md:p-3 border border-accent-amber/20 shadow-2xl">
-            <Logo size="sm" showLink={false} className="opacity-90 md:hidden" />
-            <Logo size="md" showLink={false} className="opacity-90 hidden md:block" />
+        {/* Sound wave patterns in background - Full width podcast visualizer */}
+        <div className="absolute inset-0 overflow-hidden" style={{ y: waveY, opacity: waveOpacity }}>
+          <motion.svg
+            viewBox="0 0 2000 400"
+            className="absolute inset-0 w-full h-full opacity-20"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="soundWaveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="#D97706" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#B87333" stopOpacity="0.4" />
+              </linearGradient>
+              <linearGradient id="soundWaveGradientSecondary" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#D97706" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#B87333" stopOpacity="0.3" />
+              </linearGradient>
+              <linearGradient id="soundWaveGradientTertiary" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.25" />
+                <stop offset="50%" stopColor="#D97706" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="#B87333" stopOpacity="0.25" />
+              </linearGradient>
+            </defs>
+            
+            {/* Primary wave path - flowing left to right */}
+            <motion.path
+              d="M0 200 C 200 120, 400 280, 600 200 C 800 120, 1000 280, 1200 200 C 1400 120, 1600 280, 1800 200 C 1900 160, 2000 220, 2000 220"
+              stroke="url(#soundWaveGradient)"
+              strokeWidth="2.5"
+              fill="none"
+              strokeDasharray="12 16"
+              animate={{ strokeDashoffset: [0, -112] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            />
+            
+            {/* Secondary wave path - counterflow for depth */}
+            <motion.path
+              d="M0 240 C 250 180, 500 300, 750 220 C 1000 140, 1250 300, 1500 220 C 1750 140, 2000 280, 2000 280"
+              stroke="url(#soundWaveGradientSecondary)"
+              strokeWidth="2"
+              fill="none"
+              strokeDasharray="8 14"
+              animate={{ strokeDashoffset: [0, -96] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "linear", delay: 0.5 }}
+              opacity="0.8"
+            />
+            
+            {/* Tertiary wave path - subtle background layer */}
+            <motion.path
+              d="M0 160 C 150 100, 300 220, 450 140 C 600 60, 750 220, 900 140 C 1050 60, 1200 220, 1350 140 C 1500 60, 1650 220, 1800 140 C 1900 100, 2000 160, 2000 160"
+              stroke="url(#soundWaveGradientTertiary)"
+              strokeWidth="1.5"
+              fill="none"
+              strokeDasharray="6 12"
+              animate={{ strokeDashoffset: [0, -84] }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear", delay: 1 }}
+              opacity="0.6"
+            />
+          </motion.svg>
+          
+          {/* Audio waveform bars - podcast visualizer style */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 flex items-end justify-center gap-2 md:gap-3 opacity-15">
+            {Array.from({ length: 40 }, (_, i) => {
+              const baseHeight = 10 + (i % 5) * 5;
+              const peakHeight = 30 + (i % 7) * 8;
+              const duration = 1.5 + ((i % 3) * 0.5);
+              const delay = (i % 10) * 0.1;
+              
+              return (
+                <motion.div
+                  key={i}
+                  className="w-1.5 md:w-2 bg-accent-amber rounded-t-full"
+                  animate={{
+                    height: [
+                      `${baseHeight}%`,
+                      `${peakHeight}%`,
+                      `${baseHeight}%`,
+                    ],
+                  }}
+                  transition={{
+                    duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay,
+                  }}
+                />
+              );
+            })}
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
           {/* Text Content */}
           <div className="text-center md:text-left">
+            {/* Logo - centered above text with space */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mb-8 flex justify-center md:justify-start"
+            >
+              <Logo size="lg" showLink={false} />
+            </motion.div>
 
             {/* Headline */}
             <motion.h1
