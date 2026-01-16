@@ -6,6 +6,7 @@ import SocialProofBar from "@/components/home/SocialProofBar";
 import TransformationSection from "@/components/home/TransformationSection";
 import ShowsGrid from "@/components/home/ShowsGrid";
 import Pathways from "@/components/home/Pathways";
+import ImageGallery from "@/components/home/ImageGallery";
 
 export default function HomeClient() {
   return (
@@ -18,6 +19,9 @@ export default function HomeClient() {
 
       {/* Raw to Polished Transformation Section */}
       <TransformationSection />
+
+      {/* Image Gallery Scroller */}
+      <ImageGallery />
 
       {/* Shows Grid */}
       <ShowsGrid />

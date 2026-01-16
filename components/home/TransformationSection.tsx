@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
+import Skeleton from "@/components/ui/Skeleton";
 
 interface Transformation {
   show: string;
@@ -37,6 +38,55 @@ const transformations: Transformation[] = [
     ],
   },
 ];
+
+function TransformationImage({
+  src,
+  alt,
+  className,
+  fallbackGradient,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+  fallbackGradient: string;
+}) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <div className="absolute inset-0">
+      {/* Fallback gradient */}
+      <div
+        className="absolute inset-0"
+        style={{ background: fallbackGradient }}
+      />
+      
+      {/* Loading skeleton */}
+      {isLoading && !imageError && (
+        <div className="absolute inset-0 z-10">
+          <Skeleton className="h-full w-full" variant="rectangular" />
+        </div>
+      )}
+
+      {/* Image */}
+      {!imageError && (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className={`${className} z-20`}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          unoptimized
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setIsLoading(false);
+            setImageError(true);
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function TransformationSection() {
   return (
@@ -103,7 +153,7 @@ function TransformationCard({
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       className={`grid gap-8 md:grid-cols-2 md:gap-16 ${
         !isEven ? "md:[&>*:first-child]:order-2 md:[&>*:last-child]:order-1" : ""
       }`}
@@ -111,25 +161,16 @@ function TransformationCard({
       {/* Images */}
       <div ref={imageRef} className="relative">
         <div className="relative h-[300px] overflow-hidden rounded-2xl shadow-2xl sm:h-[400px] md:h-[450px]">
+          {/* Fallback gradient base */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background-tertiary via-background-secondary to-background-tertiary" />
+          
           {/* Raw Image */}
-          <div className="absolute inset-0">
-            <Image
-              src={transformation.rawImage}
-              alt={`Raw photoshoot - ${transformation.showName}`}
-              fill
-              className="object-cover grayscale-[20%] brightness-90"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-              onError={(e) => {
-                const target = e.currentTarget as HTMLImageElement;
-                target.style.display = "none";
-                if (target.parentElement) {
-                  target.parentElement.style.background =
-                    "linear-gradient(135deg, rgba(22, 22, 22, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%)";
-                }
-              }}
-            />
-          </div>
+          <TransformationImage
+            src={transformation.rawImage}
+            alt={`Raw photoshoot - ${transformation.showName}`}
+            className="object-cover grayscale-[20%] brightness-90"
+            fallbackGradient="linear-gradient(135deg, rgba(22, 22, 22, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%)"
+          />
 
           {/* Polished Image with clip-path */}
           <motion.div
@@ -138,21 +179,11 @@ function TransformationCard({
               clipPath: clipPathValue,
             }}
           >
-            <Image
+            <TransformationImage
               src={transformation.polishedImage}
               alt={`Final cover - ${transformation.showName}`}
-              fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              unoptimized
-              onError={(e) => {
-                const target = e.currentTarget as HTMLImageElement;
-                target.style.display = "none";
-                if (target.parentElement) {
-                  target.parentElement.style.background =
-                    "linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)";
-                }
-              }}
+              fallbackGradient="linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.15) 100%)"
             />
           </motion.div>
 
