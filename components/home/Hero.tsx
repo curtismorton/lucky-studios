@@ -33,11 +33,11 @@ export default function Hero() {
         <motion.div
           className="absolute top-[20%] left-[-10%] h-[500px] w-[500px] rounded-full bg-accent-amber/20 blur-3xl"
           animate={{
-            opacity: [0.5, 1, 0.5],
-            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.8, 0.4],
+            scale: [1, 1.15, 1],
           }}
           transition={{
-            duration: 8,
+            duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -45,14 +45,14 @@ export default function Hero() {
         <motion.div
           className="absolute bottom-[10%] right-[-5%] h-[400px] w-[400px] rounded-full bg-accent-amber/15 blur-3xl"
           animate={{
-            opacity: [0.5, 1, 0.5],
-            scale: [1, 1.1, 1],
+            opacity: [0.4, 0.8, 0.4],
+            scale: [1, 1.15, 1],
           }}
           transition={{
-            duration: 8,
+            duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: 4,
+            delay: 5,
           }}
         />
         
@@ -99,26 +99,44 @@ export default function Hero() {
         </motion.svg>
       </div>
 
+      {/* Floating Logo - positioned creatively */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, y: -20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="absolute top-6 right-4 md:top-12 md:right-12 z-20 pointer-events-none"
+      >
+        <motion.div
+          animate={{
+            y: [0, -8, 0],
+            rotate: [0, 1.5, -1.5, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="relative"
+        >
+          <div className="absolute inset-0 bg-accent-amber/20 blur-2xl rounded-full scale-150" />
+          <div className="relative backdrop-blur-sm bg-background/40 rounded-xl md:rounded-2xl p-2 md:p-3 border border-accent-amber/20 shadow-2xl">
+            <Logo size="sm" showLink={false} className="opacity-90 md:hidden" />
+            <Logo size="md" showLink={false} className="opacity-90 hidden md:block" />
+          </div>
+        </motion.div>
+      </motion.div>
+
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16 items-center">
           {/* Text Content */}
           <div className="text-center md:text-left">
-            {/* Logo */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-6 flex justify-center md:justify-start"
-            >
-              <Logo size="lg" showLink={false} />
-            </motion.div>
 
             {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
               className="mb-6 font-heading font-bold leading-[0.95] tracking-tight"
               style={{
                 fontSize: "clamp(3rem, 6vw, 5rem)",
@@ -130,19 +148,19 @@ export default function Hero() {
 
             {/* Subheadline */}
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="mb-8 mx-auto max-w-lg font-body text-lg text-text-secondary md:mx-0"
+              transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
+              className="mb-10 mx-auto max-w-lg font-body text-lg leading-relaxed text-text-secondary md:mx-0"
             >
               Full-service podcast production for creators and brands. From strategy and recording to distribution and growth—we handle it all from our Bermondsey studio.
             </motion.p>
 
             {/* Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
               className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center md:justify-start gap-4"
             >
               <Link href="/contact">

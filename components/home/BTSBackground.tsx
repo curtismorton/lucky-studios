@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useState } from "react";
+import Skeleton from "@/components/ui/Skeleton";
 
 interface BTSImage {
   src: string;
@@ -17,6 +19,56 @@ const btsImages: BTSImage[] = [
   { src: "/images/Group_thumb-29.jpg", alt: "Team photo", delay: -8 },
 ];
 
+function BTSImageItem({ image, index }: { image: BTSImage; index: number }) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  return (
+    <motion.div
+      key={index}
+      className="relative w-full h-full rounded-xl overflow-hidden"
+      animate={{
+        y: [0, -20, 0],
+        scale: [1, 1.03, 1],
+        opacity: [0.6, 1, 0.6],
+      }}
+      transition={{
+        duration: 25,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: image.delay,
+      }}
+    >
+      {/* Fallback gradient - always present */}
+      <div className="absolute inset-0 bg-gradient-to-br from-accent-amber/10 via-accent-amber/5 to-accent-gold/10" />
+      
+      {/* Loading skeleton */}
+      {isLoading && !imageError && (
+        <div className="absolute inset-0 z-10">
+          <Skeleton className="h-full w-full" variant="rectangular" />
+        </div>
+      )}
+
+      {/* Image */}
+      {!imageError && (
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="object-cover blur-[2px] grayscale-[30%] z-20"
+          sizes="(max-width: 768px) 25vw, 20vw"
+          unoptimized
+          onLoad={() => setIsLoading(false)}
+          onError={() => {
+            setIsLoading(false);
+            setImageError(true);
+          }}
+        />
+      )}
+    </motion.div>
+  );
+}
+
 export default function BTSBackground() {
   // Create a 4x3 grid (12 images total) by repeating the images
   const gridImages = Array.from({ length: 12 }, (_, i) => {
@@ -31,39 +83,7 @@ export default function BTSBackground() {
     <div className="absolute inset-0 overflow-hidden">
       <div className="absolute -top-[10%] -left-[10%] -right-[10%] -bottom-[10%] grid grid-cols-4 grid-rows-3 gap-4 opacity-20 -rotate-[5deg] scale-[1.2]">
         {gridImages.map((image, index) => (
-          <motion.div
-            key={index}
-            className="relative w-full h-full rounded-xl overflow-hidden"
-            animate={{
-              y: [0, -20, 0],
-              scale: [1, 1.03, 1],
-              opacity: [0.6, 1, 0.6],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: image.delay,
-            }}
-          >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              className="object-cover blur-[2px] grayscale-[30%]"
-              sizes="(max-width: 768px) 25vw, 20vw"
-              unoptimized
-              onError={(e) => {
-                // Fallback to gradient if image fails to load
-                const target = e.currentTarget as HTMLImageElement;
-                target.style.display = "none";
-                if (target.parentElement) {
-                  target.parentElement.style.background = 
-                    "linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)";
-                }
-              }}
-            />
-          </motion.div>
+          <BTSImageItem key={index} image={image} index={index} />
         ))}
       </div>
       {/* Dark gradient overlay */}

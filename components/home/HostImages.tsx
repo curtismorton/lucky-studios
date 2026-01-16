@@ -63,9 +63,9 @@ function HostImageItem({
           delay: index * 0.2,
         }}
       >
-        {/* Placeholder fallback - always visible behind image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-amber/20 to-accent-gold/20 flex items-center justify-center z-0">
-          <span className="text-accent-amber text-xs font-semibold">
+        {/* Enhanced placeholder fallback - always visible behind image */}
+        <div className="absolute inset-0 bg-gradient-to-br from-accent-amber/30 via-accent-amber/20 to-accent-gold/30 flex items-center justify-center z-0">
+          <span className="text-accent-amber text-xs sm:text-sm font-semibold drop-shadow-lg">
             {host.name || `H${index + 1}`}
           </span>
         </div>
@@ -75,7 +75,7 @@ function HostImageItem({
             src={host.src}
             alt={host.alt}
             fill
-            className="object-cover z-10"
+            className="object-cover z-10 transition-opacity duration-300"
             sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, 112px"
             onError={() => setImageError(true)}
             unoptimized
