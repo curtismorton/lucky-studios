@@ -7,6 +7,7 @@ import TransformationSection from "@/components/home/TransformationSection";
 import ShowsGrid from "@/components/home/ShowsGrid";
 import Pathways from "@/components/home/Pathways";
 import ImageGallery from "@/components/home/ImageGallery";
+import AudioWaveDivider from "@/components/ui/AudioWaveDivider";
 
 export default function HomeClient() {
   return (
@@ -20,11 +21,20 @@ export default function HomeClient() {
       {/* Raw to Polished Transformation Section */}
       <TransformationSection />
 
+      {/* Audio Wave Divider */}
+      <AudioWaveDivider variant="subtle" />
+
       {/* Image Gallery Scroller */}
       <ImageGallery />
 
+      {/* Audio Wave Divider */}
+      <AudioWaveDivider variant="default" />
+
       {/* Shows Grid */}
       <ShowsGrid />
+
+      {/* Audio Wave Divider */}
+      <AudioWaveDivider variant="subtle" />
 
       {/* Two Paths Section */}
       <Pathways />
