@@ -10,7 +10,7 @@ import BTSBackground from "@/components/home/BTSBackground";
 import FeaturedShowCard from "@/components/home/FeaturedShowCard";
 
 export default function Hero() {
-  const heroRef = useRef<HTMLElement | null>(null);
+  const heroRef = useRef<HTMLElement>(null);
   
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -146,8 +146,8 @@ export default function Hero() {
               );
             })}
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
