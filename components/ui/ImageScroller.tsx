@@ -47,7 +47,8 @@ export default function ImageScroller({
   // Animation duration based on speed (lower speed = faster animation)
   const duration = (images.length * 200) / speed;
 
-  // Handle pause/resume with animation controls
+  // Handle animation: start on mount, pause/resume, and handle prop changes
+  // The controls object from useAnimationControls is stable, so we omit it from deps
   useEffect(() => {
     if (isPaused) {
       controls.stop();
@@ -61,19 +62,9 @@ export default function ImageScroller({
         },
       });
     }
-  }, [isPaused, direction, duration, controls]);
-
-  // Start animation on mount
-  useEffect(() => {
-    controls.start({
-      x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"],
-      transition: {
-        duration,
-        repeat: Infinity,
-        ease: "linear",
-      },
-    });
-  }, [direction, duration, controls]);
+    // controls is stable from useAnimationControls, so we can safely omit it from deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPaused, direction, duration]);
 
   return (
     <div
