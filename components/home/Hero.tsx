@@ -57,7 +57,7 @@ export default function Hero() {
         />
         
         {/* Sound wave patterns in background - Full width podcast visualizer */}
-        <div className="absolute inset-0 overflow-hidden" style={{ y: waveY, opacity: waveOpacity }}>
+        <motion.div className="absolute inset-0 overflow-hidden" style={{ y: waveY, opacity: waveOpacity }}>
           <motion.svg
             viewBox="0 0 2000 400"
             className="absolute inset-0 w-full h-full opacity-20"
@@ -147,7 +147,7 @@ export default function Hero() {
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-8">
