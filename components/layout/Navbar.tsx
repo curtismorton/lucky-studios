@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 import { buttonHover, buttonTap } from "@/lib/animations";
 import Logo from "@/components/ui/Logo";
+import { site } from "@/lib/data/site";
 
 const navLinks = [
   { name: "Our Shows", href: "/shows" },
@@ -19,6 +20,9 @@ const navLinks = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const bookingHref = site.calendlyUrl || "/contact";
+  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
+  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,13 +62,16 @@ export default function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              <motion.button
+              <motion.a
+                href={bookingHref}
+                target={bookingTarget}
+                rel={bookingRel}
                 className="rounded-full bg-accent-orange px-6 py-2.5 font-heading text-sm font-semibold text-white transition-all duration-300 hover:glow-orange"
                 whileHover={buttonHover}
                 whileTap={buttonTap}
               >
                 Book a Call
-              </motion.button>
+              </motion.a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -90,4 +97,3 @@ export default function Navbar() {
     </>
   );
 }
-

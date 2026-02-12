@@ -32,8 +32,21 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ["Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS", "sans-serif"],
-        body: ["Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS", "sans-serif"],
+        heading: [
+          "Avenir Next Condensed",
+          "Avenir Next",
+          "Futura",
+          "Montserrat",
+          "system-ui",
+          "sans-serif",
+        ],
+        body: [
+          "Avenir Next",
+          "Segoe UI",
+          "Inter",
+          "system-ui",
+          "sans-serif",
+        ],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

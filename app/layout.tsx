@@ -3,9 +3,10 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { OrganizationSchema } from "@/components/seo/StructuredData";
+import { site } from "@/lib/data/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://luckystudios.com"),
+  metadataBase: new URL(site.url),
   title: {
     template: "%s | Lucky Studios",
     default: "Lucky Studios | London's Creator-First Podcast Network",
@@ -28,14 +29,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_GB",
-    url: "https://luckystudios.com",
-    siteName: "Lucky Studios",
+    url: site.url,
+    siteName: site.name,
     title: "Lucky Studios | London's Creator-First Podcast Network",
     description:
       "Professional podcast production, studio rental, and network partnerships in London Bridge. Join the network behind 5M+ views.",
     images: [
       {
-        url: "/images/LOGO.svg",
+        url: site.ogImage,
         width: 1200,
         height: 630,
         alt: "Lucky Studios - London's Creator-First Podcast Network",
@@ -47,16 +48,16 @@ export const metadata: Metadata = {
     title: "Lucky Studios | London's Creator-First Podcast Network",
     description:
       "Professional podcast production, studio rental, and network partnerships in London Bridge.",
-    images: ["/images/LOGO.svg"],
+    images: [site.ogImage],
     creator: "@luckystudios",
   },
   icons: {
     icon: [
-      { url: "/images/LOGO.svg", type: "image/svg+xml" },
+      { url: site.logo, type: "image/png" },
       { url: "/favicon.ico", sizes: "any" },
     ],
     apple: [
-      { url: "/images/LOGO.svg", type: "image/svg+xml" },
+      { url: site.logo, type: "image/png" },
     ],
   },
   robots: {

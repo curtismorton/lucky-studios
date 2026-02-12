@@ -23,19 +23,18 @@ export default function FeaturedShowCard() {
       transition={{ duration: 0.8, delay: 0.5 }}
       className="relative"
     >
-      <div className="relative overflow-hidden rounded-3xl border border-background-tertiary/50 bg-background-secondary/90 backdrop-blur-xl p-6 shadow-2xl">
-        {/* Gold top border */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-amber to-accent-gold" />
-        
-        {/* Badge */}
+      <div className="absolute -inset-1 rounded-[1.8rem] bg-gradient-to-r from-accent-amber/30 via-accent-gold/15 to-accent-amber/10 blur-md" />
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-background-secondary/86 p-6 shadow-2xl backdrop-blur-xl md:p-7">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.15)_0%,transparent_45%)]" />
+        <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-accent-amber to-accent-gold" />
+
         <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-accent-amber/15 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-accent-amber">
           <Star className="h-3 w-3 fill-current" />
           Featured Show
         </div>
 
-        {/* Show Info */}
-        <div className="mb-6 flex gap-6">
-          <div className="relative h-36 w-36 flex-shrink-0 overflow-hidden rounded-2xl shadow-xl">
+        <div className="mb-6 flex gap-5">
+          <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 shadow-xl md:h-36 md:w-36">
             <Image
               src={coverImage}
               alt={featuredShow.title}
@@ -45,18 +44,22 @@ export default function FeaturedShowCard() {
               unoptimized
             />
           </div>
-          <div className="flex flex-col justify-center">
-            <h3 className="mb-2 font-heading text-2xl font-bold">
-              {featuredShow.title}
+          <div className="flex min-w-0 flex-col justify-center">
+            <h3 className="mb-2 truncate font-heading text-2xl font-bold">
+              <Link
+                href={`/shows/${featuredShow.slug}`}
+                className="transition-colors hover:text-accent-amber"
+              >
+                {featuredShow.title}
+              </Link>
             </h3>
-            <p className="font-body text-sm leading-relaxed text-text-secondary">
-              {featuredShow.description || featuredShow.tagline}
+            <p className="line-clamp-4 font-body text-sm leading-relaxed text-text-secondary">
+              {featuredShow.description || featuredShow.tagline}.
             </p>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 border-t border-background-tertiary/50 pt-6">
+        <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
           <div className="text-center">
             <div className="mb-1 font-heading text-2xl font-bold text-accent-amber">
               #10
@@ -86,4 +89,3 @@ export default function FeaturedShowCard() {
     </motion.div>
   );
 }
-

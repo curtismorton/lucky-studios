@@ -1,8 +1,9 @@
 import { MetadataRoute } from "next";
 import { shows } from "@/lib/data/shows";
+import { site } from "@/lib/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://luckystudios.com";
+  const baseUrl = site.url;
 
   const routes = [
     "",
@@ -28,4 +29,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...routes, ...showRoutes];
 }
-
