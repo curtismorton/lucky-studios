@@ -39,6 +39,7 @@ interface ShowCardProps {
   index?: number;
   featured?: boolean;
   spotifyShow?: SpotifyShow | null;
+  className?: string;
 }
 
 export default function ShowCard({
@@ -46,6 +47,7 @@ export default function ShowCard({
   index = 0,
   featured = false,
   spotifyShow: preloadedSpotifyShow,
+  className = "",
 }: ShowCardProps) {
   const genreStyle = genreStyles[show.genre];
   const genreLabel = genreLabels[show.genre];
@@ -63,6 +65,7 @@ export default function ShowCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.05 }}
+      className={className}
     >
       <Link href={`/shows/${show.slug}`}>
         <TiltCard
@@ -77,7 +80,7 @@ export default function ShowCard({
           glowClassName="rounded-xl mix-blend-screen"
         >
           {/* Thumbnail - Spotify cover art or placeholder */}
-          <div className="relative aspect-square w-full overflow-hidden bg-black/30 p-4">
+          <div className="relative aspect-square w-full overflow-hidden bg-black/30 p-3">
             {coverImage ? (
               <>
                 <Image
@@ -88,8 +91,8 @@ export default function ShowCard({
                   className="scale-110 object-cover opacity-25 blur-xl saturate-150"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
-                <div className="relative h-full w-full overflow-hidden rounded-lg border border-white/10 bg-black/40 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/20 to-black/60" />
+                <div className="relative h-full w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-2xl">
                   <Image
                     src={coverImage}
                     alt={show.title}
@@ -122,7 +125,7 @@ export default function ShowCard({
           </div>
 
           {/* Content */}
-          <div className="p-5">
+          <div className="p-5 sm:p-6">
             <div className="mb-3 flex items-center justify-between">
               <span
                 className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium ${genreStyle.bg} ${genreStyle.text} ${genreStyle.border}`}
@@ -141,9 +144,15 @@ export default function ShowCard({
             <p className="mb-3 font-body text-sm text-text-secondary">
               {show.tagline}
             </p>
-            <p className="font-body text-sm text-text-secondary">
+            <p className="font-body text-sm font-medium text-white/80">
               {show.stat}
             </p>
+            <div className="mt-4 inline-flex items-center gap-2 font-body text-sm font-semibold text-accent-orange">
+              View Show
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                -&gt;
+              </span>
+            </div>
             <div className="mt-4 overflow-hidden">
               <div className="max-h-0 translate-y-2 opacity-0 transition-all duration-300 group-hover:max-h-24 group-hover:translate-y-0 group-hover:opacity-100">
                 <p className="mb-3 font-body text-sm text-text-secondary">

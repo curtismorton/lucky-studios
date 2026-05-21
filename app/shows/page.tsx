@@ -7,16 +7,16 @@ export const revalidate = 86400;
 export async function generateMetadata() {
   return buildPageMetadata({
     path: "/shows",
-    fallbackTitle: "Our Shows | Lucky Studios",
+    fallbackTitle: "Lucky Studios Shows | Creator-Led Formats",
     fallbackDescription:
-      "Browse all shows in the Lucky Studios network. From entertainment to football to lifestyle - discover hit podcasts reaching millions of viewers.",
+      "Browse Lucky Studios shows: creator-led formats, football conversations, entertainment series, and sponsor-ready media built from one production system.",
     fallbackKeywords: [
-      "podcast shows",
-      "podcast network",
-      "entertainment podcasts",
-      "football podcasts",
-      "lifestyle podcasts",
       "Lucky Studios shows",
+      "creator-led shows",
+      "entertainment podcasts",
+      "football podcast",
+      "lifestyle podcast",
+      "brand sponsorship shows",
     ],
   });
 }

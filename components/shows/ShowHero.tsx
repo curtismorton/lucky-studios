@@ -45,6 +45,8 @@ export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: Sh
   );
   const resolvedSpotifyShow = preloadedSpotifyShow || spotifyShow;
   const coverImage = resolvedSpotifyShow?.images?.[0]?.url;
+  const primaryPlatformHref =
+    show.platforms?.spotify || show.platforms?.youtube || show.platforms?.apple;
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
@@ -57,14 +59,28 @@ export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: Sh
           className="relative aspect-square w-full overflow-hidden rounded-3xl"
         >
           {coverImage ? (
-            <Image
-              src={coverImage}
-              alt={show.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-            />
+            <>
+              <Image
+                src={coverImage}
+                alt=""
+                fill
+                aria-hidden="true"
+                className="scale-110 object-cover opacity-30 blur-2xl saturate-150"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/60" />
+              <div className="absolute inset-5 overflow-hidden rounded-2xl border border-white/10 bg-black/45 shadow-[0_30px_90px_rgba(0,0,0,0.45)] sm:inset-8">
+                <Image
+                  src={coverImage}
+                  alt={show.title}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 1024px) calc(100vw - 64px), 44vw"
+                  priority
+                />
+              </div>
+            </>
           ) : (
             <div
               className={`h-full w-full bg-gradient-to-br ${
@@ -151,13 +167,16 @@ export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: Sh
           )}
 
           {/* Subscribe CTA */}
-          <motion.button
-            className="rounded-full bg-accent-orange px-8 py-4 font-heading text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange"
+          <motion.a
+            href={primaryPlatformHref || "/contact"}
+            target={primaryPlatformHref ? "_blank" : undefined}
+            rel={primaryPlatformHref ? "noopener noreferrer" : undefined}
+            className="inline-flex w-fit rounded-full bg-accent-orange px-8 py-4 font-heading text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Subscribe
-          </motion.button>
+            {primaryPlatformHref ? "Listen to the Show" : "Ask About This Show"}
+          </motion.a>
         </motion.div>
       </div>
     </section>
