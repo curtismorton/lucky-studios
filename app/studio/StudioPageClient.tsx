@@ -44,6 +44,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-cyan/10 via-transparent to-accent-orange/5" />
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -51,11 +52,16 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
             transition={{ duration: 0.6 }}
             className="flex flex-col justify-center"
           >
-            <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
-              {page.hero.titleLead} <span className="text-gradient-accent">{page.hero.titleAccent}</span>
+            <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-cyan">
+              London Bridge Studio
+            </p>
+            <h1 className="mb-4 font-heading text-4xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+              A studio built for shows, clips, and campaign assets.
             </h1>
-            <p className="mb-4 font-body text-base text-text-secondary sm:mb-6 sm:text-lg md:text-xl">
-              {page.hero.subtitle}
+            <p className="mb-4 font-body text-base leading-relaxed text-text-secondary sm:mb-6 sm:text-lg md:text-xl">
+              Walk in with an idea and leave with clean multi-camera footage,
+              broadcast audio, and a production team that knows how to package
+              content for the platforms it needs to live on.
             </p>
             <div className="mb-6 sm:mb-8">
               <span className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 py-1.5 text-xs font-medium text-accent-cyan sm:px-4 sm:py-2 sm:text-sm">
@@ -72,7 +78,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {page.hero.primaryCtaLabel}
+                Book a Studio Walkthrough
               </motion.a>
               <motion.a
                 href="/contact"
@@ -80,7 +86,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {page.hero.secondaryCtaLabel}
+                Talk Through a Shoot
               </motion.a>
             </div>
           </motion.div>
@@ -114,7 +120,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.gallery.titleLead} <span className="text-gradient-accent">{page.gallery.titleAccent}</span>
+            See the space before <span className="text-gradient-accent">you book it</span>
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
             {(galleryImages.length > 0 ? galleryImages : Array.from({ length: 6 }).map(() => "")).map(
@@ -199,7 +205,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.equipment.titleLead} <span className="text-gradient-accent">{page.equipment.titleAccent}</span>
+            Production-grade kit, <span className="text-gradient-accent">ready to roll</span>
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {page.equipment.items.map((item, index) => {
@@ -237,7 +243,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-6 text-center font-heading text-3xl font-bold sm:mb-8 sm:text-4xl md:text-5xl">
-            {page.included.titleLead} <span className="text-gradient-accent">{page.included.titleAccent}</span>
+            What is handled <span className="text-gradient-accent">on the day</span>
           </h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
             {page.included.items.map((item, index) => {
@@ -272,7 +278,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.booking.titleLead} <span className="text-gradient-accent">{page.booking.titleAccent}</span>
+            Choose the session <span className="text-gradient-accent">that fits the job</span>
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {page.booking.options.map((option, index) => (
@@ -293,13 +299,16 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                 <p className="mb-4 font-body text-sm text-text-secondary sm:mb-6 sm:text-base">
                   {option.description}
                 </p>
-                <motion.button
-                  className="w-full min-h-[44px] rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
+                <motion.a
+                  href={bookingHref}
+                  target={bookingTarget}
+                  rel={bookingRel}
+                  className="flex min-h-[44px] w-full items-center justify-center rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   {option.ctaLabel}
-                </motion.button>
+                </motion.a>
               </motion.div>
             ))}
           </div>
@@ -326,7 +335,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.location.titleLead} <span className="text-gradient-accent">{page.location.titleAccent}</span>
+            Easy to reach, <span className="text-gradient-accent">easy to run</span>
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
@@ -376,10 +385,11 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
             <h2 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl">
-              {page.cta.titleLead} <span className="text-gradient-accent">{page.cta.titleAccent}</span>?
+              Want the studio and the production brain?
             </h2>
             <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
-              {page.cta.subtitle}
+              Tell us what you need to capture. We will help shape the session
+              around the show, campaign, or content run you are trying to make.
             </p>
             <div className="mx-auto max-w-2xl rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm sm:p-8">
               <p className="mb-4 font-body text-xs text-text-muted sm:text-sm">
@@ -393,7 +403,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                {page.cta.buttonLabel}
+                Start Planning the Session
                 <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </motion.a>
             </div>

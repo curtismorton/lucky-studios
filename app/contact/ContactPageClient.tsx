@@ -52,6 +52,13 @@ export default function ContactPageClient({
 }: ContactPageClientProps) {
   const page = content || defaultMarketingPagesContent.contact;
   const hasFormEndpoint = formEndpoint.trim().length > 0;
+  const interestOptions = [
+    "Build a creator show",
+    "Brand partnership or sponsorship",
+    "Book the studio",
+    "Produce campaign assets",
+    "Something else",
+  ];
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
@@ -117,6 +124,7 @@ export default function ContactPageClient({
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-orange/10 via-transparent to-accent-cyan/10" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -132,11 +140,16 @@ export default function ContactPageClient({
             <Logo size="md" showLink={false} />
           </motion.div>
 
-          <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
-            {page.hero.titleLead} <span className="text-gradient-accent">{page.hero.titleAccent}</span>
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+            Start the Conversation
+          </p>
+          <h1 className="mb-4 font-heading text-4xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+            Tell us what you are trying to build.
           </h1>
-          <p className="font-body text-base text-text-secondary sm:text-lg md:text-xl">
-            {page.hero.subtitle}
+          <p className="font-body text-base leading-relaxed text-text-secondary sm:text-lg md:text-xl">
+            Creator show, brand partnership, studio session, campaign asset
+            engine, or something in between. Send the useful context and we will
+            point the next step in the right direction.
           </p>
         </motion.div>
       </section>
@@ -150,7 +163,7 @@ export default function ContactPageClient({
             transition={{ duration: 0.6 }}
           >
             <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
-              {page.form.title}
+              Start with the idea.
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
@@ -236,7 +249,7 @@ export default function ContactPageClient({
                   aria-invalid={errors.interest ? "true" : "false"}
                 >
                   <option value="">Select an option</option>
-                  {page.form.interestOptions.map((option) => (
+                  {interestOptions.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -267,7 +280,7 @@ export default function ContactPageClient({
                     },
                   })}
                   className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
-                  placeholder="Tell us about your inquiry..."
+                  placeholder="Tell us about the show, audience, brand brief, studio session, timeline, or assets you need..."
                   aria-invalid={errors.message ? "true" : "false"}
                 />
                 {errors.message && (
@@ -290,7 +303,7 @@ export default function ContactPageClient({
                     {page.form.sendingLabel}
                   </span>
                 ) : (
-                  page.form.submitLabel
+                  "Send the Brief"
                 )}
               </motion.button>
 
@@ -337,7 +350,7 @@ export default function ContactPageClient({
             transition={{ duration: 0.6 }}
           >
             <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
-              {page.direct.title}
+              Prefer a direct route?
             </h2>
             <div className="space-y-6 sm:space-y-8">
               <div>
@@ -382,12 +395,13 @@ export default function ContactPageClient({
                     <Calendar className="h-4 w-4 text-accent-cyan sm:h-5 sm:w-5" />
                   </div>
                   <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
-                    {page.direct.bookCallTitle}
+                    Book a Working Session
                   </h3>
                 </div>
                 <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm sm:p-6">
                   <p className="mb-4 font-body text-xs text-text-muted sm:text-sm">
-                    {page.direct.bookCallHint}
+                    Useful if you already have a creator, brand brief, or shoot
+                    window and need to pressure-test the plan quickly.
                   </p>
                   <motion.a
                     href={bookingHref}
@@ -397,7 +411,7 @@ export default function ContactPageClient({
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    {page.direct.bookCallButton}
+                    Schedule a Working Session
                   </motion.a>
                 </div>
               </div>
@@ -439,7 +453,7 @@ export default function ContactPageClient({
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.faq.titleLead} <span className="text-gradient-accent">{page.faq.titleAccent}</span>
+            Useful things to <span className="text-gradient-accent">know first</span>
           </h2>
           <div className="space-y-3 sm:space-y-4">
             {page.faq.items.map((faq, index) => (

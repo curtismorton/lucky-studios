@@ -22,6 +22,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-orange/10 via-transparent to-accent-purple/10" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -36,11 +37,16 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           >
             <Logo size="md" showLink={false} />
           </motion.div>
-          <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
-            {page.hero.titleLead} <span className="text-gradient-accent">{page.hero.titleAccent}</span>
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+            About Lucky
+          </p>
+          <h1 className="mb-4 font-heading text-4xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+            We build shows like media products, not one-off uploads.
           </h1>
-          <p className="font-body text-base text-text-secondary sm:text-lg md:text-xl">
-            {page.hero.subtitle}
+          <p className="font-body text-base leading-relaxed text-text-secondary sm:text-lg md:text-xl">
+            Lucky Studios is a London production studio and creator media
+            network backed by Socially Powerful. We help talent and brands turn
+            repeatable ideas into formats people want to watch again.
           </p>
         </motion.div>
       </section>
@@ -53,18 +59,30 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-6 font-heading text-3xl font-bold sm:mb-8 sm:text-4xl md:text-5xl">
-            {page.story.titleLead} <span className="text-gradient-accent">{page.story.titleAccent}</span>
+            Why Lucky <span className="text-gradient-accent">exists</span>
           </h2>
           <div className="space-y-4 font-body text-base leading-relaxed text-text-secondary sm:space-y-6 sm:text-lg">
-            {page.story.paragraphs.map((paragraph, index) => (
-              <p key={`${paragraph}-${index}`}>{paragraph}</p>
-            ))}
+            <p>
+              Most content teams are stuck between two weak options: informal
+              creator output that is inconsistent, or polished brand content
+              that feels too slow and too safe for social platforms.
+            </p>
+            <p>
+              Lucky sits in the middle. We bring format development, studio
+              production, editing, packaging, distribution thinking, and brand
+              access into one joined-up system.
+            </p>
+            <p>
+              The goal is simple: make shows that have a reason to exist beyond
+              the first episode, then turn every recording into assets that can
+              actually travel.
+            </p>
             <div className="mt-6 rounded-2xl border border-accent-orange/30 bg-accent-orange/10 p-5 sm:mt-8 sm:p-6">
               <p className="font-heading text-lg font-semibold text-white sm:text-xl">
-                {page.story.missionTitle}
+                The operating principle
               </p>
               <p className="mt-2 font-body text-base text-text-secondary sm:text-lg">
-                {page.story.missionText}
+                Strong ideas need a repeatable production machine behind them.
               </p>
             </div>
           </div>
@@ -84,11 +102,14 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
             <div className="mb-6 grid gap-6 sm:mb-8 sm:gap-8 md:grid-cols-2">
               <div>
                 <h2 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl">
-                  {page.sociallyPowerful.titleLead}{" "}
-                  <span className="text-gradient-accent">{page.sociallyPowerful.titleAccent}</span>
+                  Backed by{" "}
+                  <span className="text-gradient-accent">Socially Powerful</span>
                 </h2>
                 <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
-                  {page.sociallyPowerful.description}
+                  Lucky has the speed of a studio with the commercial context of
+                  a global influencer marketing agency. That means show ideas
+                  can be built with audience, talent, and brand outcomes in mind
+                  from the start.
                 </p>
                 <ul className="space-y-3 sm:space-y-4">
                   {page.sociallyPowerful.bullets.map((item, index) => (
@@ -136,7 +157,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.team.titleLead} <span className="text-gradient-accent">{page.team.titleAccent}</span>
+            The people building <span className="text-gradient-accent">the system</span>
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
             {page.team.members.map((member, index) => (
@@ -184,7 +205,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            {page.values.titleLead} <span className="text-gradient-accent">{page.values.titleAccent}</span>
+            What we will not <span className="text-gradient-accent">compromise on</span>
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
             {page.values.items.map((value, index) => {
@@ -225,10 +246,10 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
             <h2 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl">
-              {page.cta.titleLead} <span className="text-gradient-accent">{page.cta.titleAccent}</span>?
+              Bring us the idea. <span className="text-gradient-accent">We will build the show.</span>
             </h2>
             <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
-              {page.cta.subtitle}
+              Pick the route that best matches what you are trying to make.
             </p>
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
               {page.cta.buttons.map((button, index) => (
