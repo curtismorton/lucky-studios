@@ -8,14 +8,15 @@ export const revalidate = 86400;
 export async function generateMetadata() {
   return buildPageMetadata({
     path: "/studio",
-    fallbackTitle: "The Studio | Lucky Studios",
+    fallbackTitle: "London Podcast and Video Studio | Lucky Studios",
     fallbackDescription:
-      "Rent our professional podcast studio in London Bridge. Equipped with Sony A7 IV cameras, Shure SM7B mics, and full production support.",
+      "Book a London Bridge production studio built for shows, clips, campaign assets, multi-camera recording, broadcast audio, and full production support.",
     fallbackKeywords: [
       "podcast studio London",
-      "studio rental London",
+      "video studio London",
       "London Bridge studio",
       "podcast production studio",
+      "campaign asset production",
       "video podcast studio",
       "Lucky Studios studio",
     ],

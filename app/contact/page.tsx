@@ -7,15 +7,15 @@ export const revalidate = 86400;
 export async function generateMetadata() {
   return buildPageMetadata({
     path: "/contact",
-    fallbackTitle: "Contact Us | Lucky Studios",
+    fallbackTitle: "Contact Lucky Studios | Build a Show or Book the Studio",
     fallbackDescription:
-      "Get in touch with Lucky Studios. Contact us about joining as a creator, brand partnerships, studio rental, or general inquiries.",
+      "Contact Lucky Studios about creator shows, brand partnerships, sponsorships, studio sessions, campaign assets, and production support.",
     fallbackKeywords: [
       "contact Lucky Studios",
-      "podcast network contact",
+      "creator show inquiry",
       "studio rental inquiry",
-      "creator application",
       "brand partnership inquiry",
+      "campaign asset production",
     ],
   });
 }

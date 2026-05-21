@@ -7,15 +7,15 @@ export const revalidate = 86400;
 export async function generateMetadata() {
   return buildPageMetadata({
     path: "/about",
-    fallbackTitle: "About Us | Lucky Studios",
+    fallbackTitle: "About Lucky Studios | Creator Media Studio",
     fallbackDescription:
-      "Learn about Lucky Studios - London's creator-first podcast network. Part of Socially Powerful, building the UK's most creator-friendly podcast network.",
+      "Lucky Studios is a London production studio and creator media network backed by Socially Powerful, building repeatable shows for creators and brands.",
     fallbackKeywords: [
       "Lucky Studios",
-      "podcast network London",
-      "creator-first podcast",
+      "creator media studio",
+      "podcast production London",
       "Socially Powerful",
-      "podcast production company",
+      "creator show production",
       "about Lucky Studios",
     ],
   });

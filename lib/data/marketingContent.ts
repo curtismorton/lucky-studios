@@ -303,25 +303,27 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
   about: {
     hero: {
       titleLead: "About",
-      titleAccent: "Lucky Studios",
-      subtitle: "London's creator-first podcast network",
+      titleAccent: "Lucky",
+      subtitle:
+        "A London production studio and creator media network backed by Socially Powerful.",
     },
     story: {
-      titleLead: "Our",
-      titleAccent: "Story",
+      titleLead: "Why Lucky",
+      titleAccent: "Exists",
       paragraphs: [
-        "Lucky Studios was born from a simple belief: creators deserve better. Too many podcast networks treat talent as content factories, prioritizing volume over quality and growth.",
-        "We set out to build something different—a network that puts creators first, providing the resources, support, and platform they need to build authentic, successful shows.",
-        "As part of Socially Powerful, we combine creator-first values with global agency backing, giving our network access to industry expertise and a 15M+ influencer following.",
+        "Most content teams are stuck between informal creator output that is inconsistent and polished brand content that feels too slow for social platforms.",
+        "Lucky sits in the middle. We bring format development, studio production, editing, packaging, distribution thinking, and brand access into one joined-up system.",
+        "The goal is simple: make shows that have a reason to exist beyond the first episode, then turn every recording into assets that can actually travel.",
       ],
-      missionTitle: "Our Mission",
-      missionText: "Build the UK's most creator-friendly podcast network",
+      missionTitle: "The operating principle",
+      missionText:
+        "Strong ideas need a repeatable production machine behind them.",
     },
     sociallyPowerful: {
       titleLead: "Part of",
       titleAccent: "Socially Powerful",
       description:
-        "Lucky Studios is backed by Socially Powerful, a global influencer marketing agency. This partnership gives our network unique advantages:",
+        "Lucky has the speed of a studio with the commercial context of a global influencer marketing agency. That means show ideas can be built with audience, talent, and brand outcomes in mind from the start.",
       bullets: [
         "Access to 15M+ influencer following",
         "Global agency backing",
@@ -332,8 +334,8 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       buttonHref: "https://sociallypowerful.com",
     },
     team: {
-      titleLead: "Our",
-      titleAccent: "Team",
+      titleLead: "The People Building",
+      titleAccent: "The System",
       members: [
         {
           name: "Curtis Morton",
@@ -362,8 +364,8 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       ],
     },
     values: {
-      titleLead: "Our",
-      titleAccent: "Values",
+      titleLead: "What We Will Not",
+      titleAccent: "Compromise On",
       items: [
         {
           title: "Creator-First",
@@ -388,9 +390,9 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       ],
     },
     cta: {
-      titleLead: "Want to",
-      titleAccent: "Work With Us",
-      subtitle: "Choose your path based on who you are",
+      titleLead: "Bring Us",
+      titleAccent: "The Idea",
+      subtitle: "Pick the route that best matches what you are trying to make.",
       buttons: [
         {
           label: "I'm a Creator",
@@ -590,23 +592,24 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
   },
   studio: {
     hero: {
-      titleLead: "The",
+      titleLead: "London Bridge",
       titleAccent: "Studio",
-      subtitle: "Professional podcast studio in the heart of London",
+      subtitle:
+        "A production-ready space for shows, clips, campaign assets, and multi-camera recording.",
       locationBadge: "5 mins from London Bridge Station",
-      primaryCtaLabel: "Book a Tour",
-      secondaryCtaLabel: "Get a Quote",
+      primaryCtaLabel: "Book a Studio Walkthrough",
+      secondaryCtaLabel: "Talk Through a Shoot",
       heroImage: "",
       heroImageAlt: "Lucky Studios podcast studio",
     },
     gallery: {
-      titleLead: "Studio",
-      titleAccent: "Gallery",
+      titleLead: "See the Space",
+      titleAccent: "Before You Book It",
       images: ["", "", "", "", "", ""],
     },
     equipment: {
-      titleLead: "Professional",
-      titleAccent: "Equipment",
+      titleLead: "Production-Grade Kit",
+      titleAccent: "Ready to Roll",
       items: [
         {
           title: "3x Sony A7 IV",
@@ -627,8 +630,8 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       ],
     },
     included: {
-      titleLead: "What's",
-      titleAccent: "Included",
+      titleLead: "Handled",
+      titleAccent: "On the Day",
       items: [
         "On-site technical support",
         "Makeup room",
@@ -639,34 +642,34 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       ],
     },
     booking: {
-      titleLead: "Booking",
-      titleAccent: "Options",
+      titleLead: "Choose the Session",
+      titleAccent: "That Fits the Job",
       options: [
         {
           title: "Half Day",
           duration: "4 hours",
-          description: "Perfect for single episode recordings",
-          ctaLabel: "Book Now",
+          description: "Best for a focused episode, interview, or short asset run.",
+          ctaLabel: "Book the Session",
         },
         {
           title: "Full Day",
           duration: "8 hours",
-          description: "Ideal for multiple episodes or longer formats",
-          ctaLabel: "Book Now",
+          description: "Built for multiple episodes, campaign capture, or longer formats.",
+          ctaLabel: "Plan the Day",
         },
         {
           title: "Custom/Ongoing",
           duration: "Contact us",
-          description: "Regular bookings? Let's discuss your needs",
-          ctaLabel: "Get Quote",
+          description: "For repeat formats, retained production, or studio plus edit support.",
+          ctaLabel: "Build the Setup",
         },
       ],
       memberNotePrefix: "Network members",
       memberNoteText: "get priority booking and exclusive discounts",
     },
     location: {
-      titleLead: "Find",
-      titleAccent: "Us",
+      titleLead: "Easy to Reach",
+      titleAccent: "Easy to Run",
       mapLabel: "Map integration placeholder",
       addressLines: [
         site.name,
@@ -680,40 +683,44 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       ],
     },
     cta: {
-      titleLead: "Ready to",
-      titleAccent: "Create",
-      subtitle: "Book a tour or schedule your recording session",
+      titleLead: "Want the Studio",
+      titleAccent: "And the Production Brain",
+      subtitle:
+        "Tell us what you need to capture and we will shape the session around the show, campaign, or content run.",
       widgetHint: "Calendly booking widget will be embedded here",
-      buttonLabel: "Schedule a Call",
+      buttonLabel: "Start Planning the Session",
     },
   },
   contact: {
     hero: {
-      titleLead: "Get in",
-      titleAccent: "Touch",
-      subtitle: "Have a question? We'd love to hear from you.",
+      titleLead: "Start the",
+      titleAccent: "Conversation",
+      subtitle:
+        "Tell us what you are trying to build and we will point the next step in the right direction.",
     },
     form: {
-      title: "Send us a Message",
-      submitLabel: "Send Message",
+      title: "Start with the idea.",
+      submitLabel: "Send the Brief",
       sendingLabel: "Sending...",
       interestOptions: [
-        "Joining as a creator",
-        "Brand partnership",
-        "Studio rental",
-        "General inquiry",
+        "Build a creator show",
+        "Brand partnership or sponsorship",
+        "Book the studio",
+        "Produce campaign assets",
+        "Something else",
       ],
     },
     direct: {
-      title: "Direct Contact",
+      title: "Prefer a Direct Route?",
       email: site.email,
       addressLines: [
         site.address.streetAddress,
         `${site.address.locality}, ${site.address.country}`,
       ],
-      bookCallTitle: "Book a Call",
-      bookCallHint: "Calendly booking widget will be embedded here",
-      bookCallButton: "Schedule a Meeting",
+      bookCallTitle: "Book a Working Session",
+      bookCallHint:
+        "Useful if you already have a creator, brand brief, or shoot window and need to pressure-test the plan quickly.",
+      bookCallButton: "Schedule a Working Session",
       socials: [
         { label: "Twitter", href: site.socials.x },
         { label: "Instagram", href: site.socials.instagram },
@@ -722,8 +729,8 @@ export const defaultMarketingPagesContent: MarketingPagesContent = {
       ],
     },
     faq: {
-      titleLead: "Frequently Asked",
-      titleAccent: "Questions",
+      titleLead: "Useful Things",
+      titleAccent: "To Know First",
       items: [
         {
           question: "How quickly will I receive a response?",
