@@ -29,12 +29,16 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
-            {page.hero.titleLead}{" "}
-            <span className="text-gradient-accent">{page.hero.titleAccent}</span>
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-cyan">
+            For Brands
+          </p>
+          <h1 className="mb-4 font-heading text-4xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+            Stop renting attention. Build media people choose to watch.
           </h1>
-          <p className="mb-8 font-body text-base text-text-secondary sm:mb-12 sm:text-lg md:text-xl">
-            {page.hero.subtitle}
+          <p className="mb-8 font-body text-base leading-relaxed text-text-secondary sm:mb-12 sm:text-lg md:text-xl">
+            Lucky helps brands create native shows, sponsor creator-led formats,
+            and turn campaign ideas into polished video, audio, and social
+            assets without building an internal studio.
           </p>
         </motion.div>
 
@@ -175,8 +179,8 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
           className="mb-12 text-center sm:mb-16"
         >
           <h2 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
-            {page.network.titleLead}{" "}
-            <span className="text-gradient-accent">{page.network.titleAccent}</span>
+            A network built for{" "}
+            <span className="text-gradient-accent">repeat attention</span>
           </h2>
         </motion.div>
 
@@ -213,8 +217,8 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
           className="mb-12 text-center sm:mb-16"
         >
           <h2 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
-            {page.benefits.titleLead}{" "}
-            <span className="text-gradient-accent">{page.benefits.titleAccent}</span>
+            What brands get{" "}
+            <span className="text-gradient-accent">without the overhead</span>
           </h2>
         </motion.div>
 
@@ -256,18 +260,19 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
             <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
-              {page.cta.titleLead}{" "}
-              <span className="text-gradient-accent">{page.cta.titleAccent}</span>?
+              Build a campaign that{" "}
+              <span className="text-gradient-accent">feels like content</span>.
             </h2>
             <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
-              {page.cta.subtitle}
+              Bring the audience, category, or commercial brief. We will shape
+              the format, talent route, production plan, and deliverables.
             </p>
             <motion.button
               className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {page.cta.buttonLabel}
+              Talk Through the Brief
               <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </motion.button>
             <p className="mt-4 font-body text-xs text-text-muted sm:text-sm">

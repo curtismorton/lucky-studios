@@ -44,19 +44,23 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
-            {page.hero.titleLead}{" "}
-            <span className="text-gradient-accent">{page.hero.titleAccent}</span>
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+            For Creators
+          </p>
+          <h1 className="mb-4 font-heading text-4xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
+            Turn your personality into a show people come back to.
           </h1>
-          <p className="mb-8 font-body text-base text-text-secondary sm:mb-12 sm:text-lg md:text-xl">
-            {page.hero.subtitle}
+          <p className="mb-8 font-body text-base leading-relaxed text-text-secondary sm:mb-12 sm:text-lg md:text-xl">
+            Bring the idea, audience, or point of view. Lucky builds the format,
+            captures the episodes, packages the assets, and helps the show move
+            across every platform that matters.
           </p>
           <motion.button
-            className="min-h-[44px] rounded-full bg-accent-purple px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-purple touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
+            className="min-h-[44px] rounded-full bg-accent-orange px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {page.hero.buttonLabel}
+            Build a Show
           </motion.button>
         </motion.div>
       </section>
@@ -70,8 +74,8 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
           className="mb-12 text-center sm:mb-16"
         >
           <h2 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
-            {page.valueProps.titleLead}{" "}
-            <span className="text-gradient-accent">{page.valueProps.titleAccent}</span>
+            What Lucky builds around{" "}
+            <span className="text-gradient-accent">your idea</span>
           </h2>
         </motion.div>
 
@@ -160,8 +164,8 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-6 text-center font-heading text-3xl font-bold sm:mb-8 sm:text-4xl md:text-5xl">
-            {page.lookFor.titleLead}{" "}
-            <span className="text-gradient-accent">{page.lookFor.titleAccent}</span>
+            The creators we can{" "}
+            <span className="text-gradient-accent">actually help</span>
           </h2>
           <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm sm:p-8">
             <ul className="space-y-3 sm:space-y-4">
@@ -196,18 +200,19 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
           className="text-center"
         >
           <h2 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl">
-            {page.cta.titleLead}{" "}
-            <span className="text-gradient-accent">{page.cta.titleAccent}</span>?
+            Ready to make the show{" "}
+            <span className="text-gradient-accent">real</span>?
           </h2>
           <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
-            {page.cta.subtitle}
+            We will help shape the format, production plan, launch assets, and
+            first publishing rhythm before anything gets overcomplicated.
           </p>
           <motion.button
             className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-purple px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-purple touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {page.cta.buttonLabel}
+            Start the Conversation
             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </motion.button>
         </motion.div>
