@@ -19,28 +19,28 @@ interface Pathway {
 const pathways: Pathway[] = [
   {
     title: "For Creators",
-    description: "Launch and grow your podcast with London's best production team. We handle everything from concept to chart position.",
+    description: "Turn the idea, personality, or audience you already have into a repeatable show format with production around it.",
     href: "/creators",
     icon: User,
     accentColor: "orange",
     features: [
       "Full production in our Bermondsey studio",
-      "Multi-platform distribution",
-      "Growth strategy & analytics",
-      "Brand partnership opportunities",
+      "Format and episode structure",
+      "Clips, covers, and publishing assets",
+      "Audience growth and sponsor readiness",
     ],
   },
   {
     title: "For Brands",
-    description: "Connect with engaged audiences through authentic podcast integrations and sponsorships across our network.",
+    description: "Build media around your category or partner with shows that already have a reason for people to care.",
     href: "/brands",
     icon: Building2,
     accentColor: "purple",
     features: [
-      "Access to 5+ established shows",
-      "Host-read integrations",
-      "Custom branded content",
-      "Cross-platform amplification",
+      "Creator-led branded formats",
+      "Host-read and native integrations",
+      "Production without internal overhead",
+      "Cross-platform campaign assets",
     ],
   },
 ];
@@ -104,7 +104,8 @@ export default function Pathways() {
               Who We Work With
             </h2>
             <p className="mx-auto max-w-2xl font-body text-lg text-text-secondary">
-              Whether you&rsquo;re a creator looking to launch your show or a brand seeking podcast partnerships, we&rsquo;ve got you covered.
+              Two routes into the same machine: build your own show, or use the
+              Lucky network to tell a better brand story.
             </p>
           </motion.div>
 
@@ -160,7 +161,7 @@ export default function Pathways() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          {pathway.title === "For Creators" ? "Learn More" : "Partner With Us"}
+                          {pathway.title === "For Creators" ? "Build a Show" : "Partner With Shows"}
                           <ArrowRight className="h-4 w-4" />
                         </motion.button>
                       </Link>

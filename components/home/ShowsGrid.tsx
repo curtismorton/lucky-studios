@@ -34,7 +34,6 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
       show.slug === "back-post" ||
       show.slug === "abby-boom"
   );
-  const comingSoonShow = shows.find((show) => show.slug === "coming-soon");
 
   return (
     <section ref={ref} className="relative overflow-hidden px-4 py-24 md:py-32">
@@ -48,15 +47,23 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
       />
       <motion.div style={{ clipPath }} className="relative">
         <div className="mx-auto max-w-6xl">
-          <motion.h2
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="mb-12 text-center font-heading text-3xl font-bold sm:mb-16 sm:text-4xl md:text-5xl"
+            className="mb-12 text-center sm:mb-16"
           >
-            Our{" "}
-            <span className="text-gradient-accent">Shows</span>
-          </motion.h2>
+            <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+              The Network
+            </p>
+            <h2 className="mx-auto max-w-4xl font-heading text-3xl font-bold leading-tight text-white sm:text-4xl md:text-6xl">
+              Shows with faces, formats, and reasons to keep watching.
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl font-body text-lg leading-relaxed text-text-secondary">
+              Full covers, clear positions, and personalities that can travel
+              from long-form episodes to short-form clips.
+            </p>
+          </motion.div>
 
           <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
             {featuredShows.map((show, index) => (
@@ -68,17 +75,6 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
                 spotifyShow={show.spotifyShowId ? showsById[show.spotifyShowId] : null}
               />
             ))}
-            {comingSoonShow && (
-              <ShowCard
-                show={comingSoonShow}
-                index={featuredShows.length}
-                spotifyShow={
-                  comingSoonShow.spotifyShowId
-                    ? showsById[comingSoonShow.spotifyShowId]
-                    : null
-                }
-              />
-            )}
           </div>
 
           <motion.div
@@ -93,7 +89,7 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
                 whileHover={buttonHover}
                 whileTap={buttonTap}
               >
-                View All Shows
+                See the Network
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </motion.button>
             </Link>

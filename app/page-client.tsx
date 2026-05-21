@@ -7,8 +7,8 @@ import SocialProofBar from "@/components/home/SocialProofBar";
 import TransformationSection from "@/components/home/TransformationSection";
 import ShowsGrid from "@/components/home/ShowsGrid";
 import StatsBar from "@/components/home/StatsBar";
-import Testimonials from "@/components/home/Testimonials";
 import Pathways from "@/components/home/Pathways";
+import ProductionSystem from "@/components/home/ProductionSystem";
 import type { HomepageContent } from "@/lib/data/homepageContent";
 import type { Show } from "@/lib/data/shows";
 
@@ -29,14 +29,14 @@ export default function HomeClient({ content, shows }: HomeClientProps) {
       {/* Stats */}
       <StatsBar />
 
-      {/* Raw to Polished Transformation Section */}
-      <TransformationSection content={content.transformation} />
-
       {/* Shows Grid */}
       <ShowsGrid shows={shows} />
 
-      {/* Testimonials */}
-      <Testimonials />
+      {/* Production System */}
+      <ProductionSystem />
+
+      {/* Raw to Polished Transformation Section */}
+      <TransformationSection content={content.transformation} />
 
       {/* Two Paths Section */}
       <Pathways />
@@ -53,20 +53,20 @@ export default function HomeClient({ content, shows }: HomeClientProps) {
           >
             <div className="absolute inset-0 rounded-3xl bg-gradient-glow opacity-30" />
             <div className="relative z-10">
-              <h2 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl">
-                {content.cta.titleLead}{" "}
-                <span className="text-gradient-accent">
-                  {content.cta.titleAccent}
-                </span>
+              <h2 className="mb-4 font-heading text-3xl font-bold text-white sm:mb-6 sm:text-4xl md:text-5xl">
+                Bring the idea.{" "}
+                <span className="text-gradient-accent">We&apos;ll build the show.</span>
               </h2>
               <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
-                {content.cta.subtitle}
+                Walk in with a personality, format, or brand objective. Walk out
+                with a production plan, distribution thinking, and the next
+                assets ready to move.
               </p>
               <Link
                 href={content.cta.buttonHref}
                 className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-gradient-accent px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-accent touch-manipulation sm:px-10 sm:py-4 sm:text-lg"
               >
-                {content.cta.buttonLabel}
+                Start the Conversation
               </Link>
             </div>
           </motion.div>

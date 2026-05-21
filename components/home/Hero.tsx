@@ -60,7 +60,7 @@ export default function Hero({ content }: HeroProps) {
       whileTap={buttonTap}
     >
       <Phone className="h-5 w-5" />
-      <span>Book a Call</span>
+      <span>Build a Show</span>
     </motion.span>
   );
 
@@ -84,11 +84,9 @@ export default function Hero({ content }: HeroProps) {
       <div aria-hidden="true" className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-background" />
         <HeroUnicornBackground />
-        <div className="absolute inset-0 bg-black/36" />
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-500/16 via-transparent to-fuchsia-500/12" />
-        <div className="absolute -left-28 top-1/2 h-[440px] w-[440px] -translate-y-1/2 rounded-full bg-violet-500/26 blur-[140px]" />
-        <div className="absolute -right-28 top-1/2 h-[420px] w-[420px] -translate-y-1/2 rounded-full bg-fuchsia-500/22 blur-[130px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/46 via-black/30 to-background/82" />
+        <div className="absolute inset-0 bg-black/42" />
+        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(245,158,11,0.24),transparent_34%,rgba(6,182,212,0.12)_72%,transparent)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/58 via-black/34 to-background/86" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-12rem)] w-full max-w-6xl flex-col px-4 md:px-8">
@@ -121,14 +119,24 @@ export default function Hero({ content }: HeroProps) {
             </AnimatePresence>
           </div>
 
+          <motion.h1
+            initial={false}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: "easeOut" }}
+            className="mx-auto mb-6 max-w-5xl font-heading text-5xl font-bold leading-none text-white sm:text-6xl md:text-7xl lg:text-8xl"
+          >
+            Build a show people actually come back to.
+          </motion.h1>
+
           <motion.p
             initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="mx-auto max-w-3xl font-body text-lg leading-relaxed text-white/88"
+            className="mx-auto max-w-3xl font-body text-lg leading-relaxed text-white/88 md:text-xl"
           >
-            Understanding the nuance of every platform after years of
-            experience is what turns momentum into outcomes.
+            Lucky Studios turns raw conversations into polished shows, clips,
+            covers, campaigns, and audience momentum across every platform that
+            matters.
           </motion.p>
         </div>
 
