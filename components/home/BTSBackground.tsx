@@ -10,11 +10,11 @@ interface BTSImage {
 }
 
 const btsImages: BTSImage[] = [
-  { src: "/images/Pod_shots_-07__1_.jpg", alt: "Podcast recording", delay: 0 },
-  { src: "/images/Set_Shots-11__3_.jpg", alt: "Studio setup", delay: -2 },
-  { src: "/images/Pod_shots_-17__1_.jpg", alt: "Recording session", delay: -4 },
-  { src: "/images/ROW08557.jpg", alt: "Behind the scenes", delay: -6 },
-  { src: "/images/Group_thumb-29.jpg", alt: "Team photo", delay: -8 },
+  { src: "/images/hero/hero-1682-2.jpg", alt: "Podcast recording", delay: 0 },
+  { src: "/images/hero/hero-1980.jpg", alt: "Studio setup", delay: -2 },
+  { src: "/images/hero/hero-2104-copy.jpg", alt: "Recording session", delay: -4 },
+  { src: "/images/hero/hero-2171.jpg", alt: "Behind the scenes", delay: -6 },
+  { src: "/images/hero/hero-2771.jpg", alt: "Team photo", delay: -8 },
 ];
 
 export default function BTSBackground() {
@@ -52,7 +52,6 @@ export default function BTSBackground() {
               fill
               className="object-cover blur-[2px] grayscale-[30%]"
               sizes="(max-width: 768px) 25vw, 20vw"
-              unoptimized
               onError={(e) => {
                 // Fallback to gradient if image fails to load
                 const target = e.currentTarget as HTMLImageElement;
@@ -73,4 +72,3 @@ export default function BTSBackground() {
     </div>
   );
 }
-

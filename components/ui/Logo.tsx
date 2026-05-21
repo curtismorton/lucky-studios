@@ -45,7 +45,6 @@ export default function Logo({
         height={dimensions.height}
         className="object-contain"
         priority
-        unoptimized={true}
       />
     </motion.div>
   );
@@ -60,4 +59,3 @@ export default function Logo({
 
   return logoElement;
 }
-

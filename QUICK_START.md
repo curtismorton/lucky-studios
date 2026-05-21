@@ -28,8 +28,14 @@ cp .env.example .env.local
 Then edit `.env.local` and add your credentials:
 
 ```env
+NEXT_PUBLIC_SITE_URL=https://luckystudios.com
 SPOTIFY_CLIENT_ID=your_actual_client_id_here
 SPOTIFY_CLIENT_SECRET=your_actual_client_secret_here
+SPOTIFY_MARKET=GB
+CONTACT_FORM_ENDPOINT=https://formspree.io/f/your_form_id
+NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/your-handle
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
 ## Step 3: Test Your Connection (1 minute)
@@ -67,17 +73,18 @@ The ID is the part after `/show/` in the URL:
 - URL: `https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk`
 - ID: `4rOoJ6Egrf8K2IrywzwOMk`
 
-## Step 5: Add Show IDs to Your Data (1 minute)
+## Step 5: Confirm Show IDs in Data (30 seconds)
 
-Open `lib/data/shows.ts` and find each show. Replace the empty `spotifyShowId` with the actual ID:
+`spotifyShowId` values are already set in `lib/data/shows.ts`. Only update them if your Spotify links changed.
+
+Example:
 
 ```typescript
 {
   id: '2',
   slug: 'back-post',
   title: 'Back Post',
-  // ... other fields
-  spotifyShowId: '4rOoJ6Egrf8K2IrywzwOMk', // ← Add your ID here
+  spotifyShowId: '6z7TZBmzHJrgx1Mx8zbywv',
 }
 ```
 
@@ -136,4 +143,3 @@ Once Spotify is working:
 - Check `SPOTIFY_SETUP.md` for detailed documentation
 - Review `IMPLEMENTATION_SUMMARY.md` for full feature list
 - Check the Spotify API docs: https://developer.spotify.com/documentation/web-api
-

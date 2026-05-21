@@ -1,21 +1,16 @@
 # Logo Assets
 
-Please add your Lucky Studios logo SVG file here as `LOGO.svg`.
+Current production assets use PNG files:
 
-The logo will be used throughout the site in:
-- Navigation bar
-- Footer
-- Mobile menu
-- Home page hero
-- About page
-- Contact page
-- Favicon and Open Graph images
+- `LOGO.png` (primary logo)
+- `LOGO-WHITE.png` (light variant)
 
-## File Requirements
-- File name: `LOGO.svg` (uppercase - important for case-sensitive file systems)
-- Format: SVG (Scalable Vector Graphics)
-- The logo should work well on dark backgrounds (the site uses a dark theme)
+Metadata, Open Graph, and structured data currently point at:
 
-## Optional: Additional Logo Variants
-If you have different logo variants (e.g., icon-only, horizontal, vertical), you can add them here and update the Logo component to use them.
+- `/images/LOGO.png`
 
+If a future SVG logo is added, update:
+
+- `/Users/Curtis/DEV/Lucky Studios/lib/data/site.ts`
+- `/Users/Curtis/DEV/Lucky Studios/app/layout.tsx`
+- `/Users/Curtis/DEV/Lucky Studios/components/seo/StructuredData.tsx`

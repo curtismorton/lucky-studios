@@ -33,6 +33,16 @@ export interface Show {
     youtube?: string;
   };
   spotifyShowId?: string; // Spotify show ID for API integration
+  ogImage?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    canonicalPath?: string;
+    ogImage?: string;
+    noindex?: boolean;
+    schemaType?: string;
+    keywords?: string[];
+  };
 }
 
 export const shows: Show[] = [
@@ -62,6 +72,7 @@ export const shows: Show[] = [
       youtube: 'https://youtube.com/@behindthescreens',
     },
     spotifyShowId: '2VzsxXgrdcP7QpQ3yLwxr7',
+    ogImage: '/images/hero/hero-1980.jpg',
   },
   {
     id: '2',
@@ -88,6 +99,7 @@ export const shows: Show[] = [
       youtube: 'https://youtube.com/@backpost',
     },
     spotifyShowId: '6z7TZBmzHJrgx1Mx8zbywv',
+    ogImage: '/images/hero/hero-2171.jpg',
   },
   {
     id: '3',
@@ -114,6 +126,7 @@ export const shows: Show[] = [
       youtube: 'https://youtube.com/@abbyboom',
     },
     spotifyShowId: '31T31fbr6LrQbe5SmYATHq',
+    ogImage: '/images/hero/hero-2104.jpg',
   },
   {
     id: '4',

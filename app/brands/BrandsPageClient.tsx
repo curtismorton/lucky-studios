@@ -1,187 +1,164 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp, Mic, Users, BarChart3, Target, Video, Globe, FileText } from "lucide-react";
+import { ArrowRight, TrendingUp, Mic, Users, BarChart3, Video, Globe } from "lucide-react";
 import Link from "next/link";
+import {
+  defaultMarketingPagesContent,
+  type BrandsPageContent,
+} from "@/lib/data/marketingContent";
 
-export default function BrandsPageClient() {
+interface BrandsPageClientProps {
+  content?: BrandsPageContent;
+}
+
+const serviceIcons = [TrendingUp, Mic] as const;
+const benefitIcons = [Users, Video, Globe, BarChart3] as const;
+
+export default function BrandsPageClient({ content }: BrandsPageClientProps) {
+  const page = content || defaultMarketingPagesContent.brands;
+
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-24 sm:px-6 lg:px-8">
-        {/* Cyan Tint Background */}
+      <section className="relative mx-auto max-w-7xl px-4 pb-24 pt-32 sm:px-6 lg:px-8">
         <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-cyan/10 via-transparent to-transparent" />
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-4xl text-center"
         >
-          <h1 className="mb-4 sm:mb-6 font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
-            Reach Engaged{" "}
-            <span className="text-gradient-accent">Audiences</span>
+          <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
+            {page.hero.titleLead}{" "}
+            <span className="text-gradient-accent">{page.hero.titleAccent}</span>
           </h1>
-          <p className="mb-8 sm:mb-12 font-body text-base sm:text-lg md:text-xl text-text-secondary">
-            Partner with shows your customers actually listen to
+          <p className="mb-8 font-body text-base text-text-secondary sm:mb-12 sm:text-lg md:text-xl">
+            {page.hero.subtitle}
           </p>
         </motion.div>
 
-        {/* Logo Strip */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-12 sm:mt-16"
         >
-          <p className="mb-4 sm:mb-6 text-center font-body text-xs sm:text-sm font-medium uppercase tracking-wider text-text-muted">
-            Trusted by
+          <p className="mb-4 text-center font-body text-xs font-medium uppercase tracking-wider text-text-muted sm:mb-6 sm:text-sm">
+            {page.trustedBy.label}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8">
-            {/* William Hill Logo Placeholder */}
-            <div className="rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 sm:px-8 py-3 sm:py-4 backdrop-blur-sm">
-              <span className="font-heading text-lg sm:text-xl font-bold text-white">William Hill</span>
-            </div>
-            {/* Placeholder Logos */}
-            {[1, 2, 3].map((i) => (
+            {page.trustedBy.brands.map((brand, index) => (
               <div
-                key={i}
-                className="rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 sm:px-8 py-3 sm:py-4 backdrop-blur-sm opacity-50"
+                key={`${brand}-${index}`}
+                className={`rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 backdrop-blur-sm sm:px-8 sm:py-4 ${index === 0 ? "" : "opacity-70"}`}
               >
-                <span className="font-body text-xs sm:text-sm text-text-secondary">Partner {i}</span>
+                <span className="font-heading text-lg font-bold text-white sm:text-xl">
+                  {brand}
+                </span>
               </div>
             ))}
           </div>
         </motion.div>
       </section>
 
-      {/* Service Cards */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {/* Sponsor a Show */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-background-tertiary bg-background-secondary/50 p-6 sm:p-8 md:p-10 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 hover:glow-cyan touch-manipulation"
-          >
-            <div className="mb-4 sm:mb-6 inline-flex rounded-xl bg-accent-cyan/10 p-3 sm:p-4">
-              <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-accent-cyan" />
-            </div>
-            <h2 className="mb-3 sm:mb-4 font-heading text-2xl sm:text-3xl font-bold text-white">
-              Sponsor a Show
-            </h2>
-            <p className="mb-4 sm:mb-6 font-body text-sm sm:text-base text-text-secondary">
-              Integrate into existing shows with established audiences and proven
-              engagement. Reach millions of listeners who trust our hosts.
-            </p>
-            <motion.button
-              className="inline-flex items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation min-h-[44px]"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              View Sponsorship Options
-              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
-            </motion.button>
-          </motion.div>
-
-          {/* Create a Branded Podcast */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-background-tertiary bg-background-secondary/50 p-6 sm:p-8 md:p-10 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 hover:glow-cyan touch-manipulation"
-          >
-            <div className="mb-4 sm:mb-6 inline-flex rounded-xl bg-accent-cyan/10 p-3 sm:p-4">
-              <Mic className="h-6 w-6 sm:h-8 sm:w-8 text-accent-cyan" />
-            </div>
-            <h2 className="mb-3 sm:mb-4 font-heading text-2xl sm:text-3xl font-bold text-white">
-              Create a Branded Podcast
-            </h2>
-            <p className="mb-4 sm:mb-6 font-body text-sm sm:text-base text-text-secondary">
-              Your own show, from concept to distribution. We handle everything
-              - you get a professional podcast that tells your brand's story.
-            </p>
-            <motion.button
-              className="inline-flex items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation min-h-[44px]"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Discuss Your Podcast
-              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
-            </motion.button>
-          </motion.div>
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">
+          {page.services.map((service, index) => {
+            const Icon = serviceIcons[index % serviceIcons.length];
+            return (
+              <motion.div
+                key={`${service.title}-${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="group relative overflow-hidden rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 hover:glow-cyan touch-manipulation sm:rounded-3xl sm:p-8 md:p-10"
+              >
+                <div className="mb-4 inline-flex rounded-xl bg-accent-cyan/10 p-3 sm:mb-6 sm:p-4">
+                  <Icon className="h-6 w-6 text-accent-cyan sm:h-8 sm:w-8" />
+                </div>
+                <h2 className="mb-3 font-heading text-2xl font-bold text-white sm:mb-4 sm:text-3xl">
+                  {service.title}
+                </h2>
+                <p className="mb-4 font-body text-sm text-text-secondary sm:mb-6 sm:text-base">
+                  {service.description}
+                </p>
+                <motion.button
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {service.ctaLabel}
+                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                </motion.button>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
-      {/* Case Study */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:p-12 md:p-16"
+          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
             <div className="mb-4">
-              <span className="inline-flex rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-accent-cyan">
-                Case Study
+              <span className="inline-flex rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 py-1.5 text-xs font-medium text-accent-cyan sm:px-4 sm:py-2 sm:text-sm">
+                {page.caseStudy.tag}
               </span>
             </div>
-            <h2 className="mb-6 sm:mb-8 font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-              William Hill × <span className="text-gradient-accent">Back Post</span>
+            <h2 className="mb-6 font-heading text-3xl font-bold sm:mb-8 sm:text-4xl md:text-5xl">
+              {page.caseStudy.titleLead}{" "}
+              <span className="text-gradient-accent">{page.caseStudy.titleAccent}</span>
             </h2>
 
             <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
               <div>
-                <h3 className="mb-2 sm:mb-3 font-heading text-lg sm:text-xl font-semibold text-white">
+                <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:mb-3 sm:text-xl">
                   Challenge
                 </h3>
-                <p className="font-body text-sm sm:text-base text-text-secondary">
-                  Reach football fans authentically through content they
-                  genuinely engage with, moving beyond traditional advertising.
+                <p className="font-body text-sm text-text-secondary sm:text-base">
+                  {page.caseStudy.challenge}
                 </p>
               </div>
               <div>
-                <h3 className="mb-2 sm:mb-3 font-heading text-lg sm:text-xl font-semibold text-white">
+                <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:mb-3 sm:text-xl">
                   Solution
                 </h3>
-                <p className="font-body text-sm sm:text-base text-text-secondary">
-                  Integrated sponsorship of Back Post, a weekly football
-                  podcast with deep tactical analysis and cultural commentary.
+                <p className="font-body text-sm text-text-secondary sm:text-base">
+                  {page.caseStudy.solution}
                 </p>
               </div>
               <div>
-                <h3 className="mb-2 sm:mb-3 font-heading text-lg sm:text-xl font-semibold text-white">
+                <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:mb-3 sm:text-xl">
                   Results
                 </h3>
-                <p className="font-body text-sm sm:text-base text-text-secondary">
-                  Reached 500K+ engaged listeners, 4.8★ average rating, and
-                  measurable brand lift in target demographics.
+                <p className="font-body text-sm text-text-secondary sm:text-base">
+                  {page.caseStudy.results}
                 </p>
               </div>
             </div>
 
-            <blockquote className="my-6 sm:my-8 border-l-4 border-accent-cyan pl-4 sm:pl-6 font-body text-base sm:text-lg italic text-text-secondary">
-              "Working with Lucky Studios gave us access to an audience that
-              actually cares about football. The integration felt natural, not
-              like advertising."
+            <blockquote className="my-6 border-l-4 border-accent-cyan pl-4 font-body text-base italic text-text-secondary sm:my-8 sm:pl-6 sm:text-lg">
+              &ldquo;{page.caseStudy.quote}&rdquo;
             </blockquote>
-            <p className="mb-4 sm:mb-6 font-body font-semibold text-white">
-              — William Hill Marketing Team
+            <p className="mb-4 font-body font-semibold text-white sm:mb-6">
+              — {page.caseStudy.author}
             </p>
 
-            <Link href="/case-studies/william-hill">
+            <Link href={page.caseStudy.buttonHref}>
               <motion.button
-                className="inline-flex items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation min-h-[44px]"
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Read Full Case Study
+                {page.caseStudy.buttonLabel}
                 <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
               </motion.button>
             </Link>
@@ -189,53 +166,37 @@ export default function BrandsPageClient() {
         </motion.div>
       </section>
 
-      {/* Network Stats */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12 sm:mb-16 text-center"
+          className="mb-12 text-center sm:mb-16"
         >
-          <h2 className="font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Our <span className="text-gradient-accent">Network</span>
+          <h2 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
+            {page.network.titleLead}{" "}
+            <span className="text-gradient-accent">{page.network.titleAccent}</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          {[
-            {
-              title: "Total Reach",
-              value: "1.1M+",
-              description: "Unique monthly listeners",
-            },
-            {
-              title: "Engagement Rate",
-              value: "68%",
-              description: "Average completion rate",
-            },
-            {
-              title: "Key Demographics",
-              value: "18-45",
-              description: "Primary age range",
-            },
-          ].map((stat, index) => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+          {page.network.stats.map((stat, index) => (
             <motion.div
-              key={stat.title}
+              key={`${stat.title}-${index}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 sm:p-8 text-center backdrop-blur-sm"
+              className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 text-center backdrop-blur-sm sm:p-8"
             >
-              <div className="mb-2 font-heading text-3xl sm:text-4xl font-bold text-accent-cyan md:text-5xl">
+              <div className="mb-2 font-heading text-3xl font-bold text-accent-cyan sm:text-4xl md:text-5xl">
                 {stat.value}
               </div>
-              <h3 className="mb-2 font-heading text-lg sm:text-xl font-semibold text-white">
+              <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:text-xl">
                 {stat.title}
               </h3>
-              <p className="font-body text-xs sm:text-sm text-text-secondary">
+              <p className="font-body text-xs text-text-secondary sm:text-sm">
                 {stat.description}
               </p>
             </motion.div>
@@ -243,60 +204,39 @@ export default function BrandsPageClient() {
         </div>
       </section>
 
-      {/* Benefits Grid */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:py-24 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12 sm:mb-16 text-center"
+          className="mb-12 text-center sm:mb-16"
         >
-          <h2 className="font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Why Partner <span className="text-gradient-accent">With Us</span>
+          <h2 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
+            {page.benefits.titleLead}{" "}
+            <span className="text-gradient-accent">{page.benefits.titleAccent}</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {[
-            {
-              icon: Users,
-              title: "Influencer Access",
-              description: "SP roster 15M+ followers across platforms",
-            },
-            {
-              icon: Video,
-              title: "Professional Production",
-              description: "Studio-quality audio and video from day one",
-            },
-            {
-              icon: Globe,
-              title: "Multi-Platform Distribution",
-              description: "Spotify, Apple, YouTube, and more",
-            },
-            {
-              icon: BarChart3,
-              title: "Performance Reporting",
-              description: "Detailed analytics and ROI tracking",
-            },
-          ].map((benefit, index) => {
-            const Icon = benefit.icon;
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+          {page.benefits.items.map((benefit, index) => {
+            const Icon = benefitIcons[index % benefitIcons.length];
             return (
               <motion.div
-                key={benefit.title}
+                key={`${benefit.title}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 sm:p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50"
+                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 sm:p-6"
               >
                 <div className="mb-4 inline-flex rounded-xl bg-accent-cyan/10 p-2.5 sm:p-3">
-                  <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-accent-cyan" />
+                  <Icon className="h-5 w-5 text-accent-cyan sm:h-6 sm:w-6" />
                 </div>
-                <h3 className="mb-2 font-heading text-lg sm:text-xl font-semibold text-white">
+                <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:text-xl">
                   {benefit.title}
                 </h3>
-                <p className="font-body text-xs sm:text-sm text-text-secondary">
+                <p className="font-body text-xs text-text-secondary sm:text-sm">
                   {benefit.description}
                 </p>
               </motion.div>
@@ -305,39 +245,35 @@ export default function BrandsPageClient() {
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="relative mx-auto max-w-4xl px-4 py-16 sm:py-24 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:p-12 text-center"
+          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
-            <h2 className="mb-4 sm:mb-6 font-heading text-2xl sm:text-3xl font-bold md:text-4xl">
-              Ready to <span className="text-gradient-accent">Get Started</span>?
+            <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
+              {page.cta.titleLead}{" "}
+              <span className="text-gradient-accent">{page.cta.titleAccent}</span>?
             </h2>
-            <p className="mb-6 sm:mb-8 font-body text-base sm:text-lg text-text-secondary">
-              Let's discuss how we can help you reach your target audience
-              through podcast partnerships.
+            <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
+              {page.cta.subtitle}
             </p>
             <motion.button
-              className="inline-flex items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation min-h-[44px]"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Schedule a Call
+              {page.cta.buttonLabel}
               <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </motion.button>
-            <p className="mt-4 font-body text-xs sm:text-sm text-text-muted">
+            <p className="mt-4 font-body text-xs text-text-muted sm:text-sm">
               Or email us at{" "}
-              <a
-                href="mailto:brands@luckystudios.com"
-                className="text-accent-cyan hover:underline"
-              >
-                brands@luckystudios.com
+              <a href={`mailto:${page.cta.email}`} className="text-accent-cyan hover:underline">
+                {page.cta.email}
               </a>
             </p>
           </div>
@@ -346,4 +282,3 @@ export default function BrandsPageClient() {
     </main>
   );
 }
-

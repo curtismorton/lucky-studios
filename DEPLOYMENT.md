@@ -17,11 +17,21 @@ Create `.env.local` with the following (see `.env.example` for template):
 ```env
 # Required
 NEXT_PUBLIC_SITE_URL=https://luckystudios.com
+SPOTIFY_CLIENT_ID=...
+SPOTIFY_CLIENT_SECRET=...
+SPOTIFY_MARKET=GB
+CONTACT_FORM_ENDPOINT=https://formspree.io/f/...
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=...
+CMS_SESSION_SECRET=...
+CMS_ADMIN_MFA_CODE=...
 
 # Optional
-NEXT_PUBLIC_GA_ID=your-google-analytics-id
-CONTACT_FORM_ENDPOINT=your-api-endpoint
-NEXT_PUBLIC_CALENDLY_URL=your-calendly-url
+NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/your-handle
+CMS_CONTENT_TABLE=site_content
+CMS_MEDIA_BUCKET=site-media
+CMS_MEDIA_PREFIX=homepage
+CMS_ADMIN_TOKEN=... # legacy compatibility only (not used by /cms UI)
 ```
 
 **In Vercel Dashboard:**
@@ -39,6 +49,12 @@ The `vercel.json` file is already configured with:
 
 ### 4. Final Checks
 
+#### Domain Mapping
+- [ ] `https://luckystudios.com` serves the Lucky Studios app, not a placeholder page
+- [ ] `https://luckystudios.com/sitemap.xml` returns the generated sitemap
+- [ ] `https://luckystudios.com/robots.txt` returns the generated robots file
+- [ ] Canonical/OG URLs match the actually live public hostname
+
 #### Links
 - [ ] All internal links work
 - [ ] External links open correctly
@@ -46,7 +62,7 @@ The `vercel.json` file is already configured with:
 
 #### Images
 - [ ] All images have alt text
-- [ ] Placeholder images are acceptable
+- [ ] Hero/transformation image paths exist under `public/images`
 - [ ] OG images are referenced correctly
 
 #### Performance
@@ -90,6 +106,18 @@ The `vercel.json` file is already configured with:
 3. Check analytics (if configured)
 4. Test contact form
 5. Verify sitemap.xml and robots.txt
+6. Verify `/api/spotify/show/:id` returns data in production
+7. Verify `/api/analytics/show/:slug` returns Supabase-backed data
+8. Verify the custom domain (`https://luckystudios.com`) is pointed at the app before treating the deployment as live
+
+## Current Production Observation
+
+Observed on April 9, 2026:
+- `https://lucky-studios.vercel.app` is serving the app correctly.
+- `https://luckystudios.com` is still serving a "Coming Soon" placeholder page.
+- Because `NEXT_PUBLIC_SITE_URL` and metadata point at `https://luckystudios.com`, canonical tags, sitemap entries, and robots output currently reference a hostname that is not serving the app.
+
+This makes domain cutover the main remaining production blocker.
 
 ## Troubleshooting
 
@@ -107,4 +135,3 @@ The `vercel.json` file is already configured with:
 - Check Vercel Analytics
 - Optimize images
 - Review bundle size
-

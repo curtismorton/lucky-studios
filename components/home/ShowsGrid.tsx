@@ -5,21 +5,11 @@ import { useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ShowCard from "@/components/shows/ShowCard";
-import { shows } from "@/lib/data/shows";
+import { type Show } from "@/lib/data/shows";
 import { buttonHover, buttonTap } from "@/lib/animations";
+import { useSpotifyShows } from "@/lib/hooks/useSpotifyShows";
 
-// Filter shows to display on homepage
-const featuredShows = shows.filter(
-  (show) =>
-    show.slug === "behind-the-screens" ||
-    show.slug === "back-post" ||
-    show.slug === "abby-boom"
-);
-
-// Add Coming Soon placeholder
-const comingSoonShow = shows.find((show) => show.slug === "coming-soon");
-
-export default function ShowsGrid() {
+export default function ShowsGrid({ shows }: { shows: Show[] }) {
   const ref = useRef<HTMLElement | null>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({
@@ -34,6 +24,17 @@ export default function ShowsGrid() {
     [clipTop, clipBottom],
     ([top, bottom]) => `inset(${top} 0% ${bottom} 0%)`
   );
+  const spotifyIds = shows
+    .map((show) => show.spotifyShowId)
+    .filter((id): id is string => Boolean(id));
+  const { showsById } = useSpotifyShows(spotifyIds);
+  const featuredShows = shows.filter(
+    (show) =>
+      show.slug === "behind-the-screens" ||
+      show.slug === "back-post" ||
+      show.slug === "abby-boom"
+  );
+  const comingSoonShow = shows.find((show) => show.slug === "coming-soon");
 
   return (
     <section ref={ref} className="relative overflow-hidden px-4 py-24 md:py-32">
@@ -64,12 +65,18 @@ export default function ShowsGrid() {
                 show={show}
                 index={index}
                 featured={show.featured}
+                spotifyShow={show.spotifyShowId ? showsById[show.spotifyShowId] : null}
               />
             ))}
             {comingSoonShow && (
               <ShowCard
                 show={comingSoonShow}
                 index={featuredShows.length}
+                spotifyShow={
+                  comingSoonShow.spotifyShowId
+                    ? showsById[comingSoonShow.spotifyShowId]
+                    : null
+                }
               />
             )}
           </div>

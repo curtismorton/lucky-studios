@@ -2,28 +2,41 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { heroImages, type HeroImage } from "@/lib/data/heroImages";
+import { useMemo, useRef, useState } from "react";
+import HeroUnicornBackground from "@/components/home/HeroUnicornBackground";
+import {
+  defaultHomepageContent,
+  type HeroImage,
+  type HeroVideoContent,
+} from "@/lib/data/homepageContent";
 
 interface HeroBackgroundProps {
-  imageSources?: HeroImage[];
+  mainImage: HeroImage;
+  fallbackImage?: HeroImage;
+  backgroundVideo?: HeroVideoContent;
 }
 
 export default function HeroBackground({
-  imageSources = heroImages,
+  mainImage,
+  fallbackImage = defaultHomepageContent.hero.accentImage,
+  backgroundVideo = defaultHomepageContent.hero.backgroundVideo,
 }: HeroBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const [activeIndex, setActiveIndex] = useState(0);
   const [failedIndices, setFailedIndices] = useState<Set<number>>(new Set());
+  const [videoFailed, setVideoFailed] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, -30]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.1]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, -8]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.01]);
+  const imageSources = useMemo(
+    () => [mainImage, fallbackImage],
+    [mainImage, fallbackImage]
+  );
   const availableIndices = useMemo(
     () =>
       imageSources
@@ -31,27 +44,13 @@ export default function HeroBackground({
         .filter((index) => !failedIndices.has(index)),
     [failedIndices, imageSources]
   );
-  const hasAnyImage = availableIndices.length > 0;
-
-  useEffect(() => {
-    if (!hasAnyImage) return;
-    if (availableIndices.includes(activeIndex)) return;
-    setActiveIndex(availableIndices[0]);
-  }, [activeIndex, availableIndices, hasAnyImage]);
-
-  useEffect(() => {
-    if (shouldReduceMotion || availableIndices.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setActiveIndex((currentIndex) => {
-        const currentPosition = availableIndices.indexOf(currentIndex);
-        const safePosition = currentPosition === -1 ? 0 : currentPosition;
-        return availableIndices[(safePosition + 1) % availableIndices.length];
-      });
-    }, 4200);
-
-    return () => clearInterval(interval);
-  }, [availableIndices, shouldReduceMotion]);
+  const activeIndex = availableIndices[0];
+  const activeImage =
+    activeIndex === undefined ? undefined : imageSources[activeIndex];
+  const showVideo =
+    Boolean(backgroundVideo.enabled && backgroundVideo.src) &&
+    !videoFailed &&
+    !shouldReduceMotion;
 
   return (
     <div
@@ -90,48 +89,63 @@ export default function HeroBackground({
         />
       </div>
 
-      {hasAnyImage &&
-        imageSources.map((image, index) => {
-          if (failedIndices.has(index)) return null;
-
-          const showAsActive = shouldReduceMotion
-            ? index === availableIndices[0]
-            : index === activeIndex;
-
-          return (
-            <motion.div
-              key={image.src}
-              className="absolute inset-0"
-              style={
-                shouldReduceMotion
-                  ? { scale: 1.05 }
-                  : { y: imageY, scale: imageScale }
-              }
-              initial={{ opacity: 0 }}
-              animate={{ opacity: showAsActive ? 1 : 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
+      {(activeImage || showVideo) && (
+        <motion.div
+          className="absolute inset-0"
+          style={
+            shouldReduceMotion
+              ? { scale: 1 }
+              : { y: imageY, scale: imageScale }
+          }
+          initial={false}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          {showVideo ? (
+            <video
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              poster={backgroundVideo.poster || activeImage?.src || mainImage.src}
+              aria-label={backgroundVideo.alt || "Hero background video"}
+              onError={() => setVideoFailed(true)}
             >
+              <source src={backgroundVideo.src} />
+            </video>
+          ) : (
+            activeImage && (
               <Image
-                src={image.src}
-                alt={image.alt}
+                src={activeImage.src}
+                alt={activeImage.alt}
                 fill
-                priority={index === 0}
+                priority
                 sizes="100vw"
-                className="object-cover"
-                unoptimized
+                className="object-cover object-center"
                 onError={() =>
-                  setFailedIndices((previous) => new Set(previous).add(index))
+                  setFailedIndices((previous) =>
+                    activeIndex === undefined
+                      ? previous
+                      : new Set(previous).add(activeIndex)
+                  )
                 }
               />
-              <div className="absolute inset-0 bg-black/28" />
-            </motion.div>
-          );
-        })}
+            )
+          )}
+          <div className="absolute inset-0 bg-black/40" />
+        </motion.div>
+      )}
 
-      <div className="absolute inset-0 bg-gradient-to-b from-background/62 via-background/38 to-background/90" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/52" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.84)_75%)]" />
-      <div className="hero-noise absolute inset-0 opacity-[0.035]" />
+      <div className="absolute inset-0 opacity-[0.72]">
+        <HeroUnicornBackground />
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-b from-black/62 via-black/44 to-background/92" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/88 via-background/70 to-background/62" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.76)_100%)]" />
+      <div className="hero-noise absolute inset-0 opacity-[0.03]" />
     </div>
   );
 }

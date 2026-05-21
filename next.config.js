@@ -20,6 +20,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'image-cdn-fa.spotifycdn.com', // Spotify image CDN alternative
       },
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co', // Supabase Storage (CMS media library)
+      },
     ],
   },
   // Optimize production builds
@@ -31,4 +35,3 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
-

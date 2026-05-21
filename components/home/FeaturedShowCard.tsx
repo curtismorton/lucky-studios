@@ -4,21 +4,34 @@ import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { shows } from "@/lib/data/shows";
-import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
+import { useSpotifyShows } from "@/lib/hooks/useSpotifyShows";
 
 export default function FeaturedShowCard() {
   // Get Back Post as featured show
   const featuredShow = shows.find((show) => show.slug === "back-post");
-  const { show: spotifyShow } = useSpotifyShow(featuredShow?.spotifyShowId);
+  const { showsById } = useSpotifyShows(
+    featuredShow?.spotifyShowId ? [featuredShow.spotifyShowId] : []
+  );
+  const spotifyShow = featuredShow?.spotifyShowId
+    ? showsById[featuredShow.spotifyShowId]
+    : null;
+  const fallbackCoverImage = "/images/hero/hero-2171-copy.jpg";
+  const spotifyCoverImage = spotifyShow?.images?.[0]?.url;
+  const [coverImage, setCoverImage] = useState(
+    spotifyCoverImage || fallbackCoverImage
+  );
+
+  useEffect(() => {
+    setCoverImage(spotifyCoverImage || fallbackCoverImage);
+  }, [spotifyCoverImage]);
 
   if (!featuredShow) return null;
 
-  const coverImage = spotifyShow?.images?.[0]?.url || "/images/COVER-ART__1_.png";
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.5 }}
       className="relative"
@@ -41,7 +54,7 @@ export default function FeaturedShowCard() {
               fill
               className="object-cover"
               sizes="144px"
-              unoptimized
+              onError={() => setCoverImage(fallbackCoverImage)}
             />
           </div>
           <div className="flex min-w-0 flex-col justify-center">

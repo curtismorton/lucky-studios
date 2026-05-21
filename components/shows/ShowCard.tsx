@@ -8,6 +8,7 @@ import { type Show } from "@/lib/data/shows";
 import { cardHover } from "@/lib/animations";
 import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
 import TiltCard from "@/components/ui/TiltCard";
+import { type SpotifyShow } from "@/lib/services/spotify";
 
 const genreStyles = {
   entertainment: {
@@ -37,13 +38,23 @@ interface ShowCardProps {
   show: Show;
   index?: number;
   featured?: boolean;
+  spotifyShow?: SpotifyShow | null;
 }
 
-export default function ShowCard({ show, index = 0, featured = false }: ShowCardProps) {
+export default function ShowCard({
+  show,
+  index = 0,
+  featured = false,
+  spotifyShow: preloadedSpotifyShow,
+}: ShowCardProps) {
   const genreStyle = genreStyles[show.genre];
   const genreLabel = genreLabels[show.genre];
-  const { show: spotifyShow } = useSpotifyShow(show.spotifyShowId);
-  const coverImage = spotifyShow?.images?.[0]?.url;
+  const shouldFetchSpotify = !preloadedSpotifyShow && Boolean(show.spotifyShowId);
+  const { show: spotifyShow } = useSpotifyShow(
+    shouldFetchSpotify ? show.spotifyShowId : undefined
+  );
+  const resolvedSpotifyShow = preloadedSpotifyShow || spotifyShow;
+  const coverImage = resolvedSpotifyShow?.images?.[0]?.url;
   const teaser = show.teaser ?? show.tagline;
 
   return (
@@ -55,29 +66,42 @@ export default function ShowCard({ show, index = 0, featured = false }: ShowCard
     >
       <Link href={`/shows/${show.slug}`}>
         <TiltCard
-          className={`group relative overflow-hidden rounded-2xl border ${
+          className={`group relative overflow-hidden rounded-xl border ${
             featured
-              ? "border-accent-orange/50 bg-gradient-to-br from-background-secondary to-background-tertiary"
-              : "border-background-tertiary bg-background-secondary/50"
-          } backdrop-blur-sm transition-all duration-300 ${
+              ? "border-accent-orange/60 bg-[linear-gradient(145deg,rgba(245,158,11,0.16),rgba(24,24,27,0.96)_42%,rgba(6,182,212,0.1))]"
+              : "border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(24,24,27,0.9)_48%,rgba(255,255,255,0.03))]"
+          } shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-sm transition-all duration-300 ${
             featured ? "hover:glow-orange" : ""
           }`}
           whileHover={cardHover}
-          glowClassName="rounded-2xl mix-blend-screen"
+          glowClassName="rounded-xl mix-blend-screen"
         >
           {/* Thumbnail - Spotify cover art or placeholder */}
-          <div className="relative aspect-video w-full overflow-hidden">
+          <div className="relative aspect-square w-full overflow-hidden bg-black/30 p-4">
             {coverImage ? (
-              <Image
-                src={coverImage}
-                alt={show.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
+              <>
+                <Image
+                  src={coverImage}
+                  alt=""
+                  fill
+                  aria-hidden="true"
+                  className="scale-110 object-cover opacity-25 blur-xl saturate-150"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/55" />
+                <div className="relative h-full w-full overflow-hidden rounded-lg border border-white/10 bg-black/40 shadow-2xl">
+                  <Image
+                    src={coverImage}
+                    alt={show.title}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 88vw, (max-width: 1200px) 42vw, 24vw"
+                  />
+                </div>
+              </>
             ) : (
               <div
-                className={`h-full w-full bg-gradient-to-br ${
+                className={`h-full w-full rounded-lg border border-white/10 bg-gradient-to-br ${
                   featured
                     ? "from-accent-orange/20 via-accent-purple/20 to-accent-cyan/20"
                     : genreStyle.bg
@@ -86,9 +110,9 @@ export default function ShowCard({ show, index = 0, featured = false }: ShowCard
             )}
             
             {/* Play Icon Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <motion.div
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm"
+                className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 shadow-[0_0_40px_rgba(255,255,255,0.22)] backdrop-blur-sm"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -98,7 +122,7 @@ export default function ShowCard({ show, index = 0, featured = false }: ShowCard
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-5">
             <div className="mb-3 flex items-center justify-between">
               <span
                 className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium ${genreStyle.bg} ${genreStyle.text} ${genreStyle.border}`}
@@ -111,7 +135,7 @@ export default function ShowCard({ show, index = 0, featured = false }: ShowCard
                 </span>
               )}
             </div>
-            <h3 className="mb-2 font-heading text-xl font-semibold text-white md:text-2xl">
+            <h3 className="mb-2 font-heading text-xl font-semibold leading-tight text-white md:text-2xl">
               {show.title}
             </h3>
             <p className="mb-3 font-body text-sm text-text-secondary">

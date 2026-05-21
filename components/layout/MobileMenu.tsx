@@ -4,18 +4,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/ui/Logo";
-import { site } from "@/lib/data/site";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   links: { name: string; href: string }[];
+  bookingHref: string;
+  bookingLabel?: string;
 }
 
-export default function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
-  const bookingHref = site.calendlyUrl || "/contact";
-  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
-  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
+export default function MobileMenu({
+  isOpen,
+  onClose,
+  links,
+  bookingHref,
+  bookingLabel = "Book a Call",
+}: MobileMenuProps) {
+  const isExternalBooking = /^https?:\/\//i.test(bookingHref);
+  const bookingTarget = isExternalBooking ? "_blank" : undefined;
+  const bookingRel = isExternalBooking ? "noopener noreferrer" : undefined;
 
   const menuVariants = {
     closed: {
@@ -116,7 +123,7 @@ export default function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Book a Call
+                {bookingLabel}
               </motion.a>
             </nav>
           </motion.div>

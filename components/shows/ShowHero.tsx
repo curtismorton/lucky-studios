@@ -5,6 +5,7 @@ import { Music, Youtube } from "lucide-react";
 import Image from "next/image";
 import { type Show } from "@/lib/data/shows";
 import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
+import { type SpotifyShow } from "@/lib/services/spotify";
 
 const genreStyles = {
   entertainment: {
@@ -32,13 +33,18 @@ const genreLabels = {
 
 interface ShowHeroProps {
   show: Show;
+  spotifyShow?: SpotifyShow;
 }
 
-export default function ShowHero({ show }: ShowHeroProps) {
+export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: ShowHeroProps) {
   const genreStyle = genreStyles[show.genre];
   const genreLabel = genreLabels[show.genre];
-  const { show: spotifyShow } = useSpotifyShow(show.spotifyShowId);
-  const coverImage = spotifyShow?.images?.[0]?.url;
+  const shouldFetchSpotify = !preloadedSpotifyShow && Boolean(show.spotifyShowId);
+  const { show: spotifyShow } = useSpotifyShow(
+    shouldFetchSpotify ? show.spotifyShowId : undefined
+  );
+  const resolvedSpotifyShow = preloadedSpotifyShow || spotifyShow;
+  const coverImage = resolvedSpotifyShow?.images?.[0]?.url;
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">

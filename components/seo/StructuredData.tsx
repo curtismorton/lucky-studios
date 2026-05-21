@@ -1,34 +1,50 @@
 import { Show } from "@/lib/data/shows";
+import { absoluteUrl, site } from "@/lib/data/site";
+import type { CmsSiteSettingsPayload } from "@/lib/cms/types";
 
-export function OrganizationSchema() {
+const siteSocials = Object.values(site.socials).filter(
+  (value): value is string => Boolean(value && value.trim().length > 0)
+);
+
+export function OrganizationSchema({
+  siteSettings,
+}: {
+  siteSettings?: CmsSiteSettingsPayload;
+}) {
+  const resolvedSite = siteSettings || site;
+  const resolveUrl = (path: string): string => {
+    if (/^https?:\/\//i.test(path)) return path;
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+    return `${resolvedSite.url.replace(/\/+$/, "")}${normalizedPath}`;
+  };
+  const socials = siteSettings
+    ? Object.values(siteSettings.socials || {}).filter(
+        (value): value is string => Boolean(value && value.trim().length > 0)
+      )
+    : siteSocials;
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Lucky Studios",
-    url: "https://luckystudios.com",
-    logo: "https://luckystudios.com/logo.png",
-    description:
-      "London's creator-first podcast network. Professional podcast production, studio rental, and network partnerships.",
+    name: resolvedSite.name,
+    url: resolvedSite.url,
+    logo: resolveUrl(resolvedSite.logo),
+    description: resolvedSite.description,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "London Bridge",
-      addressLocality: "London",
-      addressRegion: "London",
-      postalCode: "SE1",
-      addressCountry: "GB",
+      streetAddress: resolvedSite.address.streetAddress,
+      addressLocality: resolvedSite.address.locality,
+      addressRegion: resolvedSite.address.region,
+      postalCode: resolvedSite.address.postalCode,
+      addressCountry: resolvedSite.address.country,
     },
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+44-20-1234-5678",
+      telephone: resolvedSite.phone,
       contactType: "Customer Service",
-      email: "hello@weareluckystudios.com",
+      email: resolvedSite.email,
     },
-    sameAs: [
-      "https://twitter.com/luckystudios",
-      "https://instagram.com/luckystudios",
-      "https://linkedin.com/company/luckystudios",
-      "https://youtube.com/@luckystudios",
-    ],
+    sameAs: socials,
     parentOrganization: {
       "@type": "Organization",
       name: "Socially Powerful",
@@ -48,25 +64,24 @@ export function LocalBusinessSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "Lucky Studios",
-    description:
-      "Professional podcast studio rental in London Bridge. Equipped with Sony A7 IV cameras, Shure SM7B microphones, and full production support.",
+    name: site.name,
+    description: site.description,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "London Bridge",
-      addressLocality: "London",
-      addressRegion: "London",
-      postalCode: "SE1",
-      addressCountry: "GB",
+      streetAddress: site.address.streetAddress,
+      addressLocality: site.address.locality,
+      addressRegion: site.address.region,
+      postalCode: site.address.postalCode,
+      addressCountry: site.address.country,
     },
     geo: {
       "@type": "GeoCoordinates",
       latitude: "51.5074",
       longitude: "-0.0877",
     },
-    telephone: "+44-20-1234-5678",
-    email: "hello@weareluckystudios.com",
-    url: "https://luckystudios.com/studio",
+    telephone: site.phone,
+    email: site.email,
+    url: absoluteUrl("/studio"),
     priceRange: "$$",
     openingHoursSpecification: [
       {
@@ -105,18 +120,20 @@ interface PodcastSeriesSchemaProps {
 }
 
 export function PodcastSeriesSchema({ show }: PodcastSeriesSchemaProps) {
+  const showImage = show.ogImage || site.ogImage;
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "PodcastSeries",
     name: show.title,
     description: show.description || show.tagline,
-    url: `https://luckystudios.com/shows/${show.slug}`,
-    image: `https://luckystudios.com/shows/${show.slug}/artwork.jpg`,
+    url: absoluteUrl(`/shows/${show.slug}`),
+    image: absoluteUrl(showImage),
     genre: show.genre,
     publisher: {
       "@type": "Organization",
-      name: "Lucky Studios",
-      url: "https://luckystudios.com",
+      name: site.name,
+      url: site.url,
     },
     aggregateRating: show.stat.includes("M+") || show.stat.includes("views")
       ? {

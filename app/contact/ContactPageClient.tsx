@@ -11,10 +11,18 @@ import {
   Instagram,
   Linkedin,
   Youtube,
+  Globe,
   ChevronDown,
   Loader2,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import Logo from "@/components/ui/Logo";
+import { site } from "@/lib/data/site";
+import {
+  defaultMarketingPagesContent,
+  type ContactPageContent,
+} from "@/lib/data/marketingContent";
 
 interface ContactFormData {
   name: string;
@@ -24,39 +32,35 @@ interface ContactFormData {
   message: string;
 }
 
-const interestOptions = [
-  "Joining as a creator",
-  "Brand partnership",
-  "Studio rental",
-  "General inquiry",
-];
+interface ContactPageClientProps {
+  content?: ContactPageContent;
+  formEndpoint?: string;
+}
 
-const faqs = [
-  {
-    question: "How quickly will I receive a response?",
-    answer:
-      "We aim to respond to all inquiries within 24-48 hours during business days. For urgent matters, please call or use our Calendly to schedule a meeting.",
-  },
-  {
-    question: "Do you work with creators outside the UK?",
-    answer:
-      "While our studio is in London, we work with creators globally. Remote recording setups and virtual collaboration are available for international partnerships.",
-  },
-  {
-    question: "What information should I include in my inquiry?",
-    answer:
-      "Please include your name, contact information, and a brief description of what you're looking for. For creator applications, tell us about your show concept. For brand partnerships, share your goals and target audience.",
-  },
-  {
-    question: "Can I visit the studio before booking?",
-    answer:
-      "Absolutely! We offer studio tours. Use the 'Book a Tour' button or schedule a call through Calendly to arrange a visit.",
-  },
-];
+function getSocialIcon(label: string) {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("twitter") || normalized.includes("x")) return Twitter;
+  if (normalized.includes("instagram")) return Instagram;
+  if (normalized.includes("linkedin")) return Linkedin;
+  if (normalized.includes("youtube")) return Youtube;
+  return Globe;
+}
 
-export default function ContactPageClient() {
+export default function ContactPageClient({
+  content,
+  formEndpoint = "",
+}: ContactPageClientProps) {
+  const page = content || defaultMarketingPagesContent.contact;
+  const hasFormEndpoint = formEndpoint.trim().length > 0;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState("");
+
+  const bookingHref = site.calendlyUrl || "/contact";
+  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
+  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
 
   const {
     register,
@@ -66,27 +70,59 @@ export default function ContactPageClient() {
   } = useForm<ContactFormData>();
 
   const onSubmit = async (data: ContactFormData) => {
+    setSubmitError("");
+    setSubmitSuccess("");
+
+    if (!hasFormEndpoint) {
+      setSubmitError(
+        "Contact form is not configured yet. Please email us directly and set CONTACT_FORM_ENDPOINT."
+      );
+      return;
+    }
+
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    // In production, send data to API endpoint here
-    // Example: await fetch('/api/contact', { method: 'POST', body: JSON.stringify(data) })
-    setIsSubmitting(false);
-    reset();
-    // In production, you'd show a success message here
+    try {
+      const response = await fetch(formEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          source: "luckystudios.com/contact",
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null);
+        throw new Error(
+          payload?.error || payload?.message || "Form submission failed"
+        );
+      }
+
+      setSubmitSuccess("Message sent. We'll get back to you within 1-2 business days.");
+      reset();
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Could not send your message. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-4xl text-center"
         >
-          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -95,30 +131,29 @@ export default function ContactPageClient() {
           >
             <Logo size="md" showLink={false} />
           </motion.div>
-          <h1 className="mb-4 sm:mb-6 font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
-            Get in <span className="text-gradient-accent">Touch</span>
+
+          <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
+            {page.hero.titleLead} <span className="text-gradient-accent">{page.hero.titleAccent}</span>
           </h1>
-          <p className="font-body text-base sm:text-lg md:text-xl text-text-secondary">
-            Have a question? We'd love to hear from you.
+          <p className="font-body text-base text-text-secondary sm:text-lg md:text-xl">
+            {page.hero.subtitle}
           </p>
         </motion.div>
       </section>
 
-      {/* Two Column Layout */}
       <section className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-2">
-          {/* Left - Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="mb-4 sm:mb-6 font-heading text-2xl sm:text-3xl font-bold md:text-4xl">
-              Send us a Message
+            <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
+              {page.form.title}
             </h2>
+
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
-              {/* Name */}
               <div>
                 <label
                   htmlFor="name"
@@ -133,20 +168,14 @@ export default function ContactPageClient() {
                   className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
                   placeholder="Your name"
                   aria-invalid={errors.name ? "true" : "false"}
-                  aria-describedby={errors.name ? "name-error" : undefined}
                 />
                 {errors.name && (
-                  <p
-                    id="name-error"
-                    className="mt-1 font-body text-sm text-accent-orange"
-                    role="alert"
-                  >
+                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
                     {errors.name.message}
                   </p>
                 )}
               </div>
 
-              {/* Email */}
               <div>
                 <label
                   htmlFor="email"
@@ -167,20 +196,14 @@ export default function ContactPageClient() {
                   className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
                   placeholder="your.email@example.com"
                   aria-invalid={errors.email ? "true" : "false"}
-                  aria-describedby={errors.email ? "email-error" : undefined}
                 />
                 {errors.email && (
-                  <p
-                    id="email-error"
-                    className="mt-1 font-body text-sm text-accent-orange"
-                    role="alert"
-                  >
+                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
                     {errors.email.message}
                   </p>
                 )}
               </div>
 
-              {/* Company */}
               <div>
                 <label
                   htmlFor="company"
@@ -197,44 +220,35 @@ export default function ContactPageClient() {
                 />
               </div>
 
-              {/* Interest Dropdown */}
               <div>
                 <label
                   htmlFor="interest"
                   className="mb-2 block font-body text-sm font-medium text-white"
                 >
-                  I'm interested in: <span className="text-accent-orange">*</span>
+                  I&apos;m interested in: <span className="text-accent-orange">*</span>
                 </label>
                 <select
                   id="interest"
                   {...register("interest", {
                     required: "Please select an option",
                   })}
-                  className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20 min-h-[44px]"
+                  className="min-h-[44px] w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
                   aria-invalid={errors.interest ? "true" : "false"}
-                  aria-describedby={
-                    errors.interest ? "interest-error" : undefined
-                  }
                 >
                   <option value="">Select an option</option>
-                  {interestOptions.map((option) => (
+                  {page.form.interestOptions.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
                   ))}
                 </select>
                 {errors.interest && (
-                  <p
-                    id="interest-error"
-                    className="mt-1 font-body text-sm text-accent-orange"
-                    role="alert"
-                  >
+                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
                     {errors.interest.message}
                   </p>
                 )}
               </div>
 
-              {/* Message */}
               <div>
                 <label
                   htmlFor="message"
@@ -255,131 +269,153 @@ export default function ContactPageClient() {
                   className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
                   placeholder="Tell us about your inquiry..."
                   aria-invalid={errors.message ? "true" : "false"}
-                  aria-describedby={
-                    errors.message ? "message-error" : undefined
-                  }
                 />
                 {errors.message && (
-                  <p
-                    id="message-error"
-                    className="mt-1 font-body text-sm text-accent-orange"
-                    role="alert"
-                  >
+                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
                     {errors.message.message}
                   </p>
                 )}
               </div>
 
-              {/* Submit Button */}
               <motion.button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full rounded-full bg-accent-orange px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation min-h-[44px]"
-                whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
-                whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
+                disabled={isSubmitting || !hasFormEndpoint}
+                className="min-h-[44px] w-full rounded-full bg-accent-orange px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange disabled:cursor-not-allowed disabled:opacity-50 sm:px-8 sm:py-4 sm:text-lg"
+                whileHover={{ scale: isSubmitting || !hasFormEndpoint ? 1 : 1.05 }}
+                whileTap={{ scale: isSubmitting || !hasFormEndpoint ? 1 : 0.95 }}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    Sending...
+                    {page.form.sendingLabel}
                   </span>
                 ) : (
-                  "Send Message"
+                  page.form.submitLabel
                 )}
               </motion.button>
+
+              <AnimatePresence mode="wait">
+                {submitError ? (
+                  <motion.p
+                    key="error"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="flex items-center gap-2 text-sm text-red-300"
+                  >
+                    <AlertTriangle className="h-4 w-4" />
+                    {submitError}
+                  </motion.p>
+                ) : null}
+
+                {submitSuccess ? (
+                  <motion.p
+                    key="success"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="flex items-center gap-2 text-sm text-emerald-300"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    {submitSuccess}
+                  </motion.p>
+                ) : null}
+              </AnimatePresence>
+
+              {!hasFormEndpoint && !submitError && (
+                <p className="text-xs text-text-muted">
+                  Configure <code>CONTACT_FORM_ENDPOINT</code> to enable form submissions.
+                </p>
+              )}
             </form>
           </motion.div>
 
-          {/* Right - Direct Contact */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="mb-4 sm:mb-6 font-heading text-2xl sm:text-3xl font-bold md:text-4xl">
-              Direct Contact
+            <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
+              {page.direct.title}
             </h2>
             <div className="space-y-6 sm:space-y-8">
-              {/* Email */}
               <div>
                 <div className="mb-3 flex items-center gap-3">
                   <div className="rounded-lg bg-accent-orange/10 p-2">
-                    <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-accent-orange" />
+                    <Mail className="h-4 w-4 text-accent-orange sm:h-5 sm:w-5" />
                   </div>
-                  <h3 className="font-heading text-base sm:text-lg font-semibold text-white">
+                  <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
                     Email
                   </h3>
                 </div>
                 <a
-                  href="mailto:hello@weareluckystudios.com"
-                  className="font-body text-sm sm:text-base text-text-secondary transition-colors hover:text-accent-orange"
+                  href={`mailto:${page.direct.email}`}
+                  className="font-body text-sm text-text-secondary transition-colors hover:text-accent-orange sm:text-base"
                 >
-                  hello@weareluckystudios.com
+                  {page.direct.email}
                 </a>
               </div>
 
-              {/* Address */}
               <div>
                 <div className="mb-3 flex items-center gap-3">
                   <div className="rounded-lg bg-accent-purple/10 p-2">
-                    <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-accent-purple" />
+                    <MapPin className="h-4 w-4 text-accent-purple sm:h-5 sm:w-5" />
                   </div>
-                  <h3 className="font-heading text-base sm:text-lg font-semibold text-white">
+                  <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
                     Address
                   </h3>
                 </div>
-                <p className="font-body text-sm sm:text-base text-text-secondary">
-                  London Bridge
-                  <br />
-                  London, UK
+                <p className="font-body text-sm text-text-secondary sm:text-base">
+                  {page.direct.addressLines.map((line, index) => (
+                    <span key={`${line}-${index}`}>
+                      {line}
+                      {index < page.direct.addressLines.length - 1 ? <br /> : null}
+                    </span>
+                  ))}
                 </p>
               </div>
 
-              {/* Calendly Embed */}
               <div>
                 <div className="mb-3 flex items-center gap-3">
                   <div className="rounded-lg bg-accent-cyan/10 p-2">
-                    <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-accent-cyan" />
+                    <Calendar className="h-4 w-4 text-accent-cyan sm:h-5 sm:w-5" />
                   </div>
-                  <h3 className="font-heading text-base sm:text-lg font-semibold text-white">
-                    Book a Call
+                  <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
+                    {page.direct.bookCallTitle}
                   </h3>
                 </div>
-                <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 sm:p-6 backdrop-blur-sm">
-                  <p className="mb-4 font-body text-xs sm:text-sm text-text-muted">
-                    Calendly booking widget will be embedded here
+                <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm sm:p-6">
+                  <p className="mb-4 font-body text-xs text-text-muted sm:text-sm">
+                    {page.direct.bookCallHint}
                   </p>
-                  <motion.button
-                    className="w-full rounded-full border-2 border-accent-cyan bg-transparent px-4 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation min-h-[44px]"
+                  <motion.a
+                    href={bookingHref}
+                    target={bookingTarget}
+                    rel={bookingRel}
+                    className="flex min-h-[44px] w-full items-center justify-center rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan sm:px-6 sm:py-3 sm:text-sm"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    Schedule a Meeting
-                  </motion.button>
+                    {page.direct.bookCallButton}
+                  </motion.a>
                 </div>
               </div>
 
-              {/* Social Links */}
               <div>
-                <h3 className="mb-3 sm:mb-4 font-heading text-base sm:text-lg font-semibold text-white">
+                <h3 className="mb-3 font-heading text-base font-semibold text-white sm:mb-4 sm:text-lg">
                   Follow Us
                 </h3>
-                <div className="flex gap-3 sm:gap-4">
-                  {[
-                    { icon: Twitter, href: "#", label: "Twitter" },
-                    { icon: Instagram, href: "#", label: "Instagram" },
-                    { icon: Linkedin, href: "#", label: "LinkedIn" },
-                    { icon: Youtube, href: "#", label: "YouTube" },
-                  ].map((social) => {
-                    const Icon = social.icon;
+                <div className="flex flex-wrap gap-3 sm:gap-4">
+                  {page.direct.socials.map((social) => {
+                    const Icon = getSocialIcon(social.label);
                     return (
                       <motion.a
-                        key={social.label}
+                        key={`${social.label}-${social.href}`}
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full border border-background-tertiary bg-background-secondary/50 p-2.5 sm:p-3 text-text-secondary transition-all duration-300 hover:border-accent-orange hover:text-accent-orange hover:glow-orange touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center"
+                        className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-background-tertiary bg-background-secondary/50 p-2.5 text-text-secondary transition-all duration-300 hover:border-accent-orange hover:text-accent-orange hover:glow-orange sm:p-3"
                         whileHover={{ scale: 1.1, y: -2 }}
                         whileTap={{ scale: 0.9 }}
                         aria-label={social.label}
@@ -395,7 +431,6 @@ export default function ContactPageClient() {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="relative mx-auto max-w-4xl px-4 pb-24 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -403,13 +438,13 @@ export default function ContactPageClient() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-8 sm:mb-12 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Frequently Asked <span className="text-gradient-accent">Questions</span>
+          <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
+            {page.faq.titleLead} <span className="text-gradient-accent">{page.faq.titleAccent}</span>
           </h2>
           <div className="space-y-3 sm:space-y-4">
-            {faqs.map((faq, index) => (
+            {page.faq.items.map((faq, index) => (
               <motion.div
-                key={index}
+                key={`${faq.question}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -420,7 +455,7 @@ export default function ContactPageClient() {
                   onClick={() =>
                     setExpandedFaq(expandedFaq === index ? null : index)
                   }
-                  className="flex w-full items-center justify-between p-5 sm:p-6 text-left font-heading text-base sm:text-lg font-semibold text-white transition-colors hover:text-accent-orange touch-manipulation min-h-[44px]"
+                  className="flex min-h-[44px] w-full items-center justify-between p-5 text-left font-heading text-base font-semibold text-white transition-colors hover:text-accent-orange sm:p-6 sm:text-lg"
                   aria-expanded={expandedFaq === index}
                   aria-controls={`faq-answer-${index}`}
                 >
@@ -444,8 +479,8 @@ export default function ContactPageClient() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-5 sm:px-6 pb-5 sm:pb-6">
-                        <p className="font-body text-sm sm:text-base text-text-secondary">
+                      <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+                        <p className="font-body text-sm text-text-secondary sm:text-base">
                           {faq.answer}
                         </p>
                       </div>
@@ -460,4 +495,3 @@ export default function ContactPageClient() {
     </main>
   );
 }
-

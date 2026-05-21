@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 import Logo from "@/components/ui/Logo";
+import { site } from "@/lib/data/site";
 
-const footerNav = [
+const DEFAULT_FOOTER_NAV = [
   { name: "Our Shows", href: "/shows" },
   { name: "For Creators", href: "/creators" },
   { name: "For Brands", href: "/brands" },
@@ -12,18 +13,50 @@ const footerNav = [
   { name: "About", href: "/about" },
 ];
 
-const contactInfo = [
-  { label: "Email", value: "hello@weareluckystudios.com", href: "mailto:hello@weareluckystudios.com" },
-];
+interface FooterProps {
+  links?: Array<{ name: string; href: string }>;
+  email?: string;
+  phone?: string;
+  socials?: {
+    x?: string;
+    instagram?: string;
+    linkedin?: string;
+    youtube?: string;
+  };
+  badgePrefix?: string;
+  badgeHighlight?: string;
+  copyrightText?: string;
+}
 
-const socialLinks = [
-  { name: "Twitter", icon: Twitter, href: "#" },
-  { name: "Instagram", icon: Instagram, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
-  { name: "YouTube", icon: Youtube, href: "#" },
-];
+export default function Footer({
+  links = DEFAULT_FOOTER_NAV,
+  email = site.email,
+  phone = site.phone,
+  socials = site.socials,
+  badgePrefix = "Part of",
+  badgeHighlight = "Socially Powerful",
+  copyrightText = "© 2026 Lucky Studios. All rights reserved.",
+}: FooterProps) {
+  const contactInfo = [
+    {
+      label: "Email",
+      value: email,
+      href: `mailto:${email}`,
+    },
+    {
+      label: "Phone",
+      value: phone,
+      href: `tel:${phone.replace(/\s+/g, "")}`,
+    },
+  ];
 
-export default function Footer() {
+  const socialLinks = [
+    { name: "Twitter", icon: Twitter, href: socials.x || "" },
+    { name: "Instagram", icon: Instagram, href: socials.instagram || "" },
+    { name: "LinkedIn", icon: Linkedin, href: socials.linkedin || "" },
+    { name: "YouTube", icon: Youtube, href: socials.youtube || "" },
+  ].filter((item) => item.href && item.href.trim().length > 0);
+
   return (
     <footer className="relative border-t border-background-tertiary bg-background">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -50,7 +83,7 @@ export default function Footer() {
               Navigation
             </h3>
             <ul className="space-y-3">
-              {footerNav.map((link) => (
+              {links.map((link) => (
                 <li key={link.name}>
                   <a
                     href={link.href}
@@ -129,8 +162,8 @@ export default function Footer() {
               className="rounded-full border border-accent-purple/30 bg-background-secondary px-4 py-2"
             >
               <span className="font-body text-xs font-medium text-text-secondary">
-                Part of{" "}
-                <span className="text-accent-purple">Socially Powerful</span>
+                {badgePrefix}{" "}
+                <span className="text-accent-purple">{badgeHighlight}</span>
               </span>
             </motion.div>
             <motion.p
@@ -140,7 +173,7 @@ export default function Footer() {
               transition={{ duration: 0.5 }}
               className="font-body text-sm text-text-muted"
             >
-              © 2026 Lucky Studios. All rights reserved.
+              {copyrightText}
             </motion.p>
           </div>
         </div>

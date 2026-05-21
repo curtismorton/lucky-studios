@@ -6,14 +6,24 @@ import { type Episode } from "@/lib/data/shows";
 import { type Show } from "@/lib/data/shows";
 import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
 import { formatDuration } from "@/lib/utils/duration";
+import { type SpotifyEpisode } from "@/lib/services/spotify";
 
 interface ShowEpisodesProps {
   episodes?: Episode[]; // Fallback episodes from static data
   show: Show; // Show object to get Spotify ID
+  spotifyEpisodes?: SpotifyEpisode[];
 }
 
-export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowEpisodesProps) {
-  const { episodes: spotifyEpisodes, loading } = useSpotifyShow(show.spotifyShowId);
+export default function ShowEpisodes({
+  episodes: fallbackEpisodes,
+  show,
+  spotifyEpisodes: preloadedSpotifyEpisodes,
+}: ShowEpisodesProps) {
+  const shouldFetchSpotify = !preloadedSpotifyEpisodes && Boolean(show.spotifyShowId);
+  const { episodes: fetchedSpotifyEpisodes, loading } = useSpotifyShow(
+    shouldFetchSpotify ? show.spotifyShowId : undefined
+  );
+  const spotifyEpisodes = preloadedSpotifyEpisodes || fetchedSpotifyEpisodes;
   
   // Use Spotify episodes if available, otherwise fall back to static episodes
   const episodes = spotifyEpisodes.length > 0 
@@ -27,7 +37,7 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
       }))
     : fallbackEpisodes || [];
 
-  if (loading && !fallbackEpisodes?.length) {
+  if (shouldFetchSpotify && loading && !fallbackEpisodes?.length) {
     return (
       <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center text-text-secondary">Loading episodes...</div>
@@ -104,4 +114,3 @@ export default function ShowEpisodes({ episodes: fallbackEpisodes, show }: ShowE
     </section>
   );
 }
-

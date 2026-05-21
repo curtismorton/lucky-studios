@@ -55,7 +55,7 @@ export default function HeroSignalHorizon({
       className={`pointer-events-none absolute inset-x-0 bottom-0 z-0 ${className}`}
     >
       <div className="relative h-44 md:h-56">
-        <div className="absolute inset-0 bg-gradient-to-t from-background/92 via-background/34 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/38 via-background/14 to-transparent" />
 
         <div
           className="absolute inset-0"
@@ -145,4 +145,3 @@ export default function HeroSignalHorizon({
     </div>
   );
 }
-

@@ -1,15 +1,23 @@
-# Hero Image Assets
+## Hero Asset Notes
 
-Imported and optimized from `/Users/Curtis/Desktop/Studio Pictures/`:
+Current homepage hero defaults:
 
-- `hero-1682-2.jpg` (from `IMG_1682 2`)
-- `hero-1980.jpg` (from `IMG_1980`)
-- `hero-2104-copy.jpg` (from `IMG_2104 copy`)
-- `hero-2104.jpg` (from `IMG_2104`)
-- `hero-2171-copy.jpg` (from `IMG_2171 copy`)
-- `hero-2171.jpg` (from `IMG_2171`)
-- `hero-2771-2.jpg` (from `IMG_2771 2`)
-- `hero-2771-3.jpg` (from `IMG_2771 3`)
-- `hero-2771.jpg` (from `IMG_2771`)
+- Main background: `hero-main-our-pic.jpg`
+- Accent fallback: `hero-2104-copy.jpg`
 
-These are used by the hero background rotation and the photo stack accents.
+Transformation slider defaults:
+
+- Back Post raw: `hero-2771.jpg`
+- Back Post polished: `hero-2771-3.jpg`
+- DGMS raw: `hero-2171.jpg`
+- DGMS polished: `hero-2104-copy.jpg`
+
+If you replace any file, keep the same filename or update:
+
+- `/Users/Curtis/DEV/Lucky Studios/lib/data/homepageContent.ts`
+
+Before deploy, validate references:
+
+```bash
+npm run check:launch
+```

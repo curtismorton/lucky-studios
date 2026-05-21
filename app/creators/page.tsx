@@ -1,29 +1,26 @@
-import { Metadata } from "next";
 import CreatorsPageClient from "./CreatorsPageClient";
+import { getMarketingPagesContent } from "@/lib/services/marketingCms";
+import { buildPageMetadata } from "@/lib/services/cms/seo";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
-export const metadata: Metadata = {
-  title: "For Creators",
-  description:
-    "Join Lucky Studios podcast network. Grow your audience with production support, cross-promotion to 1.1M+ viewers, and revenue sharing.",
-  keywords: [
-    "podcast network",
-    "join podcast network",
-    "podcast creator",
-    "podcast production",
-    "podcast partnership",
-  ],
-  openGraph: {
-    title: "For Creators | Lucky Studios",
-    description:
-      "Join London's fastest-growing podcast network. Production support, cross-promotion, and revenue sharing.",
-    type: "website",
-    url: "https://luckystudios.com/creators",
-  },
-};
-
-export default function CreatorsPage() {
-  return <CreatorsPageClient />;
+export async function generateMetadata() {
+  return buildPageMetadata({
+    path: "/creators",
+    fallbackTitle: "For Creators | Lucky Studios",
+    fallbackDescription:
+      "Join Lucky Studios podcast network. Grow your audience with production support, cross-promotion to 1.1M+ viewers, and revenue sharing.",
+    fallbackKeywords: [
+      "podcast network",
+      "join podcast network",
+      "podcast creator",
+      "podcast production",
+      "podcast partnership",
+    ],
+  });
 }
 
+export default async function CreatorsPage() {
+  const content = await getMarketingPagesContent();
+  return <CreatorsPageClient content={content.creators} />;
+}

@@ -104,7 +104,7 @@ export default function Pathways() {
               Who We Work With
             </h2>
             <p className="mx-auto max-w-2xl font-body text-lg text-text-secondary">
-              Whether you're a creator looking to launch your show or a brand seeking podcast partnerships, we've got you covered.
+              Whether you&rsquo;re a creator looking to launch your show or a brand seeking podcast partnerships, we&rsquo;ve got you covered.
             </p>
           </motion.div>
 

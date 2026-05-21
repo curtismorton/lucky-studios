@@ -1,42 +1,33 @@
-import { Metadata } from "next";
 import StudioPageClient from "./StudioPageClient";
 import { LocalBusinessSchema } from "@/components/seo/StructuredData";
+import { getMarketingPagesContent } from "@/lib/services/marketingCms";
+import { buildPageMetadata } from "@/lib/services/cms/seo";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
-export const metadata: Metadata = {
-  title: "The Studio",
-  description:
-    "Rent our professional podcast studio in London Bridge. Equipped with Sony A7 IV cameras, Shure SM7B mics, and full production support.",
-  keywords: [
-    "podcast studio London",
-    "studio rental London",
-    "London Bridge studio",
-    "podcast production studio",
-    "video podcast studio",
-    "Lucky Studios studio",
-  ],
-  openGraph: {
-    title: "The Studio | Lucky Studios",
-    description:
-      "Professional podcast studio in the heart of London. Book a tour or get a quote.",
-    type: "website",
-    url: "https://luckystudios.com/studio",
-    images: [
-      {
-        url: "https://luckystudios.com/og-image-studio.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Lucky Studios - Professional Podcast Studio in London",
-      },
+export async function generateMetadata() {
+  return buildPageMetadata({
+    path: "/studio",
+    fallbackTitle: "The Studio | Lucky Studios",
+    fallbackDescription:
+      "Rent our professional podcast studio in London Bridge. Equipped with Sony A7 IV cameras, Shure SM7B mics, and full production support.",
+    fallbackKeywords: [
+      "podcast studio London",
+      "studio rental London",
+      "London Bridge studio",
+      "podcast production studio",
+      "video podcast studio",
+      "Lucky Studios studio",
     ],
-  },
-};
+  });
+}
 
-export default function StudioPage() {
+export default async function StudioPage() {
+  const content = await getMarketingPagesContent();
+
   return (
     <>
-      <StudioPageClient />
+      <StudioPageClient content={content.studio} />
       <LocalBusinessSchema />
     </>
   );

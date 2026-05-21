@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { shows, type Show } from "@/lib/data/shows";
+import { type Show } from "@/lib/data/shows";
 import ShowCard from "@/components/shows/ShowCard";
+import { useSpotifyShows } from "@/lib/hooks/useSpotifyShows";
 
 type Category = "all" | "entertainment" | "football" | "lifestyle";
 
@@ -14,8 +15,12 @@ const categories: { id: Category; label: string }[] = [
   { id: "lifestyle", label: "Lifestyle" },
 ];
 
-export default function ShowsPageClient() {
+export default function ShowsPageClient({ shows }: { shows: Show[] }) {
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
+  const spotifyIds = shows
+    .map((show) => show.spotifyShowId)
+    .filter((id): id is string => Boolean(id));
+  const { showsById } = useSpotifyShows(spotifyIds);
 
   const filteredShows =
     selectedCategory === "all"
@@ -23,58 +28,66 @@ export default function ShowsPageClient() {
       : shows.filter((show) => show.genre === selectedCategory);
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen overflow-hidden bg-background">
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-12 sm:px-6 lg:px-8">
+        <div className="pointer-events-none absolute inset-x-4 top-24 h-64 rounded-[48px] bg-[radial-gradient(circle_at_20%_20%,rgba(245,158,11,0.26),transparent_34%),radial-gradient(circle_at_80%_0%,rgba(6,182,212,0.18),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] opacity-80 blur-3xl" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center"
+          className="relative text-center"
         >
-          <h1 className="mb-4 font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
-            Our <span className="text-gradient-accent">Shows</span>
+          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+            Lucky Studios Network
+          </p>
+          <h1 className="mx-auto mb-5 max-w-4xl font-heading text-4xl font-bold leading-none text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            Shows that look as sharp as they sound
           </h1>
-          <p className="font-body text-base sm:text-lg md:text-xl text-text-secondary">
-            Original content reaching millions
+          <p className="mx-auto max-w-2xl font-body text-base text-text-secondary sm:text-lg md:text-xl">
+            Original formats, polished covers, and creator-led series built for repeat listening.
           </p>
         </motion.div>
       </section>
 
       {/* Category Tabs */}
-      <section className="sticky top-20 z-40 mx-auto max-w-7xl border-b border-background-tertiary bg-background/80 backdrop-blur-md sm:px-6 lg:px-8">
-        <div className="flex justify-center overflow-x-auto px-4">
-          <div className="flex gap-1">
-            {categories.map((category) => {
-              const isActive = selectedCategory === category.id;
-              return (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className="relative px-4 sm:px-6 py-3 sm:py-4 font-body text-sm font-medium text-text-secondary transition-colors hover:text-white touch-manipulation min-h-[44px] flex items-center"
-                >
-                  {category.label}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-orange"
-                      initial={false}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                </button>
-              );
-            })}
+      <section className="sticky top-20 z-40 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-full border border-white/10 bg-black/35 backdrop-blur-md">
+          <div className="flex justify-center overflow-x-auto px-4">
+            <div className="flex gap-1">
+              {categories.map((category) => {
+                const isActive = selectedCategory === category.id;
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`relative flex min-h-[44px] touch-manipulation items-center rounded-full px-4 py-3 font-body text-sm font-medium transition-colors sm:px-6 ${
+                      isActive ? "text-background" : "text-text-secondary hover:text-white"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeTabPill"
+                        className="absolute inset-1 rounded-full bg-accent-orange"
+                        initial={false}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10">{category.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Shows Grid */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedCategory}
@@ -90,6 +103,7 @@ export default function ShowsPageClient() {
                 show={show}
                 index={index}
                 featured={show.featured}
+                spotifyShow={show.spotifyShowId ? showsById[show.spotifyShowId] : null}
               />
             ))}
           </motion.div>
@@ -110,4 +124,3 @@ export default function ShowsPageClient() {
     </main>
   );
 }
-

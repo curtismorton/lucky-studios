@@ -1,7 +1,10 @@
 import HomeClient from "./page-client";
+import { getHomepageContent } from "@/lib/services/homepageCms";
+import { getShows } from "@/lib/services/cms/shows";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
-export default function Home() {
-  return <HomeClient />;
+export default async function Home() {
+  const [content, shows] = await Promise.all([getHomepageContent(), getShows()]);
+  return <HomeClient content={content} shows={shows} />;
 }

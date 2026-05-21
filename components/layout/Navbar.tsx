@@ -9,7 +9,7 @@ import { buttonHover, buttonTap } from "@/lib/animations";
 import Logo from "@/components/ui/Logo";
 import { site } from "@/lib/data/site";
 
-const navLinks = [
+const DEFAULT_NAV_LINKS = [
   { name: "Our Shows", href: "/shows" },
   { name: "For Creators", href: "/creators" },
   { name: "For Brands", href: "/brands" },
@@ -17,12 +17,23 @@ const navLinks = [
   { name: "About", href: "/about" },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  links?: Array<{ name: string; href: string }>;
+  bookingHref?: string;
+  bookingLabel?: string;
+}
+
+export default function Navbar({
+  links = DEFAULT_NAV_LINKS,
+  bookingHref: bookingHrefProp,
+  bookingLabel = "Book a Call",
+}: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const bookingHref = site.calendlyUrl || "/contact";
-  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
-  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
+  const bookingHref = bookingHrefProp || site.calendlyUrl || "/contact";
+  const isExternalBooking = /^https?:\/\//i.test(bookingHref);
+  const bookingTarget = isExternalBooking ? "_blank" : undefined;
+  const bookingRel = isExternalBooking ? "noopener noreferrer" : undefined;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +47,7 @@ export default function Navbar() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
+        initial={false}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -52,7 +63,7 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex md:items-center md:gap-8">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <motion.div key={link.name} whileHover={{ y: -2 }}>
                   <Link
                     href={link.href}
@@ -70,7 +81,7 @@ export default function Navbar() {
                 whileHover={buttonHover}
                 whileTap={buttonTap}
               >
-                Book a Call
+                {bookingLabel}
               </motion.a>
             </div>
 
@@ -92,7 +103,9 @@ export default function Navbar() {
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        links={navLinks}
+        links={links}
+        bookingHref={bookingHref}
+        bookingLabel={bookingLabel}
       />
     </>
   );

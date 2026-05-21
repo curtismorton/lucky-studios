@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   Camera,
   Mic,
@@ -14,67 +15,97 @@ import {
   X,
   ArrowRight,
 } from "lucide-react";
+import { site } from "@/lib/data/site";
+import {
+  defaultMarketingPagesContent,
+  type StudioPageContent,
+} from "@/lib/data/marketingContent";
 
-export default function StudioPageClient() {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+interface StudioPageClientProps {
+  content?: StudioPageContent;
+}
 
-  const galleryImages = Array.from({ length: 6 }, (_, i) => i + 1);
+const equipmentIcons = [Camera, Mic, Video, Lightbulb] as const;
+const includedIcons = [Video, Coffee, Coffee, Wifi, Coffee, Download] as const;
+
+export default function StudioPageClient({ content }: StudioPageClientProps) {
+  const page = content || defaultMarketingPagesContent.studio;
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+
+  const galleryImages = useMemo(
+    () => page.gallery.images.filter((entry) => entry.trim().length > 0),
+    [page.gallery.images]
+  );
+
+  const bookingHref = site.calendlyUrl || "/contact";
+  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
+  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
 
   return (
     <main className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="flex flex-col justify-center"
           >
-            <h1 className="mb-4 sm:mb-6 font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
-              The <span className="text-gradient-accent">Studio</span>
+            <h1 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
+              {page.hero.titleLead} <span className="text-gradient-accent">{page.hero.titleAccent}</span>
             </h1>
-            <p className="mb-4 sm:mb-6 font-body text-base sm:text-lg md:text-xl text-text-secondary">
-              Professional podcast studio in the heart of London
+            <p className="mb-4 font-body text-base text-text-secondary sm:mb-6 sm:text-lg md:text-xl">
+              {page.hero.subtitle}
             </p>
             <div className="mb-6 sm:mb-8">
-              <span className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-accent-cyan">
+              <span className="inline-flex items-center gap-2 rounded-full border border-accent-cyan/30 bg-accent-cyan/10 px-3 py-1.5 text-xs font-medium text-accent-cyan sm:px-4 sm:py-2 sm:text-sm">
                 <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-                5 mins from London Bridge Station
+                {page.hero.locationBadge}
               </span>
             </div>
             <div className="flex flex-wrap gap-3 sm:gap-4">
-              <motion.button
-                className="rounded-full bg-accent-cyan px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation min-h-[44px]"
+              <motion.a
+                href={bookingHref}
+                target={bookingTarget}
+                rel={bookingRel}
+                className="min-h-[44px] rounded-full bg-accent-cyan px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Book a Tour
-              </motion.button>
-              <motion.button
-                className="rounded-full border-2 border-accent-cyan bg-transparent px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation min-h-[44px]"
+                {page.hero.primaryCtaLabel}
+              </motion.a>
+              <motion.a
+                href="/contact"
+                className="min-h-[44px] rounded-full border-2 border-accent-cyan bg-transparent px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Get a Quote
-              </motion.button>
+                {page.hero.secondaryCtaLabel}
+              </motion.a>
             </div>
           </motion.div>
 
-          {/* Studio Image Placeholder */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl sm:rounded-3xl"
           >
-            <div className="h-full w-full bg-gradient-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
+            {page.hero.heroImage ? (
+              <Image
+                src={page.hero.heroImage}
+                alt={page.hero.heroImageAlt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            ) : (
+              <div className="h-full w-full bg-gradient-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
+            )}
           </motion.div>
         </div>
       </section>
 
-      {/* Gallery */}
       <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -82,41 +113,52 @@ export default function StudioPageClient() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-8 sm:mb-12 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Studio <span className="text-gradient-accent">Gallery</span>
+          <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
+            {page.gallery.titleLead} <span className="text-gradient-accent">{page.gallery.titleAccent}</span>
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
-            {galleryImages.map((image, index) => (
-              <motion.button
-                key={image}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onClick={() => setSelectedImage(image)}
-                className="group relative aspect-square overflow-hidden rounded-xl sm:rounded-2xl touch-manipulation"
-                aria-label={`View studio image ${index + 1}`}
-              >
-                <div className="h-full w-full bg-gradient-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20 transition-transform duration-300 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
-              </motion.button>
-            ))}
+            {(galleryImages.length > 0 ? galleryImages : Array.from({ length: 6 }).map(() => "")).map(
+              (imageSrc, index) => (
+                <motion.button
+                  key={`${imageSrc || "placeholder"}-${index}`}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  onClick={() => setSelectedImageIndex(index)}
+                  className="group relative aspect-square overflow-hidden rounded-xl touch-manipulation sm:rounded-2xl"
+                  aria-label={`View studio image ${index + 1}`}
+                >
+                  {imageSrc ? (
+                    <Image
+                      src={imageSrc}
+                      alt={`Studio gallery image ${index + 1}`}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-gradient-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20 transition-transform duration-300 group-hover:scale-110" />
+                  )}
+                  <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
+                </motion.button>
+              )
+            )}
           </div>
         </motion.div>
 
-        {/* Lightbox */}
         <AnimatePresence>
-          {selectedImage !== null && (
+          {selectedImageIndex !== null && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
-              onClick={() => setSelectedImage(null)}
+              onClick={() => setSelectedImageIndex(null)}
             >
               <motion.button
-                className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center text-white rounded-full bg-white/10 hover:bg-white/20 transition-colors touch-manipulation"
-                onClick={() => setSelectedImage(null)}
+                className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 touch-manipulation"
+                onClick={() => setSelectedImageIndex(null)}
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 aria-label="Close lightbox"
@@ -128,16 +170,27 @@ export default function StudioPageClient() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 className="relative max-h-[90vh] max-w-4xl"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
               >
-                <div className="aspect-video w-full overflow-hidden rounded-2xl bg-gradient-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
+                <div className="aspect-video w-full overflow-hidden rounded-2xl">
+                  {galleryImages[selectedImageIndex] ? (
+                    <Image
+                      src={galleryImages[selectedImageIndex]}
+                      alt={`Studio gallery lightbox ${selectedImageIndex + 1}`}
+                      width={1280}
+                      height={720}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-gradient-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
+                  )}
+                </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </section>
 
-      {/* Equipment Grid */}
       <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -145,49 +198,28 @@ export default function StudioPageClient() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-8 sm:mb-12 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Professional <span className="text-gradient-accent">Equipment</span>
+          <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
+            {page.equipment.titleLead} <span className="text-gradient-accent">{page.equipment.titleAccent}</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-            {[
-              {
-                icon: Camera,
-                title: "3x Sony A7 IV",
-                description: "4K cameras for multi-angle recording",
-              },
-              {
-                icon: Mic,
-                title: "Shure SM7B",
-                description: "Professional broadcast microphones",
-              },
-              {
-                icon: Video,
-                title: "ATEM Mini Pro ISO",
-                description: "Live production switcher with ISO recording",
-              },
-              {
-                icon: Lightbulb,
-                title: "Professional LED Lighting",
-                description: "Full studio lighting setup",
-              },
-            ].map((item, index) => {
-              const Icon = item.icon;
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+            {page.equipment.items.map((item, index) => {
+              const Icon = equipmentIcons[index % equipmentIcons.length];
               return (
                 <motion.div
-                  key={item.title}
+                  key={`${item.title}-${index}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 sm:p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50"
+                  className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 sm:p-6"
                 >
                   <div className="mb-4 inline-flex rounded-xl bg-accent-cyan/10 p-2.5 sm:p-3">
-                    <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-accent-cyan" />
+                    <Icon className="h-5 w-5 text-accent-cyan sm:h-6 sm:w-6" />
                   </div>
-                  <h3 className="mb-2 font-heading text-lg sm:text-xl font-semibold text-white">
+                  <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:text-xl">
                     {item.title}
                   </h3>
-                  <p className="font-body text-xs sm:text-sm text-text-secondary">
+                  <p className="font-body text-xs text-text-secondary sm:text-sm">
                     {item.description}
                   </p>
                 </motion.div>
@@ -197,7 +229,6 @@ export default function StudioPageClient() {
         </motion.div>
       </section>
 
-      {/* What's Included */}
       <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -205,35 +236,26 @@ export default function StudioPageClient() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-6 sm:mb-8 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            What's <span className="text-gradient-accent">Included</span>
+          <h2 className="mb-6 text-center font-heading text-3xl font-bold sm:mb-8 sm:text-4xl md:text-5xl">
+            {page.included.titleLead} <span className="text-gradient-accent">{page.included.titleAccent}</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-            {[
-              { icon: Video, text: "On-site technical support" },
-              { icon: Coffee, text: "Makeup room" },
-              { icon: Coffee, text: "Green room" },
-              { icon: Wifi, text: "High-speed WiFi" },
-              { icon: Coffee, text: "Refreshments" },
-              { icon: Download, text: "Same-day file transfer" },
-            ].map((item, index) => {
-              const Icon = item.icon;
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            {page.included.items.map((item, index) => {
+              const Icon = includedIcons[index % includedIcons.length];
               return (
                 <motion.div
-                  key={item.text}
+                  key={`${item}-${index}`}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex items-center gap-3 sm:gap-4 rounded-2xl border border-background-tertiary bg-background-secondary/50 p-4 backdrop-blur-sm min-h-[60px]"
+                  className="flex min-h-[60px] items-center gap-3 rounded-2xl border border-background-tertiary bg-background-secondary/50 p-4 backdrop-blur-sm sm:gap-4"
                 >
-                  <div className="flex-shrink-0">
-                    <div className="rounded-lg bg-accent-cyan/10 p-2">
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-accent-cyan" />
-                    </div>
+                  <div className="flex-shrink-0 rounded-lg bg-accent-cyan/10 p-2">
+                    <Icon className="h-4 w-4 text-accent-cyan sm:h-5 sm:w-5" />
                   </div>
-                  <span className="font-body text-sm sm:text-base text-text-secondary">
-                    {item.text}
+                  <span className="font-body text-sm text-text-secondary sm:text-base">
+                    {item}
                   </span>
                 </motion.div>
               );
@@ -242,7 +264,6 @@ export default function StudioPageClient() {
         </motion.div>
       </section>
 
-      {/* Booking Options */}
       <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -250,50 +271,34 @@ export default function StudioPageClient() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-8 sm:mb-12 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Booking <span className="text-gradient-accent">Options</span>
+          <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
+            {page.booking.titleLead} <span className="text-gradient-accent">{page.booking.titleAccent}</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              {
-                title: "Half Day",
-                duration: "4 hours",
-                description: "Perfect for single episode recordings",
-              },
-              {
-                title: "Full Day",
-                duration: "8 hours",
-                description: "Ideal for multiple episodes or longer formats",
-              },
-              {
-                title: "Custom/Ongoing",
-                duration: "Contact us",
-                description: "Regular bookings? Let's discuss your needs",
-              },
-            ].map((option, index) => (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+            {page.booking.options.map((option, index) => (
               <motion.div
-                key={option.title}
+                key={`${option.title}-${index}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 sm:p-8 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50"
+                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 sm:p-8"
               >
-                <h3 className="mb-2 font-heading text-xl sm:text-2xl font-bold text-white">
+                <h3 className="mb-2 font-heading text-xl font-bold text-white sm:text-2xl">
                   {option.title}
                 </h3>
-                <p className="mb-3 sm:mb-4 font-heading text-lg sm:text-xl font-semibold text-accent-cyan">
+                <p className="mb-3 font-heading text-lg font-semibold text-accent-cyan sm:mb-4 sm:text-xl">
                   {option.duration}
                 </p>
-                <p className="mb-4 sm:mb-6 font-body text-sm sm:text-base text-text-secondary">
+                <p className="mb-4 font-body text-sm text-text-secondary sm:mb-6 sm:text-base">
                   {option.description}
                 </p>
                 <motion.button
-                  className="w-full rounded-full border-2 border-accent-cyan bg-transparent px-4 sm:px-6 py-2.5 sm:py-3 font-heading text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation min-h-[44px]"
+                  className="w-full min-h-[44px] rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {option.title === "Custom/Ongoing" ? "Get Quote" : "Book Now"}
+                  {option.ctaLabel}
                 </motion.button>
               </motion.div>
             ))}
@@ -303,19 +308,16 @@ export default function StudioPageClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-6 sm:mt-8 rounded-2xl border border-accent-purple/30 bg-accent-purple/10 p-4 sm:p-6 text-center"
+            className="mt-6 rounded-2xl border border-accent-purple/30 bg-accent-purple/10 p-4 text-center sm:mt-8 sm:p-6"
           >
-            <p className="font-body text-xs sm:text-sm text-text-secondary">
-              <span className="font-semibold text-accent-purple">
-                Network members
-              </span>{" "}
-              get priority booking and exclusive discounts
+            <p className="font-body text-xs text-text-secondary sm:text-sm">
+              <span className="font-semibold text-accent-purple">{page.booking.memberNotePrefix}</span>{" "}
+              {page.booking.memberNoteText}
             </p>
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Location */}
       <section className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -323,42 +325,39 @@ export default function StudioPageClient() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-8 sm:mb-12 text-center font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-            Find <span className="text-gradient-accent">Us</span>
+          <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
+            {page.location.titleLead} <span className="text-gradient-accent">{page.location.titleAccent}</span>
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
-            {/* Map Placeholder */}
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
               <div className="h-full w-full bg-gradient-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <p className="font-body text-xs sm:text-sm text-text-muted">
-                  Map integration placeholder
-                </p>
+                <p className="font-body text-xs text-text-muted sm:text-sm">{page.location.mapLabel}</p>
               </div>
             </div>
 
-            {/* Address & Transport */}
             <div className="flex flex-col justify-center">
               <div className="mb-4 sm:mb-6">
-                <h3 className="mb-3 sm:mb-4 font-heading text-xl sm:text-2xl font-semibold text-white">
+                <h3 className="mb-3 font-heading text-xl font-semibold text-white sm:mb-4 sm:text-2xl">
                   Address
                 </h3>
-                <p className="font-body text-sm sm:text-base text-text-secondary">
-                  Lucky Studios
-                  <br />
-                  London Bridge
-                  <br />
-                  London, UK
+                <p className="font-body text-sm text-text-secondary sm:text-base">
+                  {page.location.addressLines.map((line, index) => (
+                    <span key={`${line}-${index}`}>
+                      {line}
+                      {index < page.location.addressLines.length - 1 ? <br /> : null}
+                    </span>
+                  ))}
                 </p>
               </div>
               <div>
-                <h3 className="mb-3 sm:mb-4 font-heading text-xl sm:text-2xl font-semibold text-white">
+                <h3 className="mb-3 font-heading text-xl font-semibold text-white sm:mb-4 sm:text-2xl">
                   Transport
                 </h3>
-                <ul className="space-y-2 font-body text-sm sm:text-base text-text-secondary">
-                  <li>🚇 London Bridge Station (5 min walk)</li>
-                  <li>🚇 Borough Station (7 min walk)</li>
-                  <li>🚌 Multiple bus routes nearby</li>
+                <ul className="space-y-2 font-body text-sm text-text-secondary sm:text-base">
+                  {page.location.transportLines.map((line, index) => (
+                    <li key={`${line}-${index}`}>{line}</li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -366,35 +365,37 @@ export default function StudioPageClient() {
         </motion.div>
       </section>
 
-      {/* Final CTA */}
       <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:p-12 text-center"
+          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
-            <h2 className="mb-4 sm:mb-6 font-heading text-3xl sm:text-4xl font-bold md:text-5xl">
-              Ready to <span className="text-gradient-accent">Create</span>?
+            <h2 className="mb-4 font-heading text-3xl font-bold sm:mb-6 sm:text-4xl md:text-5xl">
+              {page.cta.titleLead} <span className="text-gradient-accent">{page.cta.titleAccent}</span>?
             </h2>
-            <p className="mb-6 sm:mb-8 font-body text-base sm:text-lg text-text-secondary">
-              Book a tour or schedule your recording session
+            <p className="mb-6 font-body text-base text-text-secondary sm:mb-8 sm:text-lg">
+              {page.cta.subtitle}
             </p>
-            <div className="mx-auto max-w-2xl rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 sm:p-8 backdrop-blur-sm">
-              <p className="mb-4 font-body text-xs sm:text-sm text-text-muted">
-                Calendly booking widget will be embedded here
+            <div className="mx-auto max-w-2xl rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm sm:p-8">
+              <p className="mb-4 font-body text-xs text-text-muted sm:text-sm">
+                {page.cta.widgetHint}
               </p>
-              <motion.button
-                className="inline-flex items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 sm:px-8 sm:py-4 font-heading text-base sm:text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation min-h-[44px]"
+              <motion.a
+                href={bookingHref}
+                target={bookingTarget}
+                rel={bookingRel}
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Schedule a Call
+                {page.cta.buttonLabel}
                 <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-              </motion.button>
+              </motion.a>
             </div>
           </div>
         </motion.div>
@@ -402,4 +403,3 @@ export default function StudioPageClient() {
     </main>
   );
 }
-

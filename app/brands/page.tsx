@@ -1,28 +1,26 @@
-import { Metadata } from "next";
 import BrandsPageClient from "./BrandsPageClient";
+import { getMarketingPagesContent } from "@/lib/services/marketingCms";
+import { buildPageMetadata } from "@/lib/services/cms/seo";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
-export const metadata: Metadata = {
-  title: "For Brands",
-  description:
-    "Partner with Lucky Studios to reach engaged podcast audiences. Sponsor shows or create branded podcasts. 1.1M+ monthly listeners.",
-  keywords: [
-    "podcast sponsorship",
-    "branded podcast",
-    "podcast advertising",
-    "podcast marketing",
-    "podcast partnership",
-  ],
-  openGraph: {
-    title: "For Brands | Lucky Studios",
-    description:
-      "Reach engaged audiences through podcast partnerships. Sponsor shows or create branded content.",
-    type: "website",
-    url: "https://luckystudios.com/brands",
-  },
-};
+export async function generateMetadata() {
+  return buildPageMetadata({
+    path: "/brands",
+    fallbackTitle: "For Brands | Lucky Studios",
+    fallbackDescription:
+      "Partner with Lucky Studios to reach engaged podcast audiences. Sponsor shows or create branded podcasts. 1.1M+ monthly listeners.",
+    fallbackKeywords: [
+      "podcast sponsorship",
+      "branded podcast",
+      "podcast advertising",
+      "podcast marketing",
+      "podcast partnership",
+    ],
+  });
+}
 
-export default function BrandsPage() {
-  return <BrandsPageClient />;
+export default async function BrandsPage() {
+  const content = await getMarketingPagesContent();
+  return <BrandsPageClient content={content.brands} />;
 }

@@ -1,9 +1,9 @@
 import { MetadataRoute } from "next";
-import { shows } from "@/lib/data/shows";
-import { site } from "@/lib/data/site";
+import { getShows } from "@/lib/services/cms/shows";
+import { getSiteUrl } from "@/lib/services/cms/siteSettings";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = site.url;
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [baseUrl, shows] = await Promise.all([getSiteUrl(), getShows()]);
 
   const routes = [
     "",
