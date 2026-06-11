@@ -1,5 +1,5 @@
 import DoorPage from "@/components/marketing/DoorPage";
-import { brandsPage } from "@/lib/content/brands";
+import { getCmsRuntimePayload } from "@/lib/cms/runtime";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
 import { getSiteSettings } from "@/lib/services/cms/siteSettings";
 import { resolveConsultationHref } from "@/lib/utils/consultationHref";
@@ -23,7 +23,10 @@ export async function generateMetadata() {
 }
 
 export default async function BrandsPage() {
-  const siteSettings = await getSiteSettings();
+  const [pages, siteSettings] = await Promise.all([
+    getCmsRuntimePayload("marketing-pages"),
+    getSiteSettings(),
+  ]);
   const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
-  return <DoorPage content={brandsPage} consultationHref={consultationHref} />;
+  return <DoorPage content={pages.brands} consultationHref={consultationHref} />;
 }

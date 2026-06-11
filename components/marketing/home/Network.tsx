@@ -3,9 +3,14 @@ import Reveal from "@/components/cinema/Reveal";
 import Slate from "@/components/cinema/Slate";
 import ShowPoster from "@/components/marketing/ShowPoster";
 import type { Show } from "@/lib/data/shows";
-import { network } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function Network({ shows }: { shows: Show[] }) {
+type NetworkProps = {
+  shows: Show[];
+  content: HomeContent["network"];
+};
+
+export default function Network({ shows, content: network }: NetworkProps) {
   const lineup = shows.filter((show) => show.slug !== "coming-soon").slice(0, 3);
 
   return (

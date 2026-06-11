@@ -27,12 +27,17 @@ function decodeBase64Url(value: string): Buffer {
 }
 
 function getPreviewSecret(): string {
-  return (
+  const secret =
     process.env.CMS_PREVIEW_SECRET ||
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.CMS_ADMIN_TOKEN ||
-    "cms-preview-secret"
-  );
+    process.env.CMS_ADMIN_TOKEN;
+  if (!secret) {
+    // Fail closed: callers treat a thrown error as "preview inactive".
+    throw new Error(
+      "CMS preview secret is not configured (set CMS_PREVIEW_SECRET)."
+    );
+  }
+  return secret;
 }
 
 function signPayload(value: string): string {

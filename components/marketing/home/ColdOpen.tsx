@@ -5,11 +5,16 @@ import { motion } from "motion/react";
 import Cta from "@/components/cinema/Cta";
 import RecBadge from "@/components/cinema/RecBadge";
 import Timecode from "@/components/cinema/Timecode";
-import { coldOpen } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-export default function ColdOpen({ consultationHref }: { consultationHref: string }) {
+type ColdOpenProps = {
+  consultationHref: string;
+  content: HomeContent["coldOpen"];
+};
+
+export default function ColdOpen({ consultationHref, content: coldOpen }: ColdOpenProps) {
   return (
     <section className="relative flex min-h-svh flex-col justify-end overflow-hidden">
       {/* Plate */}

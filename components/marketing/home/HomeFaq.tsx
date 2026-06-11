@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Slate from "@/components/cinema/Slate";
-import { faq } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function HomeFaq() {
+export default function HomeFaq({ content: faq }: { content: HomeContent["faq"] }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (

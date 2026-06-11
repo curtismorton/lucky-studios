@@ -17,8 +17,7 @@ import type {
   CmsEntityPayload,
   CmsSeoConfig,
 } from "@/lib/cms/types";
-import { normalizeHomepageContent } from "@/lib/data/homepageContent";
-import { normalizeMarketingPagesContent } from "@/lib/data/marketingContent";
+import { normalizeWithDefaults } from "@/lib/cms/normalize";
 import { getSupabaseServiceConfig } from "@/lib/cms/supabase";
 
 export type CmsExportBundle = {
@@ -81,10 +80,12 @@ export async function buildLegacyMergeBundle(
     ...bundle.entities,
   };
 
-  const homepagePayload = normalizeHomepageContent(
+  const homepagePayload = normalizeWithDefaults(
+    defaultCmsPayloadMap.homepage,
     legacyHomepage || defaultCmsPayloadMap.homepage
   );
-  const marketingPayload = normalizeMarketingPagesContent(
+  const marketingPayload = normalizeWithDefaults(
+    defaultCmsPayloadMap["marketing-pages"],
     legacyMarketing || defaultCmsPayloadMap["marketing-pages"]
   );
 

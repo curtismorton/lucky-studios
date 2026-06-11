@@ -20,14 +20,6 @@ import type {
   CmsWorkspace,
   DashboardOverview,
 } from "@/lib/cms/types";
-import {
-  normalizeHomepageContent,
-  type HomepageContent,
-} from "@/lib/data/homepageContent";
-import {
-  normalizeMarketingPagesContent,
-  type MarketingPagesContent,
-} from "@/lib/data/marketingContent";
 import { type Show } from "@/lib/data/shows";
 import { revalidatePublishedEntity } from "@/lib/cms/revalidate";
 
@@ -177,16 +169,6 @@ function normalizePayloadForKey<TKey extends CmsEntityKey>(
   payload: unknown
 ): CmsEntityPayloadMap[TKey] {
   const fallback = defaultCmsPayloadMap[entityKey];
-
-  if (entityKey === "homepage") {
-    return normalizeHomepageContent(payload) as CmsEntityPayloadMap[TKey];
-  }
-
-  if (entityKey === "marketing-pages") {
-    return normalizeMarketingPagesContent(
-      payload
-    ) as CmsEntityPayloadMap[TKey];
-  }
 
   if (entityKey === "shows") {
     return normalizeShowsPayload(payload) as CmsEntityPayloadMap[TKey];

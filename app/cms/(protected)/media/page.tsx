@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCmsAuth } from "@/components/cms/CmsAuthProvider";
 import { useCmsApi } from "@/components/cms/useCmsApi";
 import type { HomePageEditorPayload } from "@/lib/cms/editorTypes";
-import { defaultHomepageContent } from "@/lib/data/homepageContent";
+import { homeContent } from "@/lib/content/home";
 
 type Asset = {
   id: string;
@@ -27,6 +27,13 @@ type HomepageEditorResponse = {
   } | null;
 };
 
+const HOMEPAGE_TARGETS = [
+  { value: "coldOpen.plate", label: "Homepage — Cold open plate" },
+  { value: "theRoom.plate", label: "Homepage — The Room plate" },
+  { value: "receipts.cases.0.plate", label: "Homepage — Case 01 plate" },
+  { value: "receipts.cases.1.plate", label: "Homepage — Case 02 plate" },
+];
+
 function formatBytes(sizeBytes: number | null): string {
   if (!sizeBytes || sizeBytes <= 0) return "-";
   if (sizeBytes < 1024) return `${sizeBytes} B`;
@@ -35,16 +42,27 @@ function formatBytes(sizeBytes: number | null): string {
 }
 
 function targetLabel(value: string): string {
-  if (value.startsWith("transformation.")) {
-    const match = value.match(/^transformation\.(\d+)\.(raw|polished)$/);
-    if (match) {
-      const cardIndex = Number(match[1]) + 1;
-      return `Slider Card ${cardIndex} ${match[2] === "raw" ? "Before" : "After"} Image`;
+  return HOMEPAGE_TARGETS.find((target) => target.value === value)?.label || value;
+}
+
+/** Assign `url` at a dot path ("receipts.cases.0.plate") inside the payload. */
+function setPayloadPath(payload: unknown, path: string, url: string): void {
+  const segments = path.split(".");
+  let cursor = payload as Record<string, unknown>;
+  for (const segment of segments.slice(0, -1)) {
+    const next = Array.isArray(cursor)
+      ? (cursor as unknown[])[Number(segment)]
+      : cursor[segment];
+    if (typeof next !== "object" || next === null) {
+      throw new Error(`Unknown target: ${path}`);
     }
+    cursor = next as Record<string, unknown>;
   }
-  if (value === "hero.mainBackground") return "Hero Main Image";
-  if (value === "hero.accentImage") return "Hero Accent Image";
-  return value;
+  const last = segments[segments.length - 1];
+  if (typeof cursor[last] !== "string") {
+    throw new Error(`Target is not an image field: ${path}`);
+  }
+  cursor[last] = url;
 }
 
 export default function CmsMediaPage() {
@@ -62,39 +80,13 @@ export default function CmsMediaPage() {
   const [uploadAlt, setUploadAlt] = useState("");
   const [uploadFolder, setUploadFolder] = useState("homepage");
   const [selectedTarget, setSelectedTarget] = useState(
-    searchParams.get("target") || "transformation.0.raw"
+    searchParams.get("target") || HOMEPAGE_TARGETS[0].value
   );
-
-  const [sliderCards, setSliderCards] = useState<
-    Array<{ index: number; showName: string }>
-  >([]);
-  const [pairIndex, setPairIndex] = useState(0);
-  const [beforeFile, setBeforeFile] = useState<File | null>(null);
-  const [afterFile, setAfterFile] = useState<File | null>(null);
-  const [pairUploading, setPairUploading] = useState(false);
 
   const loadAssets = useCallback(async () => {
     const response = await requestJson<{ assets: Asset[] }>("/api/dashboard/media");
     setAssets(response.assets || []);
   }, [requestJson]);
-
-  const loadHomepageTargets = useCallback(async () => {
-    const response = await requestJson<HomepageEditorResponse>(
-      "/api/cms/editor/homepage"
-    );
-    const payload =
-      response.draft?.payload ||
-      response.published?.payload ||
-      defaultHomepageContent;
-    const cards = payload.transformation.items.map((item, index) => ({
-      index,
-      showName: item.showName || `Card ${index + 1}`,
-    }));
-    setSliderCards(cards);
-    if (cards.length > 0 && pairIndex >= cards.length) {
-      setPairIndex(0);
-    }
-  }, [requestJson, pairIndex]);
 
   useEffect(() => {
     let active = true;
@@ -102,7 +94,7 @@ export default function CmsMediaPage() {
       setLoading(true);
       setStatus("");
       try {
-        await Promise.all([loadAssets(), loadHomepageTargets()]);
+        await loadAssets();
       } catch (error) {
         if (!active) return;
         setStatus(
@@ -115,35 +107,17 @@ export default function CmsMediaPage() {
     return () => {
       active = false;
     };
-  }, [loadAssets, loadHomepageTargets]);
+  }, [loadAssets]);
 
   const updateHomepageTarget = async (target: string, url: string) => {
     const response = await requestJson<HomepageEditorResponse>(
       "/api/cms/editor/homepage"
     );
     const payload =
-      response.draft?.payload ||
-      response.published?.payload ||
-      defaultHomepageContent;
+      response.draft?.payload || response.published?.payload || homeContent;
 
     const nextPayload: HomePageEditorPayload = JSON.parse(JSON.stringify(payload));
-
-    if (target === "hero.mainBackground") {
-      nextPayload.hero.mainBackground.src = url;
-    } else if (target === "hero.accentImage") {
-      nextPayload.hero.accentImage.src = url;
-    } else {
-      const match = target.match(/^transformation\.(\d+)\.(raw|polished)$/);
-      if (!match) {
-        throw new Error(`Unknown target: ${target}`);
-      }
-      const index = Number(match[1]);
-      const key = match[2] === "raw" ? "rawImage" : "polishedImage";
-      if (!nextPayload.transformation.items[index]) {
-        throw new Error("Selected slider card does not exist.");
-      }
-      nextPayload.transformation.items[index][key] = url;
-    }
+    setPayloadPath(nextPayload, target, url);
 
     await requestJson("/api/cms/editor/homepage", {
       method: "PUT",
@@ -187,7 +161,7 @@ export default function CmsMediaPage() {
       await updateHomepageTarget(selectedTarget, payload.asset.url);
       setUploadFile(null);
       setUploadAlt("");
-      await Promise.all([loadAssets(), loadHomepageTargets()]);
+      await loadAssets();
       setStatus(`Uploaded and assigned to ${targetLabel(selectedTarget)}.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Upload failed.");
@@ -199,81 +173,11 @@ export default function CmsMediaPage() {
     setStatus("Assigning image...");
     try {
       await updateHomepageTarget(target, url);
-      await loadHomepageTargets();
       setStatus(`Assigned to ${targetLabel(target)}.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Failed to assign image.");
     }
   };
-
-  const uploadPair = async () => {
-    if (!canEdit) return;
-    if (!beforeFile || !afterFile) {
-      setStatus("Choose both before and after files.");
-      return;
-    }
-
-    setPairUploading(true);
-    setStatus("Uploading before/after pair...");
-    try {
-      const uploadOne = async (file: File) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("folder", uploadFolder || "homepage");
-        const response = await fetch("/api/dashboard/media/upload", {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        });
-        const payload = (await response.json().catch(() => null)) as {
-          error?: string;
-          asset?: Asset;
-        } | null;
-        if (!response.ok || !payload?.asset?.url) {
-          throw new Error(payload?.error || `Upload failed for ${file.name}.`);
-        }
-        return payload.asset.url;
-      };
-
-      const [beforeUrl, afterUrl] = await Promise.all([
-        uploadOne(beforeFile),
-        uploadOne(afterFile),
-      ]);
-
-      await updateHomepageTarget(`transformation.${pairIndex}.raw`, beforeUrl);
-      await updateHomepageTarget(
-        `transformation.${pairIndex}.polished`,
-        afterUrl
-      );
-
-      await Promise.all([loadAssets(), loadHomepageTargets()]);
-      setBeforeFile(null);
-      setAfterFile(null);
-      setStatus(`Pair uploaded and assigned to Slider Card ${pairIndex + 1}.`);
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Paired upload failed.");
-    } finally {
-      setPairUploading(false);
-    }
-  };
-
-  const targetOptions = useMemo(() => {
-    const base = [
-      { value: "hero.mainBackground", label: "Hero Main Image" },
-      { value: "hero.accentImage", label: "Hero Accent Image" },
-    ];
-    const cardOptions = sliderCards.flatMap((card) => [
-      {
-        value: `transformation.${card.index}.raw`,
-        label: `${card.showName} Before Image`,
-      },
-      {
-        value: `transformation.${card.index}.polished`,
-        label: `${card.showName} After Image`,
-      },
-    ]);
-    return [...base, ...cardOptions];
-  }, [sliderCards]);
 
   if (loading) {
     return (
@@ -288,7 +192,8 @@ export default function CmsMediaPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-100">Media</h1>
         <p className="mt-1 text-sm text-slate-400">
-          Upload files and assign them directly to homepage fields with one click.
+          Upload files and assign them directly to homepage plates with one click.
+          Saved changes land in the homepage draft — publish from the editor.
         </p>
       </header>
 
@@ -300,7 +205,7 @@ export default function CmsMediaPage() {
 
       <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-300">
-          Single Upload + Assign
+          Upload + Assign
         </h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <input
@@ -329,7 +234,7 @@ export default function CmsMediaPage() {
             className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
             disabled={!canEdit}
           >
-            {targetOptions.map((option) => (
+            {HOMEPAGE_TARGETS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -343,49 +248,6 @@ export default function CmsMediaPage() {
           className="mt-3 rounded-lg bg-amber-500 px-3 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
         >
           Upload + Assign
-        </button>
-      </section>
-
-      <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-300">
-          Paired Slider Upload
-        </h2>
-        <p className="mt-1 text-sm text-slate-400">
-          Upload both before and after images in one action and map them to one slider card.
-        </p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <select
-            value={pairIndex}
-            onChange={(event) => setPairIndex(Number(event.target.value))}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-            disabled={!canEdit}
-          >
-            {sliderCards.map((card) => (
-              <option key={card.index} value={card.index}>
-                Slider Card {card.index + 1}: {card.showName}
-              </option>
-            ))}
-          </select>
-          <input
-            type="file"
-            onChange={(event) => setBeforeFile(event.target.files?.[0] || null)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-            disabled={!canEdit}
-          />
-          <input
-            type="file"
-            onChange={(event) => setAfterFile(event.target.files?.[0] || null)}
-            className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm"
-            disabled={!canEdit}
-          />
-        </div>
-        <button
-          type="button"
-          onClick={() => void uploadPair()}
-          disabled={!canEdit || pairUploading}
-          className="mt-3 rounded-lg bg-amber-500 px-3 py-2 text-sm font-semibold text-slate-950 disabled:opacity-50"
-        >
-          {pairUploading ? "Uploading Pair..." : "Upload Pair + Assign"}
         </button>
       </section>
 
@@ -418,34 +280,6 @@ export default function CmsMediaPage() {
                 >
                   Use for {targetLabel(selectedTarget)}
                 </button>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void assignExistingAsset(
-                        `transformation.${pairIndex}.raw`,
-                        asset.url
-                      )
-                    }
-                    disabled={!canEdit}
-                    className="rounded-lg border border-slate-700 px-2 py-1 text-xs text-slate-200 disabled:opacity-50"
-                  >
-                    Set Before
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void assignExistingAsset(
-                        `transformation.${pairIndex}.polished`,
-                        asset.url
-                      )
-                    }
-                    disabled={!canEdit}
-                    className="rounded-lg border border-slate-700 px-2 py-1 text-xs text-slate-200 disabled:opacity-50"
-                  >
-                    Set After
-                  </button>
-                </div>
               </div>
             </article>
           ))}

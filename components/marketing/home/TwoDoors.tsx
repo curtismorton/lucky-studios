@@ -2,9 +2,9 @@ import Link from "next/link";
 import Cta from "@/components/cinema/Cta";
 import Reveal from "@/components/cinema/Reveal";
 import Slate from "@/components/cinema/Slate";
-import { twoDoors } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function TwoDoors() {
+export default function TwoDoors({ content: twoDoors }: { content: HomeContent["twoDoors"] }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">
       <Slate scene={twoDoors.slate.scene} title={twoDoors.slate.title} className="mb-14" />

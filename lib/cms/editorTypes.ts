@@ -1,4 +1,4 @@
-import type { HomepageContent } from "@/lib/data/homepageContent";
+import type { HomeContent } from "@/lib/content/home";
 import type { CmsRole } from "@/lib/cms/types";
 
 export type EditorSaveStatus = "idle" | "dirty" | "saving" | "saved" | "error";
@@ -22,4 +22,4 @@ export interface CmsSessionState {
   mfa: CmsMfaState;
 }
 
-export type HomePageEditorPayload = HomepageContent;
+export type HomePageEditorPayload = HomeContent;

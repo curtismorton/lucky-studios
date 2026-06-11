@@ -1,8 +1,8 @@
 import Reveal from "@/components/cinema/Reveal";
 import Slate from "@/components/cinema/Slate";
-import { thesis } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function Thesis() {
+export default function Thesis({ content: thesis }: { content: HomeContent["thesis"] }) {
   const lines = thesis.lines;
 
   return (

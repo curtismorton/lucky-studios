@@ -4,9 +4,9 @@ import { useRef } from "react";
 import { motion, useScroll } from "motion/react";
 import Reveal from "@/components/cinema/Reveal";
 import Slate from "@/components/cinema/Slate";
-import { system } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function SystemPipeline() {
+export default function SystemPipeline({ content: system }: { content: HomeContent["system"] }) {
   const railRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: railRef,

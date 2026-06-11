@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Reveal from "@/components/cinema/Reveal";
 import Slate from "@/components/cinema/Slate";
-import { receipts } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function Receipts() {
+export default function Receipts({ content: receipts }: { content: HomeContent["receipts"] }) {
   return (
     <section className="border-y border-bone/10 bg-carbon">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">

@@ -16,10 +16,7 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import Slate from "@/components/cinema/Slate";
 import Reveal from "@/components/cinema/Reveal";
-import {
-  defaultMarketingPagesContent,
-  type ContactPageContent,
-} from "@/lib/data/marketingContent";
+import { contactContent, type ContactContent } from "@/lib/content/contact";
 
 type AudienceType = "creator" | "brand" | "agency" | "platform" | "other";
 type ContactIntent = "creator" | "brand" | "agency" | "idea" | "consultation" | "";
@@ -33,7 +30,7 @@ interface ContactFormData {
 }
 
 interface ContactPageClientProps {
-  content?: ContactPageContent;
+  content?: ContactContent;
   formEndpoint?: string;
   consultationHref: string;
 }
@@ -127,7 +124,7 @@ export default function ContactPageClient({
   formEndpoint = "",
   consultationHref,
 }: ContactPageClientProps) {
-  const page = content || defaultMarketingPagesContent.contact;
+  const page = content || contactContent;
   const searchParams = useSearchParams();
   const intent = normalizeIntent(searchParams.get("intent"));
   const entry = intent ? intentContent[intent] : intentContent.consultation;

@@ -8,6 +8,7 @@ import TwoDoors from "@/components/marketing/home/TwoDoors";
 import TheRoom from "@/components/marketing/home/TheRoom";
 import HomeFaq from "@/components/marketing/home/HomeFaq";
 import FinalCta from "@/components/marketing/home/FinalCta";
+import { getCmsRuntimePayload } from "@/lib/cms/runtime";
 import { getShows } from "@/lib/services/cms/shows";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
 import { getSiteSettings } from "@/lib/services/cms/siteSettings";
@@ -45,21 +46,25 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const [shows, siteSettings] = await Promise.all([getShows(), getSiteSettings()]);
+  const [home, shows, siteSettings] = await Promise.all([
+    getCmsRuntimePayload("homepage"),
+    getShows(),
+    getSiteSettings(),
+  ]);
   const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
 
   return (
     <main>
-      <ColdOpen consultationHref={consultationHref} />
-      <ProofReel />
-      <Thesis />
-      <SystemPipeline />
-      <Network shows={shows} />
-      <Receipts />
-      <TwoDoors />
-      <TheRoom />
-      <HomeFaq />
-      <FinalCta consultationHref={consultationHref} />
+      <ColdOpen consultationHref={consultationHref} content={home.coldOpen} />
+      <ProofReel content={home.proofReel} />
+      <Thesis content={home.thesis} />
+      <SystemPipeline content={home.system} />
+      <Network shows={shows} content={home.network} />
+      <Receipts content={home.receipts} />
+      <TwoDoors content={home.twoDoors} />
+      <TheRoom content={home.theRoom} />
+      <HomeFaq content={home.faq} />
+      <FinalCta consultationHref={consultationHref} content={home.finalCta} />
     </main>
   );
 }

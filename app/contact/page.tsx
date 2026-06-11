@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import ContactPageClient from "./ContactPageClient";
-import { getMarketingPagesContent } from "@/lib/services/marketingCms";
+import { getCmsRuntimePayload } from "@/lib/cms/runtime";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
 import { getSiteSettings } from "@/lib/services/cms/siteSettings";
 import { resolveConsultationHref } from "@/lib/utils/consultationHref";
@@ -24,8 +24,8 @@ export async function generateMetadata() {
 }
 
 export default async function ContactPage() {
-  const [content, siteSettings] = await Promise.all([
-    getMarketingPagesContent(),
+  const [pages, siteSettings] = await Promise.all([
+    getCmsRuntimePayload("marketing-pages"),
     getSiteSettings(),
   ]);
   const formEndpoint = process.env.CONTACT_FORM_ENDPOINT || "";
@@ -34,7 +34,7 @@ export default async function ContactPage() {
   return (
     <Suspense fallback={null}>
       <ContactPageClient
-        content={content.contact}
+        content={pages.contact}
         formEndpoint={formEndpoint}
         consultationHref={consultationHref}
       />

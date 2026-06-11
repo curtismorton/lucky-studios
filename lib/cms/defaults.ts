@@ -1,11 +1,5 @@
-import {
-  defaultHomepageContent,
-  type HomepageContent,
-} from "@/lib/data/homepageContent";
-import {
-  defaultMarketingPagesContent,
-  type MarketingPagesContent,
-} from "@/lib/data/marketingContent";
+import { homeContent, type HomeContent } from "@/lib/content/home";
+import { marketingPages, type MarketingPages } from "@/lib/content/pages";
 import { shows, type Show } from "@/lib/data/shows";
 import { site } from "@/lib/data/site";
 import type {
@@ -177,8 +171,8 @@ export const defaultSeoDefaultsPayload: CmsSeoDefaultsPayload = {
 };
 
 export const defaultCmsPayloadMap: CmsEntityPayloadMap = {
-  homepage: clone(defaultHomepageContent) as HomepageContent,
-  "marketing-pages": clone(defaultMarketingPagesContent) as MarketingPagesContent,
+  homepage: clone(homeContent) as HomeContent,
+  "marketing-pages": clone(marketingPages) as MarketingPages,
   shows: clone(defaultShowsPayload),
   "site-settings": clone(defaultSiteSettingsPayload),
   "nav-footer": clone(defaultNavFooterPayload),

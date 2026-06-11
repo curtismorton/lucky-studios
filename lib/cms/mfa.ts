@@ -36,12 +36,15 @@ function decodeBase64Url(value: string): Buffer {
 }
 
 function getMfaSecret(): string {
-  return (
+  const secret =
     process.env.CMS_MFA_SECRET ||
     process.env.CMS_PREVIEW_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    "cms-mfa-secret"
-  );
+    process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secret) {
+    // Fail closed: without a configured secret MFA tokens cannot be issued.
+    throw new Error("CMS MFA secret is not configured (set CMS_MFA_SECRET).");
+  }
+  return secret;
 }
 
 function signPayload(value: string): string {

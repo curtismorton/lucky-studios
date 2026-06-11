@@ -30,12 +30,17 @@ function decodeBase64Url(value: string): Buffer {
 }
 
 function getSessionSecret(): string {
-  return (
+  const secret =
     process.env.CMS_SESSION_SECRET ||
     process.env.CMS_PREVIEW_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    "cms-session-secret"
-  );
+    process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!secret) {
+    // Fail closed: without a configured secret there is no valid session.
+    throw new Error(
+      "CMS session secret is not configured (set CMS_SESSION_SECRET)."
+    );
+  }
+  return secret;
 }
 
 function signPayload(value: string): string {

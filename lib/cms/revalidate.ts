@@ -12,6 +12,7 @@ const MARKETING_PAGE_PATHS = [
   "/contact",
   "/creators",
   "/studio",
+  "/work",
 ] as const;
 
 const PUBLIC_SITE_PATHS = ["/", ...MARKETING_PAGE_PATHS, "/shows"] as const;

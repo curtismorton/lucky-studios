@@ -9,29 +9,6 @@ const PASSWORD_HASH_PREFIX = "pbkdf2_sha256";
 const DEFAULT_PASSWORD_HASH_ITERATIONS = 210000;
 const USER_LOOKUP_PAGE_SIZE = 1000;
 const USER_LOOKUP_MAX_PAGES = 10;
-const DEFAULT_DEMO_USERS: CmsCredentialUser[] = [
-  {
-    username: "curtis.m",
-    email: "curtis.m@sociallypowerful.com",
-    role: "admin",
-    passwordHash:
-      "pbkdf2_sha256$210000$55783953305165ec716f9d745bc040d2$779ac3ff9f7173ea73f51e9e2ca61c83e7f2c5c9e96e9b932876f49d24a6b795",
-  },
-  {
-    username: "content-editor",
-    email: "content-editor@example.com",
-    role: "editor",
-    passwordHash:
-      "pbkdf2_sha256$210000$8d5692f82f99d0a7282740c468de2f7a$8fedf31c2eb4135293d56db3c02b08e800f41d0ceb6f2fe0ff77c982d3557b59",
-  },
-  {
-    username: "asset-viewer",
-    email: "asset-viewer@example.com",
-    role: "viewer",
-    passwordHash:
-      "pbkdf2_sha256$210000$6487283f9d16f677787c25697b869734$8906e5801e0b282506299307236d82d119dcc70cc7a90826e04b16e306809ff5",
-  },
-];
 
 export type CmsCredentialUser = {
   username: string;
@@ -181,7 +158,9 @@ function getConfiguredUsers(): CmsCredentialUser[] {
   const raw = encoded
     ? decodeBase64Url(encoded)
     : process.env.CMS_CREDENTIAL_USERS_JSON?.trim() ?? "";
-  if (!raw) return DEFAULT_DEMO_USERS;
+  // No configured users means password login stays disabled — never fall
+  // back to baked-in accounts.
+  if (!raw) return [];
   return parseConfiguredUsersJson(
     raw,
     encoded ? "CMS_CREDENTIAL_USERS_BASE64" : "CMS_CREDENTIAL_USERS_JSON"

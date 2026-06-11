@@ -1,8 +1,13 @@
 import Cta from "@/components/cinema/Cta";
 import Reveal from "@/components/cinema/Reveal";
-import { finalCta } from "@/lib/content/home";
+import type { HomeContent } from "@/lib/content/home";
 
-export default function FinalCta({ consultationHref }: { consultationHref: string }) {
+type FinalCtaProps = {
+  consultationHref: string;
+  content: HomeContent["finalCta"];
+};
+
+export default function FinalCta({ consultationHref, content: finalCta }: FinalCtaProps) {
   return (
     <section className="border-t border-bone/10">
       <div className="mx-auto max-w-7xl px-6 py-28 text-center md:px-10 md:py-40 lg:px-16">

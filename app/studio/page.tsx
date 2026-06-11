@@ -3,7 +3,7 @@ import Reveal from "@/components/cinema/Reveal";
 import { LocalBusinessSchema } from "@/components/seo/StructuredData";
 import CtaBand from "@/components/marketing/CtaBand";
 import PageHero from "@/components/marketing/PageHero";
-import { studioPage } from "@/lib/content/studio";
+import { getCmsRuntimePayload } from "@/lib/cms/runtime";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
 import { getSiteSettings } from "@/lib/services/cms/siteSettings";
 import { resolveConsultationHref } from "@/lib/utils/consultationHref";
@@ -28,7 +28,11 @@ export async function generateMetadata() {
 }
 
 export default async function StudioPage() {
-  const siteSettings = await getSiteSettings();
+  const [pages, siteSettings] = await Promise.all([
+    getCmsRuntimePayload("marketing-pages"),
+    getSiteSettings(),
+  ]);
+  const studioPage = pages.studio;
   const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
 
   return (

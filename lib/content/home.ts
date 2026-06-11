@@ -185,3 +185,19 @@ export const finalCta = {
   secondaryCta: "Send us the idea",
   secondaryHref: "/contact",
 };
+
+/** Canonical homepage payload — the shape the CMS stores and the page renders. */
+export const homeContent = {
+  coldOpen,
+  proofReel,
+  thesis,
+  system,
+  network,
+  receipts,
+  twoDoors,
+  theRoom,
+  faq,
+  finalCta,
+};
+
+export type HomeContent = typeof homeContent;

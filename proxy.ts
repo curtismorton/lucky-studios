@@ -10,12 +10,12 @@ type CmsSessionPayload = {
   exp: number;
 };
 
-function getSessionSecret(): string {
+function getSessionSecret(): string | null {
   return (
     process.env.CMS_SESSION_SECRET ||
     process.env.CMS_PREVIEW_SECRET ||
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    "cms-session-secret"
+    null
   );
 }
 
@@ -53,10 +53,13 @@ function timingSafeEqualHex(a: string, b: string): boolean {
   return mismatch === 0;
 }
 
-async function signPayload(value: string): Promise<string> {
+async function signPayload(value: string): Promise<string | null> {
+  const secret = getSessionSecret();
+  // Fail closed: with no configured secret, no session can validate.
+  if (!secret) return null;
   const key = await crypto.subtle.importKey(
     "raw",
-    new TextEncoder().encode(getSessionSecret()),
+    new TextEncoder().encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"]
@@ -78,6 +81,7 @@ async function hasValidCmsSession(request: NextRequest): Promise<boolean> {
   if (!encodedPayload || !signature) return false;
 
   const expectedSignature = await signPayload(encodedPayload);
+  if (!expectedSignature) return false;
   if (!timingSafeEqualHex(expectedSignature, signature)) return false;
 
   const payloadBytes = decodeBase64Url(encodedPayload);

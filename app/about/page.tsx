@@ -2,7 +2,7 @@ import Reveal from "@/components/cinema/Reveal";
 import Slate from "@/components/cinema/Slate";
 import CtaBand from "@/components/marketing/CtaBand";
 import PageHero from "@/components/marketing/PageHero";
-import { aboutPage } from "@/lib/content/about";
+import { getCmsRuntimePayload } from "@/lib/cms/runtime";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
 import { getSiteSettings } from "@/lib/services/cms/siteSettings";
 import { resolveConsultationHref } from "@/lib/utils/consultationHref";
@@ -26,7 +26,11 @@ export async function generateMetadata() {
 }
 
 export default async function AboutPage() {
-  const siteSettings = await getSiteSettings();
+  const [pages, siteSettings] = await Promise.all([
+    getCmsRuntimePayload("marketing-pages"),
+    getSiteSettings(),
+  ]);
+  const aboutPage = pages.about;
   const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
 
   return (

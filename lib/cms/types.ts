@@ -1,5 +1,5 @@
-import type { HomepageContent } from "@/lib/data/homepageContent";
-import type { MarketingPagesContent } from "@/lib/data/marketingContent";
+import type { HomeContent } from "@/lib/content/home";
+import type { MarketingPages } from "@/lib/content/pages";
 import type { Show } from "@/lib/data/shows";
 
 export type CmsRole = "admin" | "editor" | "viewer";
@@ -74,8 +74,8 @@ export type CmsShowsPayload = {
 };
 
 export interface CmsEntityPayloadMap {
-  homepage: HomepageContent;
-  "marketing-pages": MarketingPagesContent;
+  homepage: HomeContent;
+  "marketing-pages": MarketingPages;
   shows: CmsShowsPayload;
   "site-settings": CmsSiteSettingsPayload;
   "nav-footer": CmsNavFooterPayload;
