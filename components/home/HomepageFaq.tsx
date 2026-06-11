@@ -66,7 +66,7 @@ export default function HomepageFaq() {
                   aria-expanded={expanded}
                   aria-controls={answerId}
                   onClick={() => setActiveItem(expanded ? null : index)}
-                  className="flex min-h-[68px] w-full items-center justify-between gap-6 py-5 text-left font-heading text-base font-semibold text-white transition hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange sm:text-lg"
+                  className="flex min-h-[68px] w-full items-center justify-between gap-6 py-5 text-left font-heading text-base font-semibold text-white transition hover:text-accent-orange focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange sm:text-lg"
                 >
                   {faq.question}
                   <motion.span animate={{ rotate: expanded ? 180 : 0 }}>

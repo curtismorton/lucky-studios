@@ -11,7 +11,7 @@ export default function Skeleton({
   className = "",
   variant = "rectangular",
 }: SkeletonProps) {
-  const baseClasses = "bg-background-tertiary rounded";
+  const baseClasses = "bg-background-tertiary rounded-sm";
   const variantClasses = {
     text: "h-4 w-full",
     circular: "rounded-full aspect-square",

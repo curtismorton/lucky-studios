@@ -89,7 +89,7 @@ export default function TransformationSection({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55, delay: 0.1 }}
-            className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 sm:p-8"
+            className="rounded-4xl border border-white/10 bg-white/[0.035] p-5 sm:p-8"
           >
             <div className="mb-8 flex items-center gap-4 rounded-2xl border border-accent-orange/25 bg-accent-orange/[0.07] p-5">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-orange font-heading text-sm font-bold text-white">
@@ -208,7 +208,7 @@ function ComparisonCard({
           className="object-cover"
           style={{ objectPosition: imageFocus.rawPosition }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/45" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/15 via-transparent to-black/45" />
         <div
           className="absolute inset-0 overflow-hidden"
           style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
@@ -222,10 +222,10 @@ function ComparisonCard({
             style={{ objectPosition: imageFocus.polishedPosition }}
           />
         </div>
-        <span className="absolute left-4 top-4 z-10 rounded-full bg-black/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm">
+        <span className="absolute left-4 top-4 z-10 rounded-full bg-black/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 backdrop-blur-xs">
           Studio
         </span>
-        <span className="absolute right-4 top-4 z-10 rounded-full bg-accent-orange/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-orange backdrop-blur-sm">
+        <span className="absolute right-4 top-4 z-10 rounded-full bg-accent-orange/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-orange backdrop-blur-xs">
           Packaged
         </span>
         {manualEnabled ? (
@@ -236,7 +236,7 @@ function ComparisonCard({
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={Math.round(progress)}
-            className="absolute inset-0 z-20 cursor-ew-resize touch-pan-y focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent-orange"
+            className="absolute inset-0 z-20 cursor-ew-resize touch-pan-y focus-visible:outline-solid focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent-orange"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerEnd}

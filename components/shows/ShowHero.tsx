@@ -69,7 +69,7 @@ export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: Sh
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/60" />
+              <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/20 to-black/60" />
               <div className="absolute inset-5 overflow-hidden rounded-2xl border border-white/10 bg-black/45 shadow-[0_30px_90px_rgba(0,0,0,0.45)] sm:inset-8">
                 <Image
                   src={coverImage}
@@ -83,7 +83,7 @@ export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: Sh
             </>
           ) : (
             <div
-              className={`h-full w-full bg-gradient-to-br ${
+              className={`h-full w-full bg-linear-to-br ${
                 show.featured
                   ? "from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30"
                   : genreStyle.bg

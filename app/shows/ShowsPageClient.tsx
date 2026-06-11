@@ -47,7 +47,7 @@ export default function ShowsPageClient({ shows }: { shows: Show[] }) {
                 The shows we are turning into repeatable media.
               </h1>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-md sm:p-8">
+            <div className="rounded-3xl border border-white/10 bg-white/4 p-6 backdrop-blur-md sm:p-8">
               <p className="font-body text-base leading-relaxed text-text-secondary sm:text-lg">
                 Original formats, polished covers, sponsor-ready positioning,
                 and creator-led series built to generate episodes, clips, and

@@ -132,7 +132,7 @@ export default function Testimonials() {
                     }}
                   >
                     <TiltCard
-                      className={`group relative h-full rounded-2xl border bg-background-secondary/70 p-8 backdrop-blur-sm transition-all duration-300 ${styles.border} ${styles.glow}`}
+                      className={`group relative h-full rounded-2xl border bg-background-secondary/70 p-8 backdrop-blur-xs transition-all duration-300 ${styles.border} ${styles.glow}`}
                       glowClassName="rounded-2xl mix-blend-screen"
                       maxTilt={7}
                       glowSize={360}

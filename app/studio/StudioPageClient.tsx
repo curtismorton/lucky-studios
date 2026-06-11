@@ -46,7 +46,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-cyan/10 via-transparent to-accent-orange/5" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-br from-accent-cyan/10 via-transparent to-accent-orange/5" />
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -97,7 +97,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl sm:rounded-3xl"
+            className="relative aspect-4/3 w-full overflow-hidden rounded-2xl sm:rounded-3xl"
           >
             {page.hero.heroImage ? (
               <Image
@@ -108,7 +108,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                 className="object-cover"
               />
             ) : (
-              <div className="h-full w-full bg-gradient-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
+              <div className="h-full w-full bg-linear-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
             )}
           </motion.div>
         </div>
@@ -146,7 +146,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                       className="object-cover transition-transform duration-300 group-hover:scale-110"
                     />
                   ) : (
-                    <div className="h-full w-full bg-gradient-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20 transition-transform duration-300 group-hover:scale-110" />
+                    <div className="h-full w-full bg-linear-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20 transition-transform duration-300 group-hover:scale-110" />
                   )}
                   <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
                 </motion.button>
@@ -190,7 +190,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="h-full w-full bg-gradient-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
+                    <div className="h-full w-full bg-linear-to-br from-accent-cyan/30 via-accent-purple/30 to-accent-orange/30" />
                   )}
                 </div>
               </motion.div>
@@ -219,7 +219,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 sm:p-6"
+                  className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-xs transition-all duration-300 hover:border-accent-cyan/50 sm:p-6"
                 >
                   <div className="mb-4 inline-flex rounded-xl bg-accent-cyan/10 p-2.5 sm:p-3">
                     <Icon className="h-5 w-5 text-accent-cyan sm:h-6 sm:w-6" />
@@ -257,9 +257,9 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="flex min-h-[60px] items-center gap-3 rounded-2xl border border-background-tertiary bg-background-secondary/50 p-4 backdrop-blur-sm sm:gap-4"
+                  className="flex min-h-[60px] items-center gap-3 rounded-2xl border border-background-tertiary bg-background-secondary/50 p-4 backdrop-blur-xs sm:gap-4"
                 >
-                  <div className="flex-shrink-0 rounded-lg bg-accent-cyan/10 p-2">
+                  <div className="shrink-0 rounded-lg bg-accent-cyan/10 p-2">
                     <Icon className="h-4 w-4 text-accent-cyan sm:h-5 sm:w-5" />
                   </div>
                   <span className="font-body text-sm text-text-secondary sm:text-base">
@@ -290,7 +290,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 sm:p-8"
+                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-xs transition-all duration-300 hover:border-accent-cyan/50 sm:p-8"
               >
                 <h3 className="mb-2 font-heading text-xl font-bold text-white sm:text-2xl">
                   {option.title}
@@ -341,7 +341,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
-              <div className="h-full w-full bg-gradient-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20" />
+              <div className="h-full w-full bg-linear-to-br from-accent-cyan/20 via-accent-purple/20 to-accent-orange/20" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <p className="font-body text-xs text-text-muted sm:text-sm">{page.location.mapLabel}</p>
               </div>
@@ -382,7 +382,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
+          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-linear-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
@@ -393,7 +393,7 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
               Tell us what you need to capture. We will help shape the session
               around the show, campaign, or content run you are trying to make.
             </p>
-            <div className="mx-auto max-w-2xl rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm sm:p-8">
+            <div className="mx-auto max-w-2xl rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-xs sm:p-8">
               <p className="mb-4 font-body text-xs text-text-muted sm:text-sm">
                 {page.cta.widgetHint}
               </p>

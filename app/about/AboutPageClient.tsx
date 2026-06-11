@@ -22,7 +22,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-orange/10 via-transparent to-accent-purple/10" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-br from-accent-orange/10 via-transparent to-accent-purple/10" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -95,7 +95,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-accent-purple/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
+          className="relative overflow-hidden rounded-2xl border border-accent-purple/30 bg-linear-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
@@ -121,14 +121,14 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="flex items-center gap-3 font-body text-sm text-text-secondary sm:text-base"
                     >
-                      <div className="h-2 w-2 flex-shrink-0 rounded-full bg-accent-purple" />
+                      <div className="h-2 w-2 shrink-0 rounded-full bg-accent-purple" />
                       {item}
                     </motion.li>
                   ))}
                 </ul>
               </div>
               <div className="flex items-center justify-center">
-                <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-8 backdrop-blur-sm sm:p-12">
+                <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-8 backdrop-blur-xs sm:p-12">
                   <p className="font-heading text-xl font-bold text-white sm:text-2xl">
                     {page.sociallyPowerful.badgeText}
                   </p>
@@ -181,7 +181,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
                       />
                     </div>
                   ) : (
-                    <div className="h-24 w-24 rounded-full bg-gradient-to-br from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30 sm:h-32 sm:w-32" />
+                    <div className="h-24 w-24 rounded-full bg-linear-to-br from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30 sm:h-32 sm:w-32" />
                   )}
                 </div>
                 <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:text-xl">
@@ -217,7 +217,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-accent-orange/50 sm:p-6"
+                  className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-xs transition-all duration-300 hover:border-accent-orange/50 sm:p-6"
                 >
                   <div className="mb-3 inline-flex rounded-xl bg-accent-orange/10 p-2.5 sm:mb-4 sm:p-3">
                     <Icon className="h-5 w-5 text-accent-orange sm:h-6 sm:w-6" />
@@ -241,7 +241,7 @@ export default function AboutPageClient({ content }: AboutPageClientProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-accent-orange/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
+          className="relative overflow-hidden rounded-2xl border border-accent-orange/30 bg-linear-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">

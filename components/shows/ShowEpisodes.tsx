@@ -78,7 +78,7 @@ export default function ShowEpisodes({
                 href={(episode as any).spotifyUrl || show.platforms?.spotify || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-accent-orange/10 text-accent-orange transition-all duration-300 group-hover:bg-accent-orange group-hover:text-white group-hover:glow-orange"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-orange/10 text-accent-orange transition-all duration-300 group-hover:bg-accent-orange group-hover:text-white group-hover:glow-orange"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >

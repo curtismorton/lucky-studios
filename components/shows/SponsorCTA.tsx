@@ -12,7 +12,7 @@ export default function SponsorCTA() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-3xl border border-accent-orange/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-12 text-center"
+        className="relative overflow-hidden rounded-3xl border border-accent-orange/30 bg-linear-to-br from-background-secondary to-background-tertiary p-12 text-center"
       >
         <div className="absolute inset-0 bg-gradient-glow opacity-30" />
         <div className="relative z-10">

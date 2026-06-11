@@ -92,7 +92,7 @@ export default function Pathways() {
               </ul>
               <Link
                 href={pathway.href}
-                className="group mt-auto inline-flex min-h-[48px] items-center gap-2 font-heading text-sm font-semibold text-white transition hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                className="group mt-auto inline-flex min-h-[48px] items-center gap-2 font-heading text-sm font-semibold text-white transition hover:text-accent-orange focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
               >
                 {pathway.cta}
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />

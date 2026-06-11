@@ -50,7 +50,7 @@ export default function HomeClient({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative overflow-hidden rounded-[2rem] border border-accent-orange/30 bg-[linear-gradient(120deg,rgba(245,158,11,0.16),rgba(22,22,24,0.96)_38%,rgba(10,10,11,0.98))] px-6 py-14 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] sm:px-10 md:px-20 md:py-20"
+            className="relative overflow-hidden rounded-4xl border border-accent-orange/30 bg-[linear-gradient(120deg,rgba(245,158,11,0.16),rgba(22,22,24,0.96)_38%,rgba(10,10,11,0.98))] px-6 py-14 text-center shadow-[0_30px_100px_rgba(0,0,0,0.42)] sm:px-10 md:px-20 md:py-20"
           >
             <div className="absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full bg-accent-orange/25 blur-3xl" />
             <div className="relative z-10">
@@ -69,13 +69,13 @@ export default function HomeClient({
                   href={consultationHref}
                   target={consultationTarget}
                   rel={consultationRel}
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white shadow-[0_12px_40px_rgba(245,158,11,0.28)] transition hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white shadow-[0_12px_40px_rgba(245,158,11,0.28)] transition hover:bg-amber-500 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
                 >
                   Start building
                 </a>
                 <a
                   href="/contact?intent=idea"
-                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/20 bg-white/[0.04] px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:border-accent-orange/45 hover:bg-accent-orange/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/20 bg-white/4 px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:border-accent-orange/45 hover:bg-accent-orange/10 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
                 >
                   Send us your idea
                 </a>

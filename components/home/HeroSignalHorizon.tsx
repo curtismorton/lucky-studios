@@ -55,7 +55,7 @@ export default function HeroSignalHorizon({
       className={`pointer-events-none absolute inset-x-0 bottom-0 z-0 ${className}`}
     >
       <div className="relative h-44 md:h-56">
-        <div className="absolute inset-0 bg-gradient-to-t from-background/38 via-background/14 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background/38 via-background/14 to-transparent" />
 
         <div
           className="absolute inset-0"
@@ -75,7 +75,7 @@ export default function HeroSignalHorizon({
             {bars.map((bar) => (
               <motion.div
                 key={bar.id}
-                className="w-full rounded-t-full bg-gradient-to-t from-accent-copper/60 via-accent-gold/70 to-accent-amber/82 shadow-[0_0_14px_rgba(245,158,11,0.25)]"
+                className="w-full rounded-t-full bg-linear-to-t from-accent-copper/60 via-accent-gold/70 to-accent-amber/82 shadow-[0_0_14px_rgba(245,158,11,0.25)]"
                 style={{ height: `${bar.baseHeight}%` }}
                 animate={
                   shouldReduceMotion

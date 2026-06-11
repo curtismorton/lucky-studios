@@ -194,7 +194,7 @@ function CmsLoginContent() {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               placeholder="curtis.m@sociallypowerful.com"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-amber-400"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-hidden transition focus:border-amber-400"
               required
             />
           </div>
@@ -213,7 +213,7 @@ function CmsLoginContent() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Enter your password"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-amber-400"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-hidden transition focus:border-amber-400"
               required
             />
           </div>
@@ -256,7 +256,7 @@ function CmsLoginContent() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="name@sociallypowerful.com"
-              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none transition focus:border-amber-400"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-hidden transition focus:border-amber-400"
               required
             />
           </div>

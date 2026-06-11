@@ -201,7 +201,7 @@ export default function ContactPageClient({
   };
 
   const fieldClassName =
-    "w-full rounded-xl border border-white/10 bg-white/[0.045] px-4 py-3.5 font-body text-white placeholder:text-white/35 transition focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20";
+    "w-full rounded-xl border border-white/10 bg-white/4.5 px-4 py-3.5 font-body text-white placeholder:text-white/35 transition focus:border-accent-orange focus:outline-hidden focus:ring-2 focus:ring-accent-orange/20";
 
   return (
     <MotionConfig reducedMotion="user">
@@ -232,7 +232,7 @@ export default function ContactPageClient({
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-8"
+            className="rounded-3xl border border-white/10 bg-white/3 p-5 sm:p-8"
           >
             <h2 className="mb-8 font-heading text-2xl font-semibold text-white sm:text-3xl">
               Start with the useful details.
@@ -348,7 +348,7 @@ export default function ContactPageClient({
               <motion.button
                 type="submit"
                 disabled={isSubmitting || !hasFormEndpoint}
-                className="flex min-h-[52px] w-full items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                className="flex min-h-[52px] w-full items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
                 whileTap={isSubmitting || !hasFormEndpoint ? undefined : { scale: 0.98 }}
               >
                 {isSubmitting ? (
@@ -390,7 +390,7 @@ export default function ContactPageClient({
               </AnimatePresence>
 
               {!hasFormEndpoint ? (
-                <p className="rounded-xl border border-accent-orange/20 bg-accent-orange/[0.06] p-4 text-sm leading-relaxed text-white/65">
+                <p className="rounded-xl border border-accent-orange/20 bg-accent-orange/6 p-4 text-sm leading-relaxed text-white/65">
                   Online submissions are not configured yet. Email{" "}
                   <a className="text-white underline decoration-accent-orange" href={`mailto:${page.direct.email}`}>
                     {page.direct.email}
@@ -429,7 +429,7 @@ export default function ContactPageClient({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-accent-orange/20 bg-accent-orange/[0.055] p-6">
+            <div className="rounded-2xl border border-accent-orange/20 bg-accent-orange/5.5 p-6">
               <div className="mb-4 flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-accent-orange" />
                 <h3 className="font-heading text-lg font-semibold text-white">
@@ -443,7 +443,7 @@ export default function ContactPageClient({
                 href={consultationHref}
                 target={bookingExternal ? "_blank" : undefined}
                 rel={bookingExternal ? "noopener noreferrer" : undefined}
-                className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-accent-orange/40 px-5 py-3 font-heading text-sm font-semibold text-white transition hover:bg-accent-orange/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-accent-orange/40 px-5 py-3 font-heading text-sm font-semibold text-white transition hover:bg-accent-orange/12 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
               >
                 Book a consultation
               </a>
@@ -459,7 +459,7 @@ export default function ContactPageClient({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-accent-orange hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-accent-orange hover:text-accent-orange focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
                   >
                     <Icon className="h-5 w-5" />
                   </a>

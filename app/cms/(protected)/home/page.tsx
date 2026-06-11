@@ -621,7 +621,7 @@ export default function CmsHomeEditorPage() {
                   <img
                     src={item.rawImage}
                     alt={`${item.showName} before`}
-                    className="h-28 w-full rounded object-cover"
+                    className="h-28 w-full rounded-sm object-cover"
                   />
                 </div>
                 <div className="rounded-lg border border-slate-800 bg-slate-950 p-2">
@@ -632,7 +632,7 @@ export default function CmsHomeEditorPage() {
                   <img
                     src={item.polishedImage}
                     alt={`${item.showName} after`}
-                    className="h-28 w-full rounded object-cover"
+                    className="h-28 w-full rounded-sm object-cover"
                   />
                 </div>
               </div>

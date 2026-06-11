@@ -59,7 +59,7 @@ export default function ProductionSystem({
         </motion.div>
 
         <div className="relative grid gap-3 md:grid-cols-5">
-          <div className="absolute left-[10%] right-[10%] top-[31px] hidden h-px bg-gradient-to-r from-transparent via-accent-orange/45 to-transparent md:block" />
+          <div className="absolute left-[10%] right-[10%] top-[31px] hidden h-px bg-linear-to-r from-transparent via-accent-orange/45 to-transparent md:block" />
           {steps.map((step, index) => (
             <motion.article
               key={step.title}
@@ -67,7 +67,7 @@ export default function ProductionSystem({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.48, delay: index * 0.06 }}
-              className="group relative rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm transition-colors hover:border-accent-orange/35 md:border-transparent md:bg-transparent md:px-4 md:py-0 md:backdrop-blur-0"
+              className="group relative rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-xs transition-colors hover:border-accent-orange/35 md:border-transparent md:bg-transparent md:px-4 md:py-0 md:backdrop-blur-0"
             >
               <div className="relative z-10 mb-8 inline-flex h-16 w-16 items-center justify-center rounded-full border border-accent-orange/35 bg-background text-sm font-semibold text-accent-orange shadow-[0_0_30px_rgba(245,158,11,0.12)]">
                 {step.label}
@@ -93,7 +93,7 @@ export default function ProductionSystem({
             href={consultationHref}
             target={external ? "_blank" : undefined}
             rel={external ? "noopener noreferrer" : undefined}
-            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
           >
             Book a consultation
           </a>

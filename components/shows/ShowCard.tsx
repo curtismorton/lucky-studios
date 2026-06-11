@@ -73,7 +73,7 @@ export default function ShowCard({
             featured
               ? "border-accent-orange/60 bg-[linear-gradient(145deg,rgba(245,158,11,0.16),rgba(24,24,27,0.96)_42%,rgba(6,182,212,0.1))]"
               : "border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(24,24,27,0.9)_48%,rgba(255,255,255,0.03))]"
-          } shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-sm transition-all duration-300 ${
+          } shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-xs transition-all duration-300 ${
             featured ? "hover:glow-orange" : ""
           }`}
           whileHover={cardHover}
@@ -91,7 +91,7 @@ export default function ShowCard({
                   className="scale-110 object-cover opacity-25 blur-xl saturate-150"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/20 to-black/60" />
+                <div className="absolute inset-0 bg-linear-to-b from-black/5 via-black/20 to-black/60" />
                 <div className="relative h-full w-full overflow-hidden rounded-xl border border-white/10 bg-black/40 shadow-2xl">
                   <Image
                     src={coverImage}
@@ -104,7 +104,7 @@ export default function ShowCard({
               </>
             ) : (
               <div
-                className={`h-full w-full rounded-lg border border-white/10 bg-gradient-to-br ${
+                className={`h-full w-full rounded-lg border border-white/10 bg-linear-to-br ${
                   featured
                     ? "from-accent-orange/20 via-accent-purple/20 to-accent-cyan/20"
                     : genreStyle.bg
@@ -115,7 +115,7 @@ export default function ShowCard({
             {/* Play Icon Overlay */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <motion.div
-                className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 shadow-[0_0_40px_rgba(255,255,255,0.22)] backdrop-blur-sm"
+                className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 shadow-[0_0_40px_rgba(255,255,255,0.22)] backdrop-blur-xs"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >

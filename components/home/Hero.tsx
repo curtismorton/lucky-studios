@@ -23,7 +23,7 @@ export default function Hero({ content, consultationHref }: HeroProps) {
   const consultationRel = consultationTarget ? "noopener noreferrer" : undefined;
 
   return (
-    <header className="relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+    <header className="relative flex min-h-svh items-center overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
       <HeroBackground
         mainImage={heroContent.mainBackground}
         fallbackImage={heroContent.accentImage}
@@ -75,13 +75,13 @@ export default function Hero({ content, consultationHref }: HeroProps) {
               href={consultationHref}
               target={consultationTarget}
               rel={consultationRel}
-              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white shadow-[0_16px_45px_rgba(245,158,11,0.28)] transition hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white shadow-[0_16px_45px_rgba(245,158,11,0.28)] transition hover:bg-amber-500 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
             >
               Book a consultation
             </a>
             <Link
               href="/shows"
-              className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/22 bg-black/25 px-8 py-3.5 font-heading text-base font-semibold text-white backdrop-blur-sm transition hover:border-accent-orange/45 hover:bg-accent-orange/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+              className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/22 bg-black/25 px-8 py-3.5 font-heading text-base font-semibold text-white backdrop-blur-xs transition hover:border-accent-orange/45 hover:bg-accent-orange/10 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
             >
               See the network
               <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />

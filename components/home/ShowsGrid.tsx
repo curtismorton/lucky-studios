@@ -77,7 +77,7 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
               >
                 <Link
                   href={`/shows/${show.slug}`}
-                  className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                  className="block focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
                 >
                   <div className="relative aspect-[1.08] overflow-hidden bg-black">
                     <Image
@@ -87,8 +87,8 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
                       sizes="(max-width: 1024px) 100vw, 33vw"
                       className="object-cover transition duration-700 group-hover:scale-[1.035]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-                    <span className="absolute left-5 top-5 rounded-full border border-accent-orange/30 bg-black/50 px-3 py-1.5 text-xs font-medium text-accent-orange backdrop-blur-sm">
+                    <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
+                    <span className="absolute left-5 top-5 rounded-full border border-accent-orange/30 bg-black/50 px-3 py-1.5 text-xs font-medium text-accent-orange backdrop-blur-xs">
                       {content.category}
                     </span>
                   </div>
@@ -121,7 +121,7 @@ export default function ShowsGrid({ shows }: { shows: Show[] }) {
         <div className="mt-10">
           <Link
             href="/shows"
-            className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-white/15 px-7 py-3 font-heading text-sm font-semibold text-white transition hover:border-accent-orange/45 hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+            className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-white/15 px-7 py-3 font-heading text-sm font-semibold text-white transition hover:border-accent-orange/45 hover:text-accent-orange focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
           >
             See the network
             <ArrowRight className="h-4 w-4" />

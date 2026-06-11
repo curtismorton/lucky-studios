@@ -21,7 +21,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-24 pt-32 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-cyan/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-br from-accent-cyan/10 via-transparent to-transparent" />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -55,7 +55,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
             {page.trustedBy.brands.map((brand, index) => (
               <div
                 key={`${brand}-${index}`}
-                className={`rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 backdrop-blur-sm sm:px-8 sm:py-4 ${index === 0 ? "" : "opacity-70"}`}
+                className={`rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 backdrop-blur-xs sm:px-8 sm:py-4 ${index === 0 ? "" : "opacity-70"}`}
               >
                 <span className="font-heading text-lg font-bold text-white sm:text-xl">
                   {brand}
@@ -77,7 +77,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 hover:glow-cyan touch-manipulation sm:rounded-3xl sm:p-8 md:p-10"
+                className="group relative overflow-hidden rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-xs transition-all duration-300 hover:border-accent-cyan/50 hover:glow-cyan touch-manipulation sm:rounded-3xl sm:p-8 md:p-10"
               >
                 <div className="mb-4 inline-flex rounded-xl bg-accent-cyan/10 p-3 sm:mb-6 sm:p-4">
                   <Icon className="h-6 w-6 text-accent-cyan sm:h-8 sm:w-8" />
@@ -110,7 +110,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
+          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-linear-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">
@@ -194,7 +194,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 text-center backdrop-blur-sm sm:p-8"
+              className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 text-center backdrop-blur-xs sm:p-8"
             >
               <div className="mb-2 font-heading text-3xl font-bold text-accent-cyan sm:text-4xl md:text-5xl">
                 {stat.value}
@@ -234,7 +234,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm transition-all duration-300 hover:border-accent-cyan/50 sm:p-6"
+                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-xs transition-all duration-300 hover:border-accent-cyan/50 sm:p-6"
               >
                 <div className="mb-4 inline-flex rounded-xl bg-accent-cyan/10 p-2.5 sm:p-3">
                   <Icon className="h-5 w-5 text-accent-cyan sm:h-6 sm:w-6" />
@@ -257,7 +257,7 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
+          className="relative overflow-hidden rounded-2xl border border-accent-cyan/30 bg-linear-to-br from-background-secondary to-background-tertiary p-8 text-center sm:rounded-3xl sm:p-12"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10">

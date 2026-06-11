@@ -37,7 +37,7 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
   return (
     <main className="min-h-screen bg-background">
       <section className="relative mx-auto max-w-7xl px-4 pb-24 pt-32 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-purple/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-br from-accent-purple/10 via-transparent to-transparent" />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -94,7 +94,7 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`group rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm transition-all duration-300 ${styles.glow} hover:border-accent-purple/50 sm:p-8`}
+                className={`group rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-xs transition-all duration-300 ${styles.glow} hover:border-accent-purple/50 sm:p-8`}
               >
                 <div className={`mb-4 inline-flex rounded-xl ${styles.bg} p-3 sm:mb-6 sm:p-4`}>
                   <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${styles.text}`} />
@@ -117,7 +117,7 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-2xl border border-accent-purple/30 bg-gradient-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
+          className="relative overflow-hidden rounded-2xl border border-accent-purple/30 bg-linear-to-br from-background-secondary to-background-tertiary p-8 sm:rounded-3xl sm:p-12 md:p-16"
         >
           <div className="absolute inset-0 bg-gradient-glow opacity-30" />
           <div className="relative z-10 grid gap-6 sm:gap-8 md:grid-cols-2">
@@ -170,7 +170,7 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
             The creators we can{" "}
             <span className="text-gradient-accent">actually help</span>
           </h2>
-          <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-sm sm:p-8">
+          <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 backdrop-blur-xs sm:p-8">
             <ul className="space-y-3 sm:space-y-4">
               {page.lookFor.items.map((trait, index) => (
                 <motion.li
@@ -181,7 +181,7 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="flex items-start gap-3 sm:gap-4"
                 >
-                  <div className="mt-1 flex-shrink-0">
+                  <div className="mt-1 shrink-0">
                     <Check className="h-4 w-4 text-accent-purple sm:h-5 sm:w-5" />
                   </div>
                   <span className="font-body text-base text-text-secondary sm:text-lg">
@@ -241,7 +241,7 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm sm:p-6"
+                className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-xs sm:p-6"
               >
                 <h3 className="mb-2 font-heading text-lg font-semibold text-white sm:mb-3 sm:text-xl">
                   {faq.question}

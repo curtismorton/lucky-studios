@@ -29,7 +29,7 @@ export default function BTSBackground() {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute -top-[10%] -left-[10%] -right-[10%] -bottom-[10%] grid grid-cols-4 grid-rows-3 gap-4 opacity-20 -rotate-[5deg] scale-[1.2]">
+      <div className="absolute top-[-10%] left-[-10%] right-[-10%] bottom-[-10%] grid grid-cols-4 grid-rows-3 gap-4 opacity-20 rotate-[-5deg] scale-[1.2]">
         {gridImages.map((image, index) => (
           <motion.div
             key={index}
@@ -50,7 +50,7 @@ export default function BTSBackground() {
               src={image.src}
               alt={image.alt}
               fill
-              className="object-cover blur-[2px] grayscale-[30%]"
+              className="object-cover blur-[2px] grayscale-30"
               sizes="(max-width: 768px) 25vw, 20vw"
               onError={(e) => {
                 // Fallback to gradient if image fails to load
@@ -66,7 +66,7 @@ export default function BTSBackground() {
         ))}
       </div>
       {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/70 to-background/98" />
+      <div className="absolute inset-0 bg-linear-to-b from-background/95 via-background/70 to-background/98" />
       {/* Radial gradients for focus areas */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(13,13,13,0.85)_0%,transparent_70%),radial-gradient(ellipse_at_70%_50%,rgba(13,13,13,0.9)_0%,transparent_70%)]" />
     </div>

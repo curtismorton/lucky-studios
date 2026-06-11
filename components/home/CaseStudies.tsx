@@ -65,7 +65,7 @@ export default function CaseStudies() {
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className="overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.055),rgba(12,12,13,0.65))]"
             >
-              <div className="relative aspect-[2/1] overflow-hidden">
+              <div className="relative aspect-2/1 overflow-hidden">
                 <Image
                   src={caseStudy.image}
                   alt={`${caseStudy.name} studio production`}
@@ -73,7 +73,7 @@ export default function CaseStudies() {
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition duration-700 hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/18 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-background via-background/18 to-transparent" />
                 <p className="absolute bottom-5 left-6 text-xs font-semibold uppercase tracking-[0.25em] text-accent-orange sm:left-8">
                   {caseStudy.name}
                 </p>
@@ -118,7 +118,7 @@ export default function CaseStudies() {
                 </dl>
                 <Link
                   href={caseStudy.href}
-                  className="mt-8 inline-flex min-h-[44px] items-center border-b border-accent-orange/50 font-heading text-sm font-semibold text-white transition hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                  className="mt-8 inline-flex min-h-[44px] items-center border-b border-accent-orange/50 font-heading text-sm font-semibold text-white transition hover:text-accent-orange focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
                 >
                   View show
                 </Link>

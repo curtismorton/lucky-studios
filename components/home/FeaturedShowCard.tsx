@@ -36,10 +36,10 @@ export default function FeaturedShowCard() {
       transition={{ duration: 0.8, delay: 0.5 }}
       className="relative"
     >
-      <div className="absolute -inset-1 rounded-[1.8rem] bg-gradient-to-r from-accent-amber/30 via-accent-gold/15 to-accent-amber/10 blur-md" />
+      <div className="absolute -inset-1 rounded-[1.8rem] bg-linear-to-r from-accent-amber/30 via-accent-gold/15 to-accent-amber/10 blur-md" />
       <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-background-secondary/86 p-6 shadow-2xl backdrop-blur-xl md:p-7">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(245,158,11,0.15)_0%,transparent_45%)]" />
-        <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-accent-amber to-accent-gold" />
+        <div className="absolute left-0 right-0 top-0 h-1 bg-linear-to-r from-accent-amber to-accent-gold" />
 
         <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-accent-amber/15 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-accent-amber">
           <Star className="h-3 w-3 fill-current" />
@@ -47,7 +47,7 @@ export default function FeaturedShowCard() {
         </div>
 
         <div className="mb-6 flex gap-5">
-          <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 shadow-xl md:h-36 md:w-36">
+          <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-2xl border border-white/10 shadow-xl md:h-36 md:w-36">
             <Image
               src={coverImage}
               alt={featuredShow.title}

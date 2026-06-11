@@ -32,7 +32,7 @@ export default function ShowHosts({ hosts }: ShowHostsProps) {
             >
               {/* Photo Placeholder */}
               <div className="mb-4 flex justify-center">
-                <div className="h-24 w-24 rounded-full bg-gradient-to-br from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30" />
+                <div className="h-24 w-24 rounded-full bg-linear-to-br from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30" />
               </div>
               <h3 className="mb-2 font-heading text-xl font-semibold text-white">
                 {host.name}
