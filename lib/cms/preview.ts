@@ -82,9 +82,9 @@ export function getPreviewCookieName(): string {
   return PREVIEW_COOKIE_NAME;
 }
 
-export function isCmsPreviewActive(): boolean {
+export async function isCmsPreviewActive(): Promise<boolean> {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get(PREVIEW_COOKIE_NAME)?.value;
     if (!token) return false;
     return Boolean(verifyPreviewToken(token));

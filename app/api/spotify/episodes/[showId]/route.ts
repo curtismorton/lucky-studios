@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSpotifyEpisodes } from "@/lib/services/spotify";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { showId: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ showId: string }> }) {
+  const params = await props.params;
   try {
     const { showId } = params;
     const searchParams = request.nextUrl.searchParams;

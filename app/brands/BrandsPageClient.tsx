@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowRight, TrendingUp, Mic, Users, BarChart3, Video, Globe } from "lucide-react";
 import Link from "next/link";
 import {

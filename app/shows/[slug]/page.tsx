@@ -25,11 +25,12 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ slug: string }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
   const [show, site] = await Promise.all([
     getShowBySlug(params.slug),
     getSiteSettings(),
@@ -85,7 +86,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function ShowPage({ params }: { params: { slug: string } }) {
+export default async function ShowPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const show = await getShowBySlug(params.slug);
 
   if (!show) {

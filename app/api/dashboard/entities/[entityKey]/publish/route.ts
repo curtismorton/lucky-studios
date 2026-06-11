@@ -7,10 +7,8 @@ import { requireActiveMfa } from "@/lib/cms/mfa";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { entityKey: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ entityKey: string }> }) {
+  const params = await props.params;
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
   const mfa = requireActiveMfa(request, auth.context.userId);

@@ -6,10 +6,8 @@ import { isCmsV2WriteEnabled } from "@/lib/cms/flags";
 
 export const dynamic = "force-dynamic";
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { entityKey: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ entityKey: string }> }) {
+  const params = await props.params;
   const auth = await withDashboardRole(request, "editor");
   if (!auth.ok) return auth.response;
 

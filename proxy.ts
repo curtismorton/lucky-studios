@@ -104,7 +104,7 @@ function isPublicCmsPath(pathname: string): boolean {
   return pathname === "/cms/login";
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   if (pathname.startsWith("/admin")) {

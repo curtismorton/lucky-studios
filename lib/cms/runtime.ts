@@ -68,7 +68,7 @@ export async function getCmsRuntimeEntity<TKey extends CmsEntityKey>(
   }
 
   const allowPreview = options?.allowPreview !== false;
-  const previewActive = allowPreview && isCmsPreviewActive();
+  const previewActive = allowPreview && (await isCmsPreviewActive());
   const preferredWorkspace: CmsWorkspace = previewActive ? "draft" : "published";
 
   try {

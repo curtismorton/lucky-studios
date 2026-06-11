@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, type HTMLMotionProps } from "motion/react";
 import { useTilt } from "@/lib/hooks/useTilt";
 import type { ReactNode } from "react";
 

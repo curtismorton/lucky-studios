@@ -5,10 +5,8 @@ import { isCmsEntityKey } from "@/lib/cms/entityKeys";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { entityKey: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ entityKey: string }> }) {
+  const params = await props.params;
   const auth = await withDashboardRole(request, "viewer");
   if (!auth.ok) return auth.response;
 

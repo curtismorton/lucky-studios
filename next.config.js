@@ -26,11 +26,7 @@ const nextConfig = {
       },
     ],
   },
-  // Optimize production builds
-  swcMinify: true,
-  // Enable compression
   compress: true,
-  // Production source maps (optional, disable for smaller builds)
   productionBrowserSourceMaps: false,
 }
 

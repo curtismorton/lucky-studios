@@ -1,4 +1,4 @@
-import { Variants } from "framer-motion";
+import { Variants, TargetAndTransition } from "motion/react";
 
 export const fadeInUp: Variants = {
   hidden: {
@@ -124,7 +124,7 @@ export const pageTransition: Variants = {
   },
 };
 
-export const buttonHover = {
+export const buttonHover: TargetAndTransition = {
   scale: 1.02,
   transition: {
     duration: 0.2,
@@ -132,14 +132,14 @@ export const buttonHover = {
   },
 };
 
-export const buttonTap = {
+export const buttonTap: TargetAndTransition = {
   scale: 0.98,
   transition: {
     duration: 0.1,
   },
 };
 
-export const cardHover = {
+export const cardHover: TargetAndTransition = {
   y: -4,
   transition: {
     duration: 0.3,

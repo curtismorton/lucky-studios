@@ -1,4 +1,4 @@
-import { useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
+import { useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 import { useCallback, type MouseEvent } from "react";
 
 const springConfig = { stiffness: 170, damping: 22, mass: 0.2 };

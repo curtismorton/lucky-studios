@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import {
   AlertTriangle,
   Calendar,

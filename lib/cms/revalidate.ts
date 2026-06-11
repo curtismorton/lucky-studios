@@ -20,7 +20,7 @@ function revalidateMarketingPages() {
   MARKETING_PAGE_PATHS.forEach((path) => {
     revalidatePath(path);
   });
-  revalidateTag(MARKETING_CACHE_TAG);
+  revalidateTag(MARKETING_CACHE_TAG, "max");
 }
 
 function revalidatePublicSiteShell() {
@@ -34,7 +34,7 @@ export function revalidatePublishedEntity(entityKey: CmsEntityKey) {
   switch (entityKey) {
     case "homepage":
       revalidatePath("/");
-      revalidateTag(HOMEPAGE_CACHE_TAG);
+      revalidateTag(HOMEPAGE_CACHE_TAG, "max");
       break;
     case "marketing-pages":
       revalidateMarketingPages();

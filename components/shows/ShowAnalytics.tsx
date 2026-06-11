@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { TrendingUp, Eye, Play, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Show } from "@/lib/data/shows";

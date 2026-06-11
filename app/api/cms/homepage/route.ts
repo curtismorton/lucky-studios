@@ -58,7 +58,7 @@ export async function PUT(request: NextRequest) {
     );
   }
 
-  revalidateTag(HOMEPAGE_CMS_CACHE_TAG);
+  revalidateTag(HOMEPAGE_CMS_CACHE_TAG, "max");
 
   return NextResponse.json({
     ok: true,

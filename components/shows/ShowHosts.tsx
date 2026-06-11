@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Twitter, Instagram } from "lucide-react";
 import { type Host } from "@/lib/data/shows";
 

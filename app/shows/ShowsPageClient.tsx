@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { type Show } from "@/lib/data/shows";
 import ShowCard from "@/components/shows/ShowCard";
 import { useSpotifyShows } from "@/lib/hooks/useSpotifyShows";

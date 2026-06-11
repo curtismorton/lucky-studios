@@ -1,6 +1,6 @@
 "use client";
 
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, motion } from "motion/react";
 import Hero from "@/components/home/Hero";
 import TransformationSection from "@/components/home/TransformationSection";
 import ShowsGrid from "@/components/home/ShowsGrid";

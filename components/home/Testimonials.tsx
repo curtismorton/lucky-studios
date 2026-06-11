@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Star } from "lucide-react";
 import { useRef } from "react";
 import TiltCard from "@/components/ui/TiltCard";

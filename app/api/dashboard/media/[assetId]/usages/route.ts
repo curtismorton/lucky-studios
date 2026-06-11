@@ -4,10 +4,8 @@ import { getDashboardAssetUsage } from "@/lib/cms/media";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { assetId: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ assetId: string }> }) {
+  const params = await props.params;
   const auth = await withDashboardRole(request, "viewer");
   if (!auth.ok) return auth.response;
 

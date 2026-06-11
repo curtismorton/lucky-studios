@@ -10,10 +10,8 @@ function isCmsRole(value: unknown): value is CmsRole {
   return value === "admin" || value === "editor" || value === "viewer";
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { userId: string } }
-) {
+export async function PUT(request: NextRequest, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
   const mfa = requireActiveMfa(request, auth.context.userId);

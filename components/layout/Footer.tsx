@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import { site } from "@/lib/data/site";
