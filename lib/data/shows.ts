@@ -99,7 +99,7 @@ export const shows: Show[] = [
       youtube: 'https://youtube.com/@backpost',
     },
     spotifyShowId: '6z7TZBmzHJrgx1Mx8zbywv',
-    ogImage: '/images/hero/hero-2171.jpg',
+    ogImage: '/images/hero/hero-2104.jpg',
   },
   {
     id: '3',
@@ -126,7 +126,7 @@ export const shows: Show[] = [
       youtube: 'https://youtube.com/@abbyboom',
     },
     spotifyShowId: '31T31fbr6LrQbe5SmYATHq',
-    ogImage: '/images/hero/hero-2104.jpg',
+    ogImage: '/images/hero/hero-2171.jpg',
   },
   {
     id: '4',

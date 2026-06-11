@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import Grain from "@/components/cinema/Grain";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 
@@ -51,11 +52,14 @@ export default function SiteChrome({
   return (
     <>
       {hideSiteChrome ? null : (
-        <Navbar
-          links={links}
-          bookingHref={bookingHref}
-          bookingLabel={bookingLabel}
-        />
+        <>
+          <Grain />
+          <Navbar
+            links={links}
+            bookingHref={bookingHref}
+            bookingLabel={bookingLabel}
+          />
+        </>
       )}
       {children}
       {hideSiteChrome ? null : (

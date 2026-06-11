@@ -1,10 +1,33 @@
 @import 'tailwindcss';
 
+/* ============================================================
+   LUCKY STUDIOS — CINEMA SYSTEM
+   Dark film-grade palette. One accent: the tally light.
+   Display type: Archivo (variable width). Telemetry: IBM Plex Mono.
+   ============================================================ */
+
 @theme {
+  /* --- Cinema palette --- */
+  --color-ink: #0a0a0b; /* page black */
+  --color-carbon: #131316; /* raised surface */
+  --color-carbon-deep: #1a1a1f; /* hover / inset surface */
+  --color-bone: #ece9e2; /* warm print white */
+  --color-tally: #ff312e; /* REC light */
+  --color-tally-deep: #b3120f; /* pressed / borders */
+
+  /* --- Type --- */
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Legacy aliases so pre-rebuild pages keep rendering */
+  --font-heading: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-archivo), system-ui, sans-serif;
+
+  /* --- Legacy palette (CMS admin only — remove with task #5) --- */
   --color-background: #1c1c1e;
   --color-background-secondary: #2c2c2e;
   --color-background-tertiary: #3a3a3c;
-
   --color-accent: #f59e0b;
   --color-accent-amber: #f59e0b;
   --color-accent-gold: #d97706;
@@ -14,43 +37,17 @@
   --color-accent-purple: #8b5cf6;
   --color-accent-cyan: #06b6d4;
   --color-accent-green: #10b981;
-
   --color-text: #f5f5f7;
   --color-text-secondary: #a0a0a0;
   --color-text-muted: #666666;
 
-  --font-heading: var(--font-heading), system-ui, sans-serif;
-  --font-body: var(--font-body), system-ui, sans-serif;
-
-  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
-  --background-image-gradient-conic: conic-gradient(
-    from 180deg at 50% 50%,
-    var(--tw-gradient-stops)
-  );
-  --background-image-gradient-accent: linear-gradient(
-    135deg,
-    #f59e0b 0%,
-    #d97706 50%,
-    #b87333 100%
-  );
-  --background-image-gradient-glow: radial-gradient(
-    circle at center,
-    rgba(245, 158, 11, 0.15) 0%,
-    transparent 70%
-  );
-
   --shadow-glow-amber: 0 0 20px rgba(245, 158, 11, 0.4);
-  --shadow-glow-gold: 0 0 25px rgba(217, 119, 6, 0.5);
-  --shadow-glow-copper: 0 0 20px rgba(184, 115, 51, 0.4);
   --shadow-glow-orange: 0 0 20px rgba(245, 158, 11, 0.4);
-  --shadow-glow-purple: 0 0 20px rgba(139, 92, 246, 0.4);
-  --shadow-glow-cyan: 0 0 20px rgba(6, 182, 212, 0.4);
-  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.4);
-  --shadow-glow-accent: 0 0 30px rgba(255, 107, 53, 0.3);
 
   --animate-fade-in: fadeIn 0.5s ease-in-out;
   --animate-slide-up: slideUp 0.5s ease-out;
   --animate-glow-pulse: glowPulse 2s ease-in-out infinite;
+  --animate-rec-blink: recBlink 1.6s steps(1) infinite;
 
   @keyframes fadeIn {
     0% {
@@ -79,16 +76,19 @@
       opacity: 0.7;
     }
   }
+  @keyframes recBlink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.25;
+    }
+  }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
+/* Tailwind v4 sets default border color to currentcolor; keep the v3
+   default until every page sets explicit border colors. */
 @layer base {
   *,
   ::after,
@@ -99,45 +99,67 @@
   }
 }
 
-@utility text-gradient-accent {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b87333 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ============================================================
+   CINEMA UTILITIES
+   ============================================================ */
+
+/* Big-screen display type: expanded width, heavy weight, tight leading */
+@utility type-display {
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 0.94;
 }
-@utility bg-gradient-glow {
-  background: radial-gradient(
-    circle at center,
-    rgba(245, 158, 11, 0.15) 0%,
-    transparent 70%
+
+/* Mono slate/telemetry label */
+@utility tc-label {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Film grade for photography — desaturate, deepen, unify */
+@utility film-grade {
+  filter: saturate(0.78) contrast(1.08) brightness(0.78);
+}
+
+/* Heavier grade for background plates */
+@utility film-grade-deep {
+  filter: saturate(0.65) contrast(1.1) brightness(0.58);
+}
+
+/* Film grain tile (SVG turbulence) — pair with opacity + blend */
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='220'%20height='220'%20viewBox='0%200%20220%20220'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3C/filter%3E%3Crect%20width='220'%20height='220'%20filter='url(%23n)'%20opacity='0.4'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  mix-blend-mode: soft-light;
+}
+
+/* Bottom scrim for text legibility over plates */
+@utility scrim-b {
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 11, 0.96) 0%,
+    rgba(10, 10, 11, 0.62) 38%,
+    rgba(10, 10, 11, 0.18) 68%,
+    rgba(10, 10, 11, 0) 100%
   );
 }
-@utility glow-amber {
-  box-shadow: var(--glow-amber);
+
+/* Full-frame vignette */
+@utility vignette {
+  background: radial-gradient(
+    120% 90% at 50% 40%,
+    rgba(10, 10, 11, 0) 40%,
+    rgba(10, 10, 11, 0.55) 100%
+  );
 }
-@utility glow-gold {
-  box-shadow: var(--glow-gold);
-}
-@utility glow-copper {
-  box-shadow: var(--glow-copper);
-}
-@utility glow-orange {
-  box-shadow: var(--glow-orange);
-}
-@utility glow-purple {
-  box-shadow: var(--glow-purple);
-}
-@utility glow-cyan {
-  box-shadow: var(--glow-cyan);
-}
-@utility glow-green {
-  box-shadow: var(--glow-green);
-}
-@utility glow-accent {
-  box-shadow: var(--glow-accent);
-}
+
 @utility link-underline {
-  /* Link hover animations */
   position: relative;
   text-decoration: none;
 
@@ -147,7 +169,7 @@
     bottom: -2px;
     left: 0;
     width: 0;
-    height: 2px;
+    height: 1px;
     background: currentColor;
     transition: width 0.3s ease;
   }
@@ -156,110 +178,26 @@
     width: 100%;
   }
 }
-@utility text-gradient-rainbow {
-  background: linear-gradient(
-    90deg,
-    #f59e0b 0%,
-    #d97706 33.33%,
-    #b87333 66.66%,
-    #f59e0b 100%
-  );
-  background-size: 200% 100%;
+
+/* Legacy utilities (CMS admin only — remove with task #5) */
+@utility text-gradient-accent {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b87333 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 3s ease infinite;
 }
-@utility waveform-bar {
-  /* Audio Waveform Animation */
-  transform-origin: bottom center;
-  animation: waveform-pulse 1.5s ease-in-out infinite;
-
-  &:nth-child(1) {
-    animation-delay: 0s;
-  }
-  &:nth-child(2) {
-    animation-delay: 0.1s;
-  }
-  &:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-  &:nth-child(4) {
-    animation-delay: 0.3s;
-  }
-  &:nth-child(5) {
-    animation-delay: 0.4s;
-  }
-  &:nth-child(6) {
-    animation-delay: 0.5s;
-  }
-  &:nth-child(7) {
-    animation-delay: 0.6s;
-  }
-  &:nth-child(8) {
-    animation-delay: 0.7s;
-  }
+@utility glow-amber {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
 }
-@utility bg-tech-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: grid-drift 40s linear infinite;
-}
-@utility bg-scanlines {
-  background-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.08) 1px,
-    transparent 1px
-  );
-  background-size: 100% 4px;
-  mix-blend-mode: screen;
-  animation: scanline-drift 12s linear infinite;
-}
-@utility hero-noise {
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='220'%20height='220'%20viewBox='0%200%20220%20220'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3C/filter%3E%3Crect%20width='220'%20height='220'%20filter='url(%23n)'%20opacity='0.4'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 220px 220px;
-  mix-blend-mode: soft-light;
+@utility glow-orange {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
 }
 
-@layer utilities {
-  :root {
-    /* Color System - Warm Studio Theme */
-    --color-background: #1c1c1e;
-    --color-background-secondary: #2c2c2e;
-    --color-background-tertiary: #3a3a3c;
+/* ============================================================
+   BASE
+   ============================================================ */
 
-    /* Warm Studio Accents */
-    --color-accent-amber: #f59e0b;
-    --color-accent-gold: #d97706;
-    --color-accent-copper: #b87333;
-    --color-accent-brass: #cd7f32;
-
-    /* Legacy colors for backward compatibility */
-    --color-accent-orange: #f59e0b;
-    --color-accent-purple: #8b5cf6;
-    --color-accent-cyan: #06b6d4;
-    --color-accent-green: #10b981;
-
-    --color-text-primary: #f5f5f7;
-    --color-text-secondary: #a0a0a0;
-    --color-text-muted: #666666;
-
-    /* Glow Effects - Warm Studio */
-    --glow-amber: 0 0 20px rgba(245, 158, 11, 0.4);
-    --glow-gold: 0 0 25px rgba(217, 119, 6, 0.5);
-    --glow-copper: 0 0 20px rgba(184, 115, 51, 0.4);
-    --glow-accent: 0 0 30px rgba(245, 158, 11, 0.3);
-
-    /* Legacy glows */
-    --glow-orange: 0 0 20px rgba(245, 158, 11, 0.4);
-    --glow-purple: 0 0 20px rgba(139, 92, 246, 0.4);
-    --glow-cyan: 0 0 20px rgba(6, 182, 212, 0.4);
-    --glow-green: 0 0 20px rgba(16, 185, 129, 0.4);
-  }
-
+@layer base {
   * {
     box-sizing: border-box;
     padding: 0;
@@ -271,21 +209,20 @@
   body {
     max-width: 100vw;
     overflow-x: hidden;
-    background-color: var(--color-background, #1c1c1e);
-    color: var(--color-text-primary, #f5f5f7);
-  }
-
-  /* Touch optimization */
-  button,
-  a,
-  [role='button'] {
-    touch-action: manipulation;
+    background-color: var(--color-ink);
+    color: var(--color-bone);
   }
 
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: var(--font-body), system-ui, sans-serif;
+    font-family: var(--font-archivo), system-ui, sans-serif;
+  }
+
+  button,
+  a,
+  [role='button'] {
+    touch-action: manipulation;
   }
 
   h1,
@@ -294,67 +231,26 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-heading), system-ui, sans-serif;
+    font-family: var(--font-archivo), system-ui, sans-serif;
     font-weight: 700;
   }
 
-  /* Custom scrollbar */
+  ::selection {
+    background: var(--color-tally);
+    color: var(--color-ink);
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
   }
-
   ::-webkit-scrollbar-track {
-    background: var(--color-background);
+    background: var(--color-ink);
   }
-
   ::-webkit-scrollbar-thumb {
-    background: var(--color-background-tertiary);
+    background: var(--color-carbon-deep);
     border-radius: 5px;
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-amber);
-  }
-
-  /* Utility classes for gradients and glows */
-}
-@layer utilities {
-  
-  @keyframes waveform-pulse {
-    0%, 100% {
-      transform: scaleY(0.3);
-      opacity: 0.6;
-    }
-    50% {
-      transform: scaleY(1);
-      opacity: 1;
-    }
-  }
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
-}
-
-@keyframes grid-drift {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 200px 200px;
-  }
-}
-
-@keyframes scanline-drift {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 80px;
+    background: var(--color-tally);
   }
 }

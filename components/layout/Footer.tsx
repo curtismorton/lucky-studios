@@ -1,8 +1,6 @@
-"use client";
-
-import { motion } from "motion/react";
-import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
-import Logo from "@/components/ui/Logo";
+import Image from "next/image";
+import Link from "next/link";
+import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 import { site } from "@/lib/data/site";
 
 const DEFAULT_FOOTER_NAV = [
@@ -37,145 +35,100 @@ export default function Footer({
   badgeHighlight = "Socially Powerful",
   copyrightText = "© 2026 Lucky Studios. All rights reserved.",
 }: FooterProps) {
-  const contactInfo = [
-    {
-      label: "Email",
-      value: email,
-      href: `mailto:${email}`,
-    },
-    {
-      label: "Phone",
-      value: phone,
-      href: `tel:${phone.replace(/\s+/g, "")}`,
-    },
-  ];
-
   const socialLinks = [
-    { name: "Twitter", icon: Twitter, href: socials.x || "" },
-    { name: "Instagram", icon: Instagram, href: socials.instagram || "" },
-    { name: "LinkedIn", icon: Linkedin, href: socials.linkedin || "" },
-    { name: "YouTube", icon: Youtube, href: socials.youtube || "" },
-  ].filter((item) => item.href && item.href.trim().length > 0);
+    { name: "X", href: socials?.x, Icon: Twitter },
+    { name: "Instagram", href: socials?.instagram, Icon: Instagram },
+    { name: "LinkedIn", href: socials?.linkedin, Icon: Linkedin },
+    { name: "YouTube", href: socials?.youtube, Icon: Youtube },
+  ].filter((social) => Boolean(social.href));
 
   return (
-    <footer className="relative border-t border-background-tertiary bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        {/* Logo Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 flex justify-center"
-        >
-          <Logo size="md" />
-        </motion.div>
-        
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-          {/* Navigation Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h3 className="mb-6 font-heading text-lg font-semibold text-white">
-              Navigation
-            </h3>
-            <ul className="space-y-3">
+    <footer className="border-t border-bone/10">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20 lg:px-16">
+        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+          {/* Brand */}
+          <div>
+            <Image
+              src="/images/LOGO-WHITE.png"
+              alt="Lucky Studios"
+              width={140}
+              height={32}
+              className="h-7 w-auto"
+            />
+            <p className="type-display mt-6 text-2xl uppercase">
+              Make your own <span className="text-tally">luck</span>.
+            </p>
+            <p className="tc-label mt-6 text-bone/40">
+              Podcast network &amp; production studio · London
+            </p>
+          </div>
+
+          {/* Nav */}
+          <nav aria-label="Footer">
+            <p className="tc-label text-bone/40">Index</p>
+            <ul className="mt-5 space-y-3">
               {links.map((link) => (
-                <li key={link.name}>
-                  <a
+                <li key={link.href}>
+                  <Link
                     href={link.href}
-                    className="font-body text-sm text-text-secondary transition-colors hover:text-accent-orange"
+                    className="link-underline text-sm text-bone/70 hover:text-bone"
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
-          </motion.div>
+          </nav>
 
-          {/* Contact Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <h3 className="mb-6 font-heading text-lg font-semibold text-white">
-              Contact
-            </h3>
-            <ul className="space-y-3">
-              {contactInfo.map((item) => (
-                <li key={item.label}>
+          {/* Contact */}
+          <div>
+            <p className="tc-label text-bone/40">Contact</p>
+            <ul className="mt-5 space-y-3 text-sm">
+              {email && (
+                <li>
                   <a
-                    href={item.href}
-                    className="font-body text-sm text-text-secondary transition-colors hover:text-accent-orange"
+                    href={`mailto:${email}`}
+                    className="link-underline font-mono text-bone/70 hover:text-bone"
                   >
-                    <span className="block font-medium text-white">{item.label}</span>
-                    {item.value}
+                    {email}
                   </a>
                 </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Social Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h3 className="mb-6 font-heading text-lg font-semibold text-white">
-              Follow Us
-            </h3>
-            <div className="flex gap-4">
-              {socialLinks.map((social) => {
-                const Icon = social.icon;
-                return (
-                  <motion.a
-                    key={social.name}
-                    href={social.href}
-                    className="rounded-full border border-background-tertiary bg-background-secondary p-3 text-text-secondary transition-all duration-300 hover:border-accent-orange hover:text-accent-orange hover:glow-orange"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                    aria-label={social.name}
+              )}
+              {phone && (
+                <li>
+                  <a
+                    href={`tel:${phone.replace(/\s/g, "")}`}
+                    className="link-underline font-mono text-bone/70 hover:text-bone"
                   >
-                    <Icon className="h-5 w-5" />
-                  </motion.a>
-                );
-              })}
-            </div>
-          </motion.div>
+                    {phone}
+                  </a>
+                </li>
+              )}
+            </ul>
+            {socialLinks.length > 0 && (
+              <div className="mt-7 flex gap-5">
+                {socialLinks.map(({ name, href, Icon }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={name}
+                    className="text-bone/50 transition-colors hover:text-tally"
+                  >
+                    <Icon size={18} />
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Badge and Copyright */}
-        <div className="mt-12 border-t border-background-tertiary pt-8">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="rounded-full border border-accent-purple/30 bg-background-secondary px-4 py-2"
-            >
-              <span className="font-body text-xs font-medium text-text-secondary">
-                {badgePrefix}{" "}
-                <span className="text-accent-purple">{badgeHighlight}</span>
-              </span>
-            </motion.div>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="font-body text-sm text-text-muted"
-            >
-              {copyrightText}
-            </motion.p>
-          </div>
+        <div className="mt-16 flex flex-col gap-4 border-t border-bone/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="tc-label text-bone/40">{copyrightText}</p>
+          <p className="tc-label text-bone/40">
+            {badgePrefix} <span className="text-bone/70">{badgeHighlight}</span>
+          </p>
         </div>
       </div>
     </footer>

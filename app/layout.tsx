@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Syne } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/layout/SiteChrome";
 import { OrganizationSchema } from "@/components/seo/StructuredData";
@@ -7,16 +7,16 @@ import { site } from "@/lib/data/site";
 import { getNavFooterSettings, getSeoDefaults, getSiteSettings } from "@/lib/services/cms/siteSettings";
 import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
-const headingFont = Syne({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-heading",
-  weight: ["500", "600", "700", "800"],
+  variable: "--font-archivo",
+  axes: ["wdth"],
 });
 
-const bodyFont = Space_Grotesk({
+const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-body",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-plex-mono",
+  weight: ["400", "500", "600"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -115,13 +115,13 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${headingFont.variable} ${bodyFont.variable}`}
+      className={`dark ${archivo.variable} ${plexMono.variable}`}
     >
       <head>
         <OrganizationSchema siteSettings={siteSettings} />
       </head>
       <body
-        className="font-body antialiased bg-background"
+        className="font-sans antialiased bg-ink text-bone"
       >
         <SiteChrome
           links={navFooter.primaryLinks}

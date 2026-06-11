@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { Menu } from "lucide-react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import MobileMenu from "./MobileMenu";
-import { buttonHover, buttonTap } from "@/lib/animations";
-import Logo from "@/components/ui/Logo";
-import { site } from "@/lib/data/site";
-import { resolveConsultationHref } from "@/lib/utils/consultationHref";
+import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
+import RecBadge from "@/components/cinema/RecBadge";
 
 const DEFAULT_NAV_LINKS = [
   { name: "Our Shows", href: "/shows" },
@@ -24,90 +21,155 @@ interface NavbarProps {
   bookingLabel?: string;
 }
 
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 export default function Navbar({
   links = DEFAULT_NAV_LINKS,
-  bookingHref: bookingHrefProp,
-  bookingLabel = "Book a Call",
+  bookingHref = "/contact?intent=consultation",
+  bookingLabel = "Book a call",
 }: NavbarProps) {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const bookingHref = resolveConsultationHref(bookingHrefProp || site.calendlyUrl);
-  const isExternalBooking = /^https?:\/\//i.test(bookingHref);
-  const bookingTarget = isExternalBooking ? "_blank" : undefined;
-  const bookingRel = isExternalBooking ? "noopener noreferrer" : undefined;
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return (
-    <>
-      <motion.nav
-        initial={false}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-background/80 backdrop-blur-md border-b border-background-tertiary"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            {/* Logo */}
-            <Logo size="sm" className="h-12" />
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex md:items-center md:gap-8">
-              {links.map((link) => (
-                <motion.div key={link.name} whileHover={{ y: -2 }}>
+  useEffect(() => {
+    document.documentElement.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const bookingExternal = bookingHref.startsWith("http");
+
+  return (
+    <header
+      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
+        scrolled && !menuOpen
+          ? "border-b border-bone/10 bg-ink/90 backdrop-blur-md"
+          : "border-b border-transparent"
+      }`}
+    >
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:h-[4.5rem] md:px-10 lg:px-16">
+        <Link href="/" aria-label="Lucky Studios — home" className="relative z-50 shrink-0">
+          <Image
+            src="/images/LOGO-WHITE.png"
+            alt="Lucky Studios"
+            width={120}
+            height={28}
+            className="h-6 w-auto md:h-7"
+            priority
+          />
+        </Link>
+
+        {/* Desktop nav */}
+        <div className="hidden items-center gap-8 md:flex">
+          {links.map((link) => {
+            const active =
+              pathname === link.href ||
+              (link.href !== "/" && pathname?.startsWith(`${link.href}/`));
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`tc-label transition-colors duration-200 ${
+                  active ? "text-bone" : "text-bone/55 hover:text-bone"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+          <Link
+            href={bookingHref}
+            {...(bookingExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="tc-label bg-tally px-5 py-3 text-ink transition-colors duration-200 hover:bg-bone"
+          >
+            {bookingLabel}
+          </Link>
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          className="relative z-50 flex h-11 w-11 flex-col items-center justify-center gap-1.5 md:hidden"
+        >
+          <span
+            className={`block h-0.5 w-6 bg-bone transition-transform duration-300 ${
+              menuOpen ? "translate-y-1 rotate-45" : ""
+            }`}
+          />
+          <span
+            className={`block h-0.5 w-6 bg-bone transition-transform duration-300 ${
+              menuOpen ? "-translate-y-1 -rotate-45" : ""
+            }`}
+          />
+        </button>
+      </nav>
+
+      {/* Mobile menu — full-frame title card */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-40 flex flex-col bg-ink md:hidden"
+          >
+            <div className="flex grow flex-col justify-center px-6 pt-16">
+              {links.map((link, index) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, ease: EASE, delay: 0.08 + index * 0.06 }}
+                  className="overflow-hidden border-t border-bone/10 last:border-b"
+                >
                   <Link
                     href={link.href}
-                    className="link-underline font-body text-sm font-medium text-text-secondary transition-colors hover:text-white"
+                    className="type-display block py-4 text-4xl uppercase text-bone"
                   >
                     {link.name}
                   </Link>
                 </motion.div>
               ))}
-              <motion.a
-                href={bookingHref}
-                target={bookingTarget}
-                rel={bookingRel}
-                className="rounded-full bg-accent-orange px-6 py-2.5 font-heading text-sm font-semibold text-white transition-all duration-300 hover:glow-orange"
-                whileHover={buttonHover}
-                whileTap={buttonTap}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.08 + links.length * 0.06 }}
+                className="mt-10"
               >
-                {bookingLabel}
-              </motion.a>
+                <Link
+                  href={bookingHref}
+                  {...(bookingExternal
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="tc-label inline-block bg-tally px-7 py-4 text-ink"
+                >
+                  {bookingLabel}
+                </Link>
+              </motion.div>
             </div>
-
-            {/* Mobile Menu Button */}
-            <motion.button
-              className="md:hidden flex h-11 w-11 items-center justify-center text-white touch-manipulation"
-              onClick={() => setIsMobileMenuOpen(true)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Open menu"
-            >
-              <Menu className="h-6 w-6" />
-            </motion.button>
-          </div>
-        </div>
-      </motion.nav>
-
-      {/* Mobile Menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        links={links}
-        bookingHref={bookingHref}
-        bookingLabel={bookingLabel}
-      />
-    </>
+            <div className="flex items-center justify-between px-6 pb-8">
+              <RecBadge label="LUCKY STUDIOS · LONDON" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }
