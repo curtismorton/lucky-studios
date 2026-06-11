@@ -2,10 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ShowHero from "@/components/shows/ShowHero";
 import ShowAbout from "@/components/shows/ShowAbout";
-import ShowHosts from "@/components/shows/ShowHosts";
 import ShowEpisodes from "@/components/shows/ShowEpisodes";
-import ShowAnalytics from "@/components/shows/ShowAnalytics";
-import SponsorCTA from "@/components/shows/SponsorCTA";
+import CtaBand from "@/components/marketing/CtaBand";
 import { PodcastSeriesSchema } from "@/components/seo/StructuredData";
 import {
   getSpotifyShowData,
@@ -108,18 +106,19 @@ export default async function ShowPage(props: { params: Promise<{ slug: string }
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main>
       <PodcastSeriesSchema show={show} />
       <ShowHero show={show} spotifyShow={spotifyShow} />
       <ShowAbout show={show} />
-      {show.hosts && show.hosts.length > 0 && <ShowHosts hosts={show.hosts} />}
-      <ShowEpisodes
-        episodes={show.episodes}
-        show={show}
-        spotifyEpisodes={spotifyEpisodes}
+      <ShowEpisodes show={show} spotifyEpisodes={spotifyEpisodes} />
+      <CtaBand
+        headline="Put your brand in the room."
+        sub={`${show.title} reaches an audience that chooses to show up every week. Sponsorship and integration slots are scoped per season.`}
+        primaryLabel="Talk sponsorship"
+        primaryHref="/contact?intent=brand"
+        secondaryLabel="All shows"
+        secondaryHref="/shows"
       />
-      <ShowAnalytics show={show} />
-      <SponsorCTA />
     </main>
   );
 }

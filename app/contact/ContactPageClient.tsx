@@ -1,22 +1,21 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   AlertTriangle,
-  Calendar,
   CheckCircle2,
   Globe,
   Instagram,
   Linkedin,
   Loader2,
-  Mail,
-  MapPin,
   Twitter,
   Youtube,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import Slate from "@/components/cinema/Slate";
+import Reveal from "@/components/cinema/Reveal";
 import {
   defaultMarketingPagesContent,
   type ContactPageContent,
@@ -49,41 +48,41 @@ const audienceOptions: Array<{ value: AudienceType; label: string }> = [
 
 const intentContent: Record<
   Exclude<ContactIntent, "">,
-  { label: string; title: string; description: string; audienceType: AudienceType | "" }
+  { label: string; title: string[]; description: string; audienceType: AudienceType | "" }
 > = {
   creator: {
-    label: "Creator enquiry",
-    title: "Let us build the show around your audience.",
+    label: "CREATOR ENQUIRY",
+    title: ["Bring the voice."],
     description:
-      "Tell us what people already come to you for and what the show could unlock.",
+      "Tell us what people already come to you for, and what the show could unlock.",
     audienceType: "creator",
   },
   brand: {
-    label: "Brand enquiry",
-    title: "Turn the objective into a content property.",
+    label: "BRAND ENQUIRY",
+    title: ["Bring the objective."],
     description:
-      "Share the audience, category and outcome you want a recurring show to own.",
+      "The audience, the category, the outcome — we'll bring the format that owns it.",
     audienceType: "brand",
   },
   agency: {
-    label: "Partner enquiry",
-    title: "Bring the brief. We will shape the format.",
+    label: "PARTNER ENQUIRY",
+    title: ["Bring the brief."],
     description:
-      "Tell us about the talent, campaign or platform need behind the idea.",
+      "Talent, campaign or platform need — tell us what's behind it and we'll shape the show.",
     audienceType: "agency",
   },
   idea: {
-    label: "Show idea",
-    title: "Tell us the show you cannot stop thinking about.",
+    label: "SHOW IDEA",
+    title: ["Bring the idea."],
     description:
-      "A strong personality, community or point of view is enough to start.",
+      "The show you can't stop thinking about. A personality, a community or a point of view is enough.",
     audienceType: "",
   },
   consultation: {
-    label: "Consultation",
-    title: "Tell us what you are trying to build.",
+    label: "FIRST CONTACT",
+    title: ["Bring whatever", "you've got."],
     description:
-      "Share the useful context and we will find the right first conversation.",
+      "Creator, brand, brief or half-formed idea — give us the useful context and we'll find the right first conversation.",
     audienceType: "",
   },
 };
@@ -117,6 +116,11 @@ function isConfiguredFormEndpoint(endpoint: string): boolean {
   // Keep template environment values from presenting a working submission flow.
   return !normalized.includes("your_form_id") && !normalized.includes("your-form-id");
 }
+
+const FIELD_CLASS =
+  "w-full border border-bone/20 bg-ink px-4 py-3.5 text-bone placeholder:text-bone/30 transition-colors focus:border-tally focus:outline-none";
+
+const LABEL_CLASS = "tc-label mb-2.5 block text-bone/60";
 
 export default function ContactPageClient({
   content,
@@ -187,7 +191,7 @@ export default function ContactPageClient({
         );
       }
 
-      setSubmitSuccess("Message sent. We will be in touch shortly.");
+      setSubmitSuccess("Message received. We'll be in touch shortly.");
       reset({ audienceType: entry.audienceType });
     } catch (error) {
       setSubmitError(
@@ -200,66 +204,58 @@ export default function ContactPageClient({
     }
   };
 
-  const fieldClassName =
-    "w-full rounded-xl border border-white/10 bg-white/4.5 px-4 py-3.5 font-body text-white placeholder:text-white/35 transition focus:border-accent-orange focus:outline-hidden focus:ring-2 focus:ring-accent-orange/20";
-
   return (
-    <MotionConfig reducedMotion="user">
-      <main className="min-h-screen overflow-hidden bg-background">
-      <section className="relative px-4 pb-14 pt-32 sm:px-6 md:pb-20 lg:px-8">
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[460px] w-full max-w-4xl -translate-x-1/2 bg-[radial-gradient(circle_at_50%_20%,rgba(245,158,11,0.17),transparent_58%)]" />
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
-          className="relative mx-auto max-w-4xl text-center"
-        >
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
-            {entry.label}
-          </p>
-          <h1 className="mb-5 font-heading text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl">
-            {entry.title}
+    <main>
+      {/* Opener */}
+      <section className="mx-auto max-w-7xl px-6 pb-14 pt-36 md:px-10 md:pt-44 lg:px-16">
+        <Slate scene="CONTACT" title={entry.label} className="mb-12" />
+        <Reveal>
+          <h1 className="type-display text-[clamp(2.75rem,7vw,6.5rem)] uppercase">
+            {entry.title.map((line) => (
+              <span key={line} className="block">
+                {line.replace(/\.$/, "")}
+                {line.endsWith(".") && <span className="text-tally">.</span>}
+              </span>
+            ))}
           </h1>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
+        </Reveal>
+        <Reveal delay={0.12}>
+          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-bone/70">
             {entry.description}
           </p>
-        </motion.div>
+        </Reveal>
       </section>
 
-      <section className="relative mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1.04fr_0.72fr] lg:gap-16">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="rounded-3xl border border-white/10 bg-white/3 p-5 sm:p-8"
-          >
-            <h2 className="mb-8 font-heading text-2xl font-semibold text-white sm:text-3xl">
-              Start with the useful details.
-            </h2>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              <div className="grid gap-5 sm:grid-cols-2">
+      <section className="mx-auto max-w-7xl px-6 pb-24 md:px-10 md:pb-32 lg:px-16">
+        <div className="grid gap-12 lg:grid-cols-[1.05fr_0.7fr] lg:gap-16">
+          {/* The form */}
+          <Reveal amount={0.1}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-7 border border-bone/15 bg-carbon p-6 sm:p-10"
+            >
+              <div className="grid gap-7 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-white">
-                    Name <span className="text-accent-orange">*</span>
+                  <label htmlFor="name" className={LABEL_CLASS}>
+                    Name <span className="text-tally">*</span>
                   </label>
                   <input
                     id="name"
                     type="text"
                     {...register("name", { required: "Name is required" })}
-                    className={fieldClassName}
+                    className={FIELD_CLASS}
                     placeholder="Your name"
                     aria-invalid={Boolean(errors.name)}
                   />
                   {errors.name ? (
-                    <p className="mt-2 text-sm text-accent-orange" role="alert">
+                    <p className="mt-2 text-sm text-tally" role="alert">
                       {errors.name.message}
                     </p>
                   ) : null}
                 </div>
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-white">
-                    Email <span className="text-accent-orange">*</span>
+                  <label htmlFor="email" className={LABEL_CLASS}>
+                    Email <span className="text-tally">*</span>
                   </label>
                   <input
                     id="email"
@@ -271,12 +267,12 @@ export default function ContactPageClient({
                         message: "Enter a valid email address",
                       },
                     })}
-                    className={fieldClassName}
+                    className={FIELD_CLASS}
                     placeholder="you@example.com"
                     aria-invalid={Boolean(errors.email)}
                   />
                   {errors.email ? (
-                    <p className="mt-2 text-sm text-accent-orange" role="alert">
+                    <p className="mt-2 text-sm text-tally" role="alert">
                       {errors.email.message}
                     </p>
                   ) : null}
@@ -284,13 +280,13 @@ export default function ContactPageClient({
               </div>
 
               <div>
-                <label htmlFor="audienceType" className="mb-2 block text-sm font-medium text-white">
-                  I am a <span className="text-accent-orange">*</span>
+                <label htmlFor="audienceType" className={LABEL_CLASS}>
+                  I am a <span className="text-tally">*</span>
                 </label>
                 <select
                   id="audienceType"
                   {...register("audienceType", { required: "Select one option" })}
-                  className={`${fieldClassName} min-h-[52px]`}
+                  className={`${FIELD_CLASS} min-h-[52px]`}
                   aria-invalid={Boolean(errors.audienceType)}
                 >
                   <option value="">Select one option</option>
@@ -301,15 +297,15 @@ export default function ContactPageClient({
                   ))}
                 </select>
                 {errors.audienceType ? (
-                  <p className="mt-2 text-sm text-accent-orange" role="alert">
+                  <p className="mt-2 text-sm text-tally" role="alert">
                     {errors.audienceType.message}
                   </p>
                 ) : null}
               </div>
 
               <div>
-                <label htmlFor="brief" className="mb-2 block text-sm font-medium text-white">
-                  What are you trying to build? <span className="text-accent-orange">*</span>
+                <label htmlFor="brief" className={LABEL_CLASS}>
+                  What are you trying to build? <span className="text-tally">*</span>
                 </label>
                 <textarea
                   id="brief"
@@ -321,26 +317,26 @@ export default function ContactPageClient({
                       message: "Please add a little more detail",
                     },
                   })}
-                  className={fieldClassName}
-                  placeholder="Tell us about the idea, audience, brief, format or support you need."
+                  className={FIELD_CLASS}
+                  placeholder="The idea, the audience, the brief, the format — whatever you've got."
                   aria-invalid={Boolean(errors.brief)}
                 />
                 {errors.brief ? (
-                  <p className="mt-2 text-sm text-accent-orange" role="alert">
+                  <p className="mt-2 text-sm text-tally" role="alert">
                     {errors.brief.message}
                   </p>
                 ) : null}
               </div>
 
               <div>
-                <label htmlFor="optionalLink" className="mb-2 block text-sm font-medium text-white">
+                <label htmlFor="optionalLink" className={LABEL_CLASS}>
                   Optional link
                 </label>
                 <input
                   id="optionalLink"
                   type="url"
                   {...register("optionalLink")}
-                  className={fieldClassName}
+                  className={FIELD_CLASS}
                   placeholder="Show, channel, brief or brand link"
                 />
               </div>
@@ -348,16 +344,16 @@ export default function ContactPageClient({
               <motion.button
                 type="submit"
                 disabled={isSubmitting || !hasFormEndpoint}
-                className="flex min-h-[52px] w-full items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
-                whileTap={isSubmitting || !hasFormEndpoint ? undefined : { scale: 0.98 }}
+                className="tc-label flex min-h-[56px] w-full items-center justify-center gap-3 bg-tally !text-xs text-ink transition-colors hover:bg-bone disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tally"
+                whileTap={isSubmitting || !hasFormEndpoint ? undefined : { scale: 0.99 }}
               >
                 {isSubmitting ? (
                   <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     {page.form.sendingLabel}
                   </span>
                 ) : (
-                  "Send us your idea"
+                  <>Send it →</>
                 )}
               </motion.button>
 
@@ -368,7 +364,7 @@ export default function ContactPageClient({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="flex items-center gap-2 text-sm text-red-300"
+                    className="flex items-center gap-2 text-sm text-tally"
                     role="alert"
                   >
                     <AlertTriangle className="h-4 w-4" />
@@ -380,96 +376,92 @@ export default function ContactPageClient({
                     key="success"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="flex items-center gap-2 text-sm text-emerald-300"
+                    className="flex items-center gap-2 text-sm text-bone"
                     role="status"
                   >
-                    <CheckCircle2 className="h-4 w-4" />
+                    <CheckCircle2 className="h-4 w-4 text-tally" />
                     {submitSuccess}
                   </motion.p>
                 ) : null}
               </AnimatePresence>
 
               {!hasFormEndpoint ? (
-                <p className="rounded-xl border border-accent-orange/20 bg-accent-orange/6 p-4 text-sm leading-relaxed text-white/65">
-                  Online submissions are not configured yet. Email{" "}
-                  <a className="text-white underline decoration-accent-orange" href={`mailto:${page.direct.email}`}>
+                <p className="border border-tally/30 bg-tally/5 p-4 text-sm leading-relaxed text-bone/70">
+                  Online submissions aren&apos;t configured yet. Email{" "}
+                  <a
+                    className="link-underline text-bone"
+                    href={`mailto:${page.direct.email}`}
+                  >
                     {page.direct.email}
                   </a>{" "}
                   to start the conversation.
                 </p>
               ) : null}
             </form>
-          </motion.div>
+          </Reveal>
 
-          <motion.aside
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="space-y-9 pt-2"
-          >
-            <div>
-              <h2 className="mb-6 font-heading text-2xl font-semibold text-white">
-                Prefer a direct route?
-              </h2>
-              <div className="space-y-6 text-sm text-white/65">
-                <a href={`mailto:${page.direct.email}`} className="flex items-center gap-3 transition hover:text-accent-orange">
-                  <Mail className="h-5 w-5 text-accent-orange" />
+          {/* Direct routes */}
+          <Reveal delay={0.1} amount={0.1}>
+            <aside className="space-y-12">
+              <div>
+                <h2 className="tc-label text-bone/50">Direct line</h2>
+                <a
+                  href={`mailto:${page.direct.email}`}
+                  className="link-underline mt-4 inline-block font-mono text-lg text-bone"
+                >
                   {page.direct.email}
                 </a>
-                <div className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-5 w-5 text-accent-orange" />
-                  <p>
-                    {page.direct.addressLines.map((line) => (
-                      <span key={line} className="block">
-                        {line}
-                      </span>
-                    ))}
-                  </p>
-                </div>
+                <p className="tc-label mt-6 !leading-loose text-bone/45">
+                  {page.direct.addressLines.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </p>
               </div>
-            </div>
 
-            <div className="rounded-2xl border border-accent-orange/20 bg-accent-orange/5.5 p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-accent-orange" />
-                <h3 className="font-heading text-lg font-semibold text-white">
-                  Book a consultation
+              <div className="border-l-2 border-tally bg-carbon p-7">
+                <h3 className="flex items-center gap-3">
+                  <span className="h-2 w-2 rounded-full bg-tally animate-rec-blink motion-reduce:animate-none" aria-hidden />
+                  <span className="tc-label text-bone">Skip the form</span>
                 </h3>
+                <p className="mt-4 text-sm leading-relaxed text-bone/65">
+                  Already have a creator, a brief or a format to discuss? Book the
+                  conversation directly.
+                </p>
+                <a
+                  href={consultationHref}
+                  target={bookingExternal ? "_blank" : undefined}
+                  rel={bookingExternal ? "noopener noreferrer" : undefined}
+                  className="tc-label mt-6 inline-flex min-h-[48px] w-full items-center justify-center border border-bone/25 px-5 !text-xs text-bone transition-colors hover:border-bone hover:bg-bone hover:text-ink"
+                >
+                  Book a consultation →
+                </a>
               </div>
-              <p className="mb-6 text-sm leading-relaxed text-white/62">
-                Useful when you already have a creator, brand brief or format to discuss.
-              </p>
-              <a
-                href={consultationHref}
-                target={bookingExternal ? "_blank" : undefined}
-                rel={bookingExternal ? "noopener noreferrer" : undefined}
-                className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-accent-orange/40 px-5 py-3 font-heading text-sm font-semibold text-white transition hover:bg-accent-orange/12 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
-              >
-                Book a consultation
-              </a>
-            </div>
 
-            <div className="flex gap-3">
-              {page.direct.socials.map((social) => {
-                const Icon = getSocialIcon(social.label);
-                return (
-                  <a
-                    key={social.href}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-accent-orange hover:text-accent-orange focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
-                  >
-                    <Icon className="h-5 w-5" />
-                  </a>
-                );
-              })}
-            </div>
-          </motion.aside>
+              {page.direct.socials.length > 0 && (
+                <div className="flex gap-4">
+                  {page.direct.socials.map((social) => {
+                    const Icon = getSocialIcon(social.label);
+                    return (
+                      <a
+                        key={social.href}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.label}
+                        className="flex h-11 w-11 items-center justify-center border border-bone/15 text-bone/60 transition-colors hover:border-tally hover:text-tally"
+                      >
+                        <Icon className="h-4.5 w-4.5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </aside>
+          </Reveal>
         </div>
       </section>
-      </main>
-    </MotionConfig>
+    </main>
   );
 }

@@ -1,116 +1,91 @@
-"use client";
+import Reveal from "@/components/cinema/Reveal";
+import Slate from "@/components/cinema/Slate";
+import type { Show } from "@/lib/data/shows";
+import type { SpotifyEpisode } from "@/lib/services/spotify";
 
-import { motion } from "motion/react";
-import { Play } from "lucide-react";
-import { type Episode } from "@/lib/data/shows";
-import { type Show } from "@/lib/data/shows";
-import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
-import { formatDuration } from "@/lib/utils/duration";
-import { type SpotifyEpisode } from "@/lib/services/spotify";
-
-interface ShowEpisodesProps {
-  episodes?: Episode[]; // Fallback episodes from static data
-  show: Show; // Show object to get Spotify ID
+type ShowEpisodesProps = {
+  show: Show;
   spotifyEpisodes?: SpotifyEpisode[];
+};
+
+type EpisodeRow = {
+  key: string;
+  title: string;
+  date: string;
+  duration: string;
+  href?: string;
+};
+
+function formatDuration(ms: number): string {
+  const minutes = Math.round(ms / 60000);
+  return `${minutes} MIN`;
 }
 
-export default function ShowEpisodes({
-  episodes: fallbackEpisodes,
-  show,
-  spotifyEpisodes: preloadedSpotifyEpisodes,
-}: ShowEpisodesProps) {
-  const shouldFetchSpotify = !preloadedSpotifyEpisodes && Boolean(show.spotifyShowId);
-  const { episodes: fetchedSpotifyEpisodes, loading } = useSpotifyShow(
-    shouldFetchSpotify ? show.spotifyShowId : undefined
-  );
-  const spotifyEpisodes = preloadedSpotifyEpisodes || fetchedSpotifyEpisodes;
-  
-  // Use Spotify episodes if available, otherwise fall back to static episodes
-  const episodes = spotifyEpisodes.length > 0 
-    ? spotifyEpisodes.map((ep, index) => ({
-        id: ep.id, // Include Spotify ID for stable keys
-        number: ep.episode_number ?? index + 1,
-        title: ep.name,
-        duration: formatDuration(ep.duration_ms),
-        date: ep.release_date,
-        spotifyUrl: ep.external_urls.spotify,
+function formatDate(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date
+    .toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+    .toUpperCase();
+}
+
+export default function ShowEpisodes({ show, spotifyEpisodes }: ShowEpisodesProps) {
+  const rows: EpisodeRow[] = spotifyEpisodes?.length
+    ? spotifyEpisodes.slice(0, 6).map((episode) => ({
+        key: episode.id,
+        title: episode.name,
+        date: formatDate(episode.release_date),
+        duration: formatDuration(episode.duration_ms),
+        href: episode.external_urls?.spotify,
       }))
-    : fallbackEpisodes || [];
+    : (show.episodes || []).map((episode) => ({
+        key: `${episode.number}`,
+        title: episode.title,
+        date: formatDate(episode.date),
+        duration: episode.duration,
+        href: show.platforms?.spotify,
+      }));
 
-  if (shouldFetchSpotify && loading && !fallbackEpisodes?.length) {
-    return (
-      <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="text-center text-text-secondary">Loading episodes...</div>
-      </section>
-    );
-  }
-
-  if (episodes.length === 0) {
-    return null;
-  }
+  if (rows.length === 0) return null;
 
   return (
-    <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2 className="mb-12 font-heading text-3xl font-bold md:text-4xl">
-          Latest Episodes
-        </h2>
-        <div className="space-y-4">
-          {episodes.map((episode, index) => {
-            // Use stable key: Spotify ID for Spotify episodes, or episode number for fallback episodes
-            const stableKey = (episode as any).id ?? `episode-${episode.number ?? index}`;
-            return (
-            <motion.div
-              key={stableKey}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group flex items-center gap-4 rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6 transition-all duration-300 hover:border-accent-orange/50 hover:bg-background-tertiary"
-            >
-              {/* Play Button */}
-              <motion.a
-                href={(episode as any).spotifyUrl || show.platforms?.spotify || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-orange/10 text-accent-orange transition-all duration-300 group-hover:bg-accent-orange group-hover:text-white group-hover:glow-orange"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Play className="h-5 w-5" fill="currentColor" />
-              </motion.a>
+    <section className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28 lg:px-16">
+      <Slate scene="SCENE 02" title="LATEST RECORDINGS" className="mb-12" />
+      <ol>
+        {rows.map((row, index) => {
+          const inner = (
+            <div className="grid items-baseline gap-2 py-6 md:grid-cols-[90px_1fr_200px_90px] md:gap-8">
+              <span className="tc-label tabular-nums text-tally">
+                EP {String(rows.length - index).padStart(2, "0")}
+              </span>
+              <span className="text-lg font-semibold leading-snug transition-colors group-hover:text-bone md:text-xl">
+                {row.title}
+              </span>
+              <span className="tc-label text-bone/45">{row.date}</span>
+              <span className="tc-label text-bone/45 md:text-right">{row.duration}</span>
+            </div>
+          );
 
-              {/* Episode Info */}
-              <div className="flex-1">
-                <div className="mb-1 flex items-center gap-3">
-                  <span className="font-body text-xs font-medium text-text-muted">
-                    Episode {episode.number}
-                  </span>
-                  <span className="font-body text-xs text-text-muted">
-                    {episode.duration}
-                  </span>
-                </div>
-                <h3 className="font-heading text-lg font-semibold text-white">
-                  {episode.title}
-                </h3>
-                <p className="font-body text-sm text-text-secondary">
-                  {new Date(episode.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-            </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
+          return (
+            <li key={row.key} className="border-t border-bone/15 last:border-b">
+              <Reveal amount={0.4}>
+                {row.href ? (
+                  <a
+                    href={row.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block text-bone/85 transition-colors hover:bg-carbon"
+                  >
+                    {inner}
+                  </a>
+                ) : (
+                  <div className="text-bone/85">{inner}</div>
+                )}
+              </Reveal>
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }

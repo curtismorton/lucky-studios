@@ -1,6 +1,8 @@
-import BrandsPageClient from "./BrandsPageClient";
-import { getMarketingPagesContent } from "@/lib/services/marketingCms";
+import DoorPage from "@/components/marketing/DoorPage";
+import { brandsPage } from "@/lib/content/brands";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
+import { getSiteSettings } from "@/lib/services/cms/siteSettings";
+import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
 export const revalidate = 86400;
 
@@ -9,18 +11,19 @@ export async function generateMetadata() {
     path: "/brands",
     fallbackTitle: "For Brands | Lucky Studios",
     fallbackDescription:
-      "Partner with Lucky Studios to reach engaged podcast audiences. Sponsor shows or create branded podcasts. 1.1M+ monthly listeners.",
+      "Stop renting attention. Lucky Studios builds branded entertainment people choose to watch — original shows, sponsorships and format extensions with real audiences.",
     fallbackKeywords: [
-      "podcast sponsorship",
       "branded podcast",
+      "podcast sponsorship",
+      "branded entertainment",
       "podcast advertising",
-      "podcast marketing",
-      "podcast partnership",
+      "branded content production",
     ],
   });
 }
 
 export default async function BrandsPage() {
-  const content = await getMarketingPagesContent();
-  return <BrandsPageClient content={content.brands} />;
+  const siteSettings = await getSiteSettings();
+  const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
+  return <DoorPage content={brandsPage} consultationHref={consultationHref} />;
 }

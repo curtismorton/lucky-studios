@@ -1,183 +1,81 @@
-"use client";
-
-import { motion } from "motion/react";
-import { Music, Youtube } from "lucide-react";
 import Image from "next/image";
-import { type Show } from "@/lib/data/shows";
-import { useSpotifyShow } from "@/lib/hooks/useSpotifyShow";
-import { type SpotifyShow } from "@/lib/services/spotify";
+import Cta from "@/components/cinema/Cta";
+import Reveal from "@/components/cinema/Reveal";
+import Slate from "@/components/cinema/Slate";
+import type { Show } from "@/lib/data/shows";
+import type { SpotifyShow } from "@/lib/services/spotify";
 
-const genreStyles = {
-  entertainment: {
-    bg: "bg-accent-orange/10",
-    text: "text-accent-orange",
-    border: "border-accent-orange/30",
-  },
-  football: {
-    bg: "bg-accent-purple/10",
-    text: "text-accent-purple",
-    border: "border-accent-purple/30",
-  },
-  lifestyle: {
-    bg: "bg-accent-cyan/10",
-    text: "text-accent-cyan",
-    border: "border-accent-cyan/30",
-  },
-};
+const FALLBACK_PLATE = "/images/hero/hero-main-our-pic.jpg";
 
-const genreLabels = {
-  entertainment: "Entertainment",
-  football: "Football",
-  lifestyle: "Lifestyle",
-};
-
-interface ShowHeroProps {
+type ShowHeroProps = {
   show: Show;
   spotifyShow?: SpotifyShow;
-}
+};
 
-export default function ShowHero({ show, spotifyShow: preloadedSpotifyShow }: ShowHeroProps) {
-  const genreStyle = genreStyles[show.genre];
-  const genreLabel = genreLabels[show.genre];
-  const shouldFetchSpotify = !preloadedSpotifyShow && Boolean(show.spotifyShowId);
-  const { show: spotifyShow } = useSpotifyShow(
-    shouldFetchSpotify ? show.spotifyShowId : undefined
-  );
-  const resolvedSpotifyShow = preloadedSpotifyShow || spotifyShow;
-  const coverImage = resolvedSpotifyShow?.images?.[0]?.url;
-  const primaryPlatformHref =
-    show.platforms?.spotify || show.platforms?.youtube || show.platforms?.apple;
+export default function ShowHero({ show, spotifyShow }: ShowHeroProps) {
+  const plate = spotifyShow?.images?.[0]?.url || show.ogImage || FALLBACK_PLATE;
+  const spotifyUrl = spotifyShow?.external_urls?.spotify || show.platforms?.spotify;
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8">
-      <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-        {/* Artwork - Spotify cover art or placeholder */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative aspect-square w-full overflow-hidden rounded-3xl"
-        >
-          {coverImage ? (
-            <>
-              <Image
-                src={coverImage}
-                alt=""
-                fill
-                aria-hidden="true"
-                className="scale-110 object-cover opacity-30 blur-2xl saturate-150"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-              <div className="absolute inset-0 bg-linear-to-b from-black/10 via-black/20 to-black/60" />
-              <div className="absolute inset-5 overflow-hidden rounded-2xl border border-white/10 bg-black/45 shadow-[0_30px_90px_rgba(0,0,0,0.45)] sm:inset-8">
-                <Image
-                  src={coverImage}
-                  alt={show.title}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 1024px) calc(100vw - 64px), 44vw"
-                  priority
-                />
-              </div>
-            </>
-          ) : (
-            <div
-              className={`h-full w-full bg-linear-to-br ${
-                show.featured
-                  ? "from-accent-orange/30 via-accent-purple/30 to-accent-cyan/30"
-                  : genreStyle.bg
-              }`}
-            />
-          )}
-        </motion.div>
+    <section className="mx-auto max-w-7xl px-6 pb-20 pt-36 md:px-10 md:pb-24 md:pt-44 lg:px-16">
+      <Slate scene="NOW SHOWING" title={show.genre.toUpperCase()} className="mb-12" />
 
-        {/* Info */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-col justify-center"
-        >
-          {/* Genre Badge */}
-          <div className="mb-4">
-            <span
-              className={`inline-flex rounded-full border px-4 py-2 text-sm font-medium ${genreStyle.bg} ${genreStyle.text} ${genreStyle.border}`}
-            >
-              {genreLabel}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1 className="mb-4 font-heading text-4xl font-bold md:text-5xl lg:text-6xl">
-            {show.title}
-          </h1>
-
-          {/* Stat */}
-          <p className="mb-4 font-body text-lg text-text-secondary">
-            {show.tagline}
-          </p>
-          <p className="mb-8 font-body text-lg text-text-secondary">
-            {show.stat}
-          </p>
-
-          {/* Platform Buttons */}
-          {show.platforms && (
-            <div className="mb-8 flex flex-wrap gap-4">
-              {show.platforms.spotify && (
-                <motion.a
-                  href={show.platforms.spotify}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-body text-sm font-medium text-white transition-all duration-300 hover:border-accent-orange/50 hover:bg-accent-orange/10"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Music className="h-5 w-5" />
-                  Spotify
-                </motion.a>
+      <div className="grid items-end gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <div>
+          <Reveal>
+            <h1 className="type-display text-[clamp(2.5rem,6.5vw,5.5rem)] uppercase">
+              {show.title}
+            </h1>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-6 max-w-xl text-xl leading-relaxed text-bone/70">
+              {show.tagline}
+            </p>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <p className="tc-label mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-bone/55">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
+                {show.stat}
+              </span>
+              {spotifyShow?.total_episodes ? (
+                <span>{spotifyShow.total_episodes} EPISODES</span>
+              ) : null}
+              {show.format ? <span>{show.format.toUpperCase()}</span> : null}
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <div className="mt-10 flex flex-wrap gap-4">
+              {spotifyUrl && (
+                <Cta href={spotifyUrl} external>
+                  Listen on Spotify
+                </Cta>
               )}
-              {show.platforms.apple && (
-                <motion.a
-                  href={show.platforms.apple}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-body text-sm font-medium text-white transition-all duration-300 hover:border-accent-orange/50 hover:bg-accent-orange/10"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Music className="h-5 w-5" />
-                  Apple Podcasts
-                </motion.a>
-              )}
-              {show.platforms.youtube && (
-                <motion.a
-                  href={show.platforms.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-body text-sm font-medium text-white transition-all duration-300 hover:border-accent-orange/50 hover:bg-accent-orange/10"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Youtube className="h-5 w-5" />
-                  YouTube
-                </motion.a>
+              {show.platforms?.youtube && (
+                <Cta href={show.platforms.youtube} variant="ghost" external>
+                  Watch on YouTube
+                </Cta>
               )}
             </div>
-          )}
+          </Reveal>
+        </div>
 
-          {/* Subscribe CTA */}
-          <motion.a
-            href={primaryPlatformHref || "/contact"}
-            target={primaryPlatformHref ? "_blank" : undefined}
-            rel={primaryPlatformHref ? "noopener noreferrer" : undefined}
-            className="inline-flex w-fit rounded-full bg-accent-orange px-8 py-4 font-heading text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {primaryPlatformHref ? "Listen to the Show" : "Ask About This Show"}
-          </motion.a>
-        </motion.div>
+        <Reveal amount={0.2}>
+          <div className="relative aspect-square overflow-hidden border border-bone/10">
+            <Image
+              src={plate}
+              alt={`${show.title} key art`}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="film-grade object-cover"
+            />
+            <span
+              className="absolute right-4 top-4 h-2 w-2 rounded-full bg-tally animate-rec-blink motion-reduce:animate-none"
+              aria-hidden
+            />
+          </div>
+        </Reveal>
       </div>
     </section>
   );

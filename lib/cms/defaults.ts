@@ -123,6 +123,7 @@ export const defaultCmsEntityDefinitions: CmsEntityDefinition[] = [
 export const defaultNavFooterPayload: CmsNavFooterPayload = {
   primaryLinks: [
     { name: "Our Shows", href: "/shows" },
+    { name: "The Work", href: "/work" },
     { name: "For Creators", href: "/creators" },
     { name: "For Brands", href: "/brands" },
     { name: "The Studio", href: "/studio" },
@@ -130,6 +131,7 @@ export const defaultNavFooterPayload: CmsNavFooterPayload = {
   ],
   footerLinks: [
     { name: "Our Shows", href: "/shows" },
+    { name: "The Work", href: "/work" },
     { name: "For Creators", href: "/creators" },
     { name: "For Brands", href: "/brands" },
     { name: "The Studio", href: "/studio" },

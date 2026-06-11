@@ -1,63 +1,33 @@
-"use client";
-
-import { motion } from "motion/react";
-import { Home, Search } from "lucide-react";
 import Link from "next/link";
+import Cta from "@/components/cinema/Cta";
 
 // Note: Metadata exports are not supported in not-found.tsx files in Next.js
 // The 404 page title will use the default from layout.tsx
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-md w-full text-center"
-      >
-        <div className="mb-8 flex justify-center">
-          <div className="rounded-full bg-accent-purple/10 p-6">
-            <Search className="h-16 w-16 text-accent-purple" />
-          </div>
-        </div>
-
-        <h1 className="mb-4 font-heading text-4xl font-bold text-white md:text-5xl">
-          404
-        </h1>
-
-        <h2 className="mb-4 font-heading text-2xl font-semibold text-white md:text-3xl">
-          Page Not Found
-        </h2>
-
-        <p className="mb-8 font-body text-lg text-text-secondary">
-          The page you&rsquo;re looking for doesn&rsquo;t exist or has been moved.
-        </p>
-
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-          <Link href="/">
-            <motion.button
-              className="flex items-center justify-center gap-2 rounded-full bg-accent-orange px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Home className="h-5 w-5" />
-              Go home
-            </motion.button>
-          </Link>
-
-          <Link href="/shows">
-            <motion.button
-              className="flex items-center justify-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:border-accent-purple/50 hover:bg-accent-purple/10"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Search className="h-5 w-5" />
-              Browse shows
-            </motion.button>
-          </Link>
-        </div>
-      </motion.div>
-    </div>
+    <main className="flex min-h-svh flex-col items-center justify-center px-6 text-center">
+      <p className="tc-label flex items-center gap-4 text-bone/50">
+        <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
+        SCENE MISSING
+        <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
+      </p>
+      <h1 className="type-display mt-8 text-[clamp(4rem,18vw,12rem)] leading-none">
+        4<span className="text-tally">0</span>4
+      </h1>
+      <p className="mt-6 max-w-md text-lg leading-relaxed text-bone/65">
+        This page didn&apos;t make the final cut. The rest of the show is still
+        running.
+      </p>
+      <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <Cta href="/">Back to the start</Cta>
+        <Cta href="/shows" variant="ghost">
+          See the shows
+        </Cta>
+      </div>
+      <Link href="/contact" className="link-underline tc-label mt-12 text-bone/45">
+        Think something should be here? Tell us.
+      </Link>
+    </main>
   );
 }

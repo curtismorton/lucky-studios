@@ -1,6 +1,8 @@
-import CreatorsPageClient from "./CreatorsPageClient";
-import { getMarketingPagesContent } from "@/lib/services/marketingCms";
+import DoorPage from "@/components/marketing/DoorPage";
+import { creatorsPage } from "@/lib/content/creators";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
+import { getSiteSettings } from "@/lib/services/cms/siteSettings";
+import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
 export const revalidate = 86400;
 
@@ -9,18 +11,19 @@ export async function generateMetadata() {
     path: "/creators",
     fallbackTitle: "For Creators | Lucky Studios",
     fallbackDescription:
-      "Join Lucky Studios podcast network. Grow your audience with production support, cross-promotion to 1.1M+ viewers, and revenue sharing.",
+      "Your moment is perishable. Lucky Studios builds the show around your voice — format, production, packaging and growth — so a viral run becomes appointment viewing.",
     fallbackKeywords: [
       "podcast network",
-      "join podcast network",
+      "creator show production",
       "podcast creator",
-      "podcast production",
-      "podcast partnership",
+      "podcast production london",
+      "creator format development",
     ],
   });
 }
 
 export default async function CreatorsPage() {
-  const content = await getMarketingPagesContent();
-  return <CreatorsPageClient content={content.creators} />;
+  const siteSettings = await getSiteSettings();
+  const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
+  return <DoorPage content={creatorsPage} consultationHref={consultationHref} />;
 }

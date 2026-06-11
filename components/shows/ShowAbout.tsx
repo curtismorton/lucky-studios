@@ -1,38 +1,47 @@
-"use client";
+import Reveal from "@/components/cinema/Reveal";
+import Slate from "@/components/cinema/Slate";
+import type { Show } from "@/lib/data/shows";
 
-import { motion } from "motion/react";
-import { type Show } from "@/lib/data/shows";
-
-interface ShowAboutProps {
-  show: Show;
-}
-
-export default function ShowAbout({ show }: ShowAboutProps) {
+export default function ShowAbout({ show }: { show: Show }) {
   if (!show.description) return null;
 
   return (
-    <section className="relative mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2 className="mb-6 font-heading text-3xl font-bold md:text-4xl">
-          About
-        </h2>
-        <p className="mb-8 font-body text-lg leading-relaxed text-text-secondary">
-          {show.description}
-        </p>
-        {show.format && (
-          <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-6">
-            <p className="font-body text-sm font-medium text-text-secondary">
-              <span className="text-white">Format:</span> {show.format}
+    <section className="border-y border-bone/10 bg-carbon">
+      <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-28 lg:px-16">
+        <Slate scene="SCENE 01" title="THE FORMAT" className="mb-12" />
+        <div className="grid gap-12 lg:grid-cols-[1fr_360px] lg:gap-16">
+          <Reveal>
+            <p className="max-w-2xl text-lg leading-relaxed text-bone/75 md:text-xl">
+              {show.description}
             </p>
-          </div>
-        )}
-      </motion.div>
+          </Reveal>
+          {(show.hosts?.length || show.format) && (
+            <Reveal delay={0.1}>
+              <dl className="space-y-6 border-l-2 border-tally pl-6">
+                {show.format && (
+                  <div>
+                    <dt className="tc-label text-bone/50">Format</dt>
+                    <dd className="mt-2 text-bone/80">{show.format}</dd>
+                  </div>
+                )}
+                {show.hosts && show.hosts.length > 0 && (
+                  <div>
+                    <dt className="tc-label text-bone/50">
+                      {show.hosts.length === 1 ? "Host" : "Hosts"}
+                    </dt>
+                    {show.hosts.map((host) => (
+                      <dd key={host.name} className="mt-2 text-bone/80">
+                        {host.name}
+                        <span className="tc-label ml-3 text-bone/45">{host.role}</span>
+                      </dd>
+                    ))}
+                  </div>
+                )}
+              </dl>
+            </Reveal>
+          )}
+        </div>
+      </div>
     </section>
   );
 }
-
