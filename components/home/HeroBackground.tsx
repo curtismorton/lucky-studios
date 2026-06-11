@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useMemo, useRef, useState } from "react";
-import HeroUnicornBackground from "@/components/home/HeroUnicornBackground";
 import {
   defaultHomepageContent,
   type HeroImage,
@@ -138,12 +137,8 @@ export default function HeroBackground({
         </motion.div>
       )}
 
-      <div className="absolute inset-0 opacity-[0.72]">
-        <HeroUnicornBackground />
-      </div>
-
-      <div className="absolute inset-0 bg-gradient-to-b from-black/62 via-black/44 to-background/92" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/88 via-background/70 to-background/62" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/48 to-background/96" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/94 via-background/78 to-background/32" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.76)_100%)]" />
       <div className="hero-noise absolute inset-0 opacity-[0.03]" />
     </div>

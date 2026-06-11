@@ -20,6 +20,7 @@ import {
   defaultMarketingPagesContent,
   type StudioPageContent,
 } from "@/lib/data/marketingContent";
+import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
 interface StudioPageClientProps {
   content?: StudioPageContent;
@@ -37,9 +38,10 @@ export default function StudioPageClient({ content }: StudioPageClientProps) {
     [page.gallery.images]
   );
 
-  const bookingHref = site.calendlyUrl || "/contact";
-  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
-  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
+  const bookingHref = resolveConsultationHref(site.calendlyUrl);
+  const isExternalBooking = /^https?:\/\//i.test(bookingHref);
+  const bookingTarget = isExternalBooking ? "_blank" : undefined;
+  const bookingRel = isExternalBooking ? "noopener noreferrer" : undefined;
 
   return (
     <main className="min-h-screen bg-background">

@@ -1,18 +1,8 @@
 "use client";
 
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type PointerEvent,
-} from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import {
   defaultHomepageContent,
   type TransformationContent,
@@ -23,15 +13,36 @@ interface TransformationSectionProps {
   content?: TransformationContent;
 }
 
+const outputs = [
+  "Full YouTube episode",
+  "Spotify episode",
+  "Audio podcast",
+  "Short form clips",
+  "Thumbnails",
+  "Titles and descriptions",
+  "Guest social assets",
+  "Sponsor cutdowns",
+  "Newsletter or LinkedIn snippets",
+  "Analytics insights",
+] as const;
+
+const imageFocusByShow: Record<
+  string,
+  { rawPosition: string; polishedPosition: string }
+> = {
+  backpost: {
+    rawPosition: "50% 46%",
+    polishedPosition: "50% 50%",
+  },
+  dgms: {
+    rawPosition: "50% 38%",
+    polishedPosition: "50% 42%",
+  },
+};
+
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
-
-const SAFE_START_OFFSET_MIN = 0.68;
-const SAFE_START_OFFSET_MAX = 0.9;
-const SAFE_END_OFFSET_MIN = 0.42;
-const SAFE_SCROLL_WINDOW = 0.2;
-const MIN_VISIBLE_POLISHED = 44;
 
 export default function TransformationSection({
   content,
@@ -39,322 +50,218 @@ export default function TransformationSection({
   const transformationContent = content || defaultHomepageContent.transformation;
 
   return (
-    <section className="relative overflow-hidden bg-background px-4 py-24 md:py-32">
-      <div className="pointer-events-none absolute inset-x-0 top-16 h-96 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.16),transparent_36%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent)]" />
+    <section className="relative overflow-hidden px-4 py-16 sm:px-6 md:py-28 lg:px-8">
+      <div className="pointer-events-none absolute inset-x-0 top-12 h-96 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.13),transparent_48%)]" />
       <div className="relative mx-auto max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center"
+          transition={{ duration: 0.55 }}
+          className="mb-12 max-w-4xl md:mb-16"
         >
-          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
-            Production Pipeline
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+            Content engine
           </p>
-          <h2 className="mx-auto mb-5 max-w-5xl font-heading text-3xl font-bold leading-tight text-white sm:text-4xl md:text-6xl">
-            Raw studio moments, engineered into{" "}
-            <span className="text-gradient-accent">finished media assets.</span>
+          <h2 className="mb-5 font-heading text-3xl font-bold leading-tight text-white sm:text-4xl md:text-6xl">
+            One recording. A full content engine.
           </h2>
-          <p className="mx-auto max-w-3xl font-body text-lg leading-relaxed text-text-secondary">
-            Compare the clean studio capture with the finished creative output: artwork,
-            format, positioning, and the production polish that makes each show feel
-            launch-ready.
+          <p className="max-w-3xl text-base leading-relaxed text-white/65 sm:text-lg">
+            A studio session should not end with one upload. We turn every
+            recording into a complete platform package.
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-24 md:gap-32">
-          {transformationContent.items.map((transformation, index) => (
-            <TransformationCard
-              key={transformation.show}
-              transformation={transformation}
-              index={index}
-              sliderConfig={transformationContent.slider}
-            />
-          ))}
+        <div className="grid gap-8 xl:grid-cols-[minmax(420px,0.96fr)_minmax(440px,1.04fr)] xl:items-start">
+          <div className="space-y-5">
+            {transformationContent.items.slice(0, 2).map((item, index) => (
+              <ComparisonCard
+                key={item.show}
+                transformation={item}
+                index={index}
+                manualEnabled={transformationContent.slider.manualEnabled}
+              />
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, delay: 0.1 }}
+            className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 sm:p-8"
+          >
+            <div className="mb-8 flex items-center gap-4 rounded-2xl border border-accent-orange/25 bg-accent-orange/[0.07] p-5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-orange font-heading text-sm font-bold text-white">
+                01
+              </span>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-orange">
+                  Studio recording
+                </p>
+                <p className="mt-1 text-sm text-white/68">
+                  One captured session enters the pipeline.
+                </p>
+              </div>
+            </div>
+            <div className="mb-6 flex items-center gap-3">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/42">
+                Platform outputs
+              </span>
+              <span className="h-px flex-1 bg-white/10" />
+            </div>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {outputs.map((output, index) => (
+                <li
+                  key={output}
+                  className="flex min-h-[58px] items-center gap-3 rounded-xl border border-white/10 bg-black/18 px-4 py-3 text-sm text-white/72"
+                >
+                  <span className="font-heading text-xs font-semibold text-accent-orange">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {output}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
 
-function TransformationCard({
+function ComparisonCard({
   transformation,
   index,
-  sliderConfig,
+  manualEnabled,
 }: {
   transformation: TransformationItem;
   index: number;
-  sliderConfig: TransformationContent["slider"];
+  manualEnabled: boolean;
 }) {
   const imageRef = useRef<HTMLDivElement>(null);
   const activePointerId = useRef<number | null>(null);
-  const isDraggingRef = useRef(false);
-  const [progress, setProgress] = useState(MIN_VISIBLE_POLISHED);
-
-  // Keep the reveal completing while most of the card is still in view.
-  const startOffset = clamp(
-    sliderConfig.startOffset,
-    SAFE_START_OFFSET_MIN,
-    SAFE_START_OFFSET_MAX
-  );
-  const endOffset = clamp(
-    sliderConfig.endOffset,
-    SAFE_END_OFFSET_MIN,
-    Math.max(SAFE_END_OFFSET_MIN, startOffset - SAFE_SCROLL_WINDOW)
-  );
-
-  const { scrollYProgress } = useScroll({
-    target: imageRef,
-    // Complete the scroll reveal before the slider nears the top edge.
-    offset: [`start ${startOffset}`, `end ${endOffset}`],
-  });
-
-  const syncProgressFromScroll = useCallback(() => {
-    if (isDraggingRef.current) return;
-
-    const next = scrollYProgress.get();
-    if (!Number.isFinite(next)) return;
-
-    setProgress(clamp(next * 100, MIN_VISIBLE_POLISHED, 100));
-  }, [scrollYProgress]);
-
-  useEffect(() => {
-    let firstFrame = 0;
-    let secondFrame = 0;
-
-    const scheduleSync = () => {
-      firstFrame = window.requestAnimationFrame(() => {
-        syncProgressFromScroll();
-        secondFrame = window.requestAnimationFrame(syncProgressFromScroll);
-      });
-    };
-
-    scheduleSync();
-    window.addEventListener("load", scheduleSync);
-    window.addEventListener("resize", syncProgressFromScroll);
-
-    return () => {
-      window.cancelAnimationFrame(firstFrame);
-      window.cancelAnimationFrame(secondFrame);
-      window.removeEventListener("load", scheduleSync);
-      window.removeEventListener("resize", syncProgressFromScroll);
-    };
-  }, [syncProgressFromScroll]);
-
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
-    if (isDraggingRef.current || !Number.isFinite(value)) return;
-    setProgress(clamp(value * 100, MIN_VISIBLE_POLISHED, 100));
-  });
+  const [progress, setProgress] = useState(14);
+  const imageFocus = imageFocusByShow[transformation.show] ?? {
+    rawPosition: "50% 50%",
+    polishedPosition: "50% 50%",
+  };
 
   const updateProgressFromPointer = (clientX: number) => {
     const rect = imageRef.current?.getBoundingClientRect();
     if (!rect || rect.width <= 0) return;
-    const next = ((clientX - rect.left) / rect.width) * 100;
-    setProgress(clamp(next, 0, 100));
+    setProgress(clamp(((clientX - rect.left) / rect.width) * 100, 0, 100));
   };
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (!sliderConfig.manualEnabled) return;
-    if (!event.isPrimary) return;
-
+    if (!manualEnabled || !event.isPrimary) return;
     activePointerId.current = event.pointerId;
-    isDraggingRef.current = true;
     updateProgressFromPointer(event.clientX);
-    if (event.currentTarget) {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
+    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (!sliderConfig.manualEnabled) return;
     if (activePointerId.current !== event.pointerId) return;
     updateProgressFromPointer(event.clientX);
   };
 
-  const endDragging = (event: PointerEvent<HTMLDivElement>) => {
+  const handlePointerEnd = (event: PointerEvent<HTMLDivElement>) => {
     if (activePointerId.current !== event.pointerId) return;
-
-    if (event.currentTarget?.hasPointerCapture(event.pointerId)) {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
-
     activePointerId.current = null;
-    isDraggingRef.current = false;
-    window.requestAnimationFrame(syncProgressFromScroll);
   };
 
-  const handlePosition = `${progress}%`;
-  const clipPath = `inset(0 ${100 - progress}% 0 0)`;
-  const isEven = index % 2 === 0;
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!manualEnabled) return;
+    let nextProgress = progress;
+    if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
+      nextProgress = progress - 5;
+    } else if (event.key === "ArrowRight" || event.key === "ArrowUp") {
+      nextProgress = progress + 5;
+    } else if (event.key === "Home") {
+      nextProgress = 0;
+    } else if (event.key === "End") {
+      nextProgress = 100;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    setProgress(clamp(nextProgress, 0, 100));
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
+    <motion.figure
+      initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8 }}
-      className={`grid gap-8 md:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] md:gap-16 ${
-        !isEven ? "md:[&>*:first-child]:order-2 md:[&>*:last-child]:order-1" : ""
-      }`}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.06 }}
+      className="rounded-3xl border border-white/10 bg-white/[0.035] p-3"
     >
-      <div ref={imageRef} className="relative">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(5,5,6,0.95)_40%,rgba(245,158,11,0.12))] p-3 shadow-[0_32px_90px_rgba(0,0,0,0.42)]">
-          <div className="mb-3 flex items-center justify-between px-1">
-            <div>
-              <p className="font-body text-[10px] font-semibold uppercase tracking-[0.24em] text-white/45">
-                Asset Compare
-              </p>
-              <p className="font-heading text-sm font-semibold text-white">
-                {transformation.showName}
-              </p>
-            </div>
-            <div className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 font-body text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-amber">
-              Studio to Launch
-            </div>
-          </div>
-          <div className="relative h-[300px] overflow-hidden rounded-xl border border-white/10 bg-black sm:h-[400px] md:h-[450px]">
+      <div ref={imageRef} className="relative h-[255px] overflow-hidden rounded-2xl bg-black sm:h-[330px]">
+        <Image
+          src={transformation.rawImage}
+          alt={`${transformation.showName} studio recording`}
+          fill
+          sizes="(max-width: 1280px) 100vw, 46vw"
+          className="object-cover"
+          style={{ objectPosition: imageFocus.rawPosition }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/45" />
+        <div
+          className="absolute inset-0 overflow-hidden"
+          style={{ clipPath: `inset(0 ${100 - progress}% 0 0)` }}
+        >
           <Image
-            src={transformation.rawImage}
-            alt=""
+            src={transformation.polishedImage}
+            alt={`${transformation.showName} finished media asset`}
             fill
-            aria-hidden="true"
-            className="scale-110 object-cover opacity-25 blur-xl grayscale"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 1280px) 100vw, 46vw"
+            className="object-cover"
+            style={{ objectPosition: imageFocus.polishedPosition }}
           />
-          <div className="absolute inset-0">
-            <Image
-              src={transformation.rawImage}
-              alt={`Raw photoshoot - ${transformation.showName}`}
-              fill
-              className="object-contain grayscale-[20%] brightness-90"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              onError={(e) => {
-                const target = e.currentTarget as HTMLImageElement;
-                target.style.display = "none";
-                if (target.parentElement) {
-                  target.parentElement.style.background =
-                    "linear-gradient(135deg, rgba(22, 22, 22, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%)";
-                }
-              }}
-            />
-          </div>
-
-          <motion.div className="absolute inset-0" style={{ clipPath }}>
-            <Image
-              src={transformation.polishedImage}
-              alt=""
-              fill
-              aria-hidden="true"
-              className="scale-110 object-cover opacity-30 blur-xl saturate-150"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            <Image
-              src={transformation.polishedImage}
-              alt={`Final cover - ${transformation.showName}`}
-              fill
-              className="object-contain"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              onError={(e) => {
-                const target = e.currentTarget as HTMLImageElement;
-                target.style.display = "none";
-                if (target.parentElement) {
-                  target.parentElement.style.background =
-                    "linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)";
-                }
-              }}
-            />
-          </motion.div>
-
+        </div>
+        <span className="absolute left-4 top-4 z-10 rounded-full bg-black/50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm">
+          Studio
+        </span>
+        <span className="absolute right-4 top-4 z-10 rounded-full bg-accent-orange/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-orange backdrop-blur-sm">
+          Packaged
+        </span>
+        {manualEnabled ? (
           <div
-            className="absolute bottom-4 left-4 z-20 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-xs font-medium text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)] backdrop-blur"
+            role="slider"
+            tabIndex={0}
+            aria-label={`Compare studio capture and packaged asset for ${transformation.showName}`}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress)}
+            className="absolute inset-0 z-20 cursor-ew-resize touch-pan-y focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent-orange"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerEnd}
+            onPointerCancel={handlePointerEnd}
+            onKeyDown={handleKeyDown}
           >
-            {sliderConfig.manualEnabled ? "Drag the handle" : "Scroll to compare"}
-          </div>
-
-          <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full border border-white/10 bg-black/50 px-3 py-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70 backdrop-blur">
-            Clean Capture
-          </div>
-          <div className="pointer-events-none absolute right-4 top-4 z-20 rounded-full border border-accent-amber/30 bg-accent-amber/15 px-3 py-1.5 font-body text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-amber backdrop-blur">
-            Finished Asset
-          </div>
-
-          {sliderConfig.manualEnabled && (
-            <div
-              className="absolute inset-0 z-20 cursor-ew-resize touch-pan-y"
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={endDragging}
-              onPointerCancel={endDragging}
-              aria-label="Drag to compare raw and polished artwork"
-            />
-          )}
-
-          <motion.div
-            className="absolute bottom-0 top-0 z-30 w-px bg-white/80 shadow-[0_0_24px_rgba(245,158,11,0.8)]"
-            style={{ left: handlePosition }}
-          >
-            <div
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={endDragging}
-              onPointerCancel={endDragging}
-              className={`absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-accent-amber text-background shadow-[0_12px_40px_rgba(245,158,11,0.48)] ${
-                sliderConfig.manualEnabled ? "cursor-ew-resize touch-pan-y" : "cursor-default"
-              }`}
+            <span
+              className="absolute bottom-0 top-0 w-px bg-white/90 shadow-[0_0_18px_rgba(245,158,11,0.7)]"
+              style={{ left: `${progress}%` }}
             >
-              <svg
-                aria-hidden="true"
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M8 7 3 12l5 5" />
-                <path d="M16 7l5 5-5 5" />
-                <path d="M3 12h18" />
-              </svg>
-            </div>
-          </motion.div>
+              <span className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-sm font-semibold text-background shadow-xl">
+                &lt;&gt;
+              </span>
+            </span>
           </div>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <span
-            className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-center font-body text-xs font-semibold uppercase tracking-[0.18em]"
-            style={{ color: progress < 50 ? "#F59E0B" : "rgba(255,255,255,0.48)" }}
-          >
-            Raw Studio
-          </span>
-          <span
-            className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-center font-body text-xs font-semibold uppercase tracking-[0.18em]"
-            style={{ color: progress >= 50 ? "#F59E0B" : "rgba(255,255,255,0.48)" }}
-          >
-            Finished Creative
-          </span>
-        </div>
+        ) : null}
       </div>
-
-      <div className="flex flex-col justify-center">
-        <span className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-accent-amber/30 bg-accent-amber/10 px-4 py-2 text-sm font-medium text-accent-amber">
-          <span className="h-2 w-2 rounded-full bg-accent-amber shadow-[0_0_18px_rgba(245,158,11,0.75)]" />
+      <figcaption className="flex items-center justify-between gap-4 px-3 pb-2 pt-4 text-sm">
+        <span className="font-heading font-semibold text-white">
           {transformation.showName}
         </span>
-        <h3 className="mb-4 font-heading text-3xl font-bold leading-tight text-white md:text-4xl">
-          {transformation.title}
-        </h3>
-        {transformation.description.map((paragraph, paragraphIndex) => (
-          <p
-            key={paragraphIndex}
-            className="mb-4 font-body text-text-secondary leading-relaxed last:mb-0"
-          >
-            {paragraph}
-          </p>
-        ))}
-      </div>
-    </motion.div>
+        <span className="text-white/52">
+          {manualEnabled ? "Drag or use arrow keys to compare" : "Studio to packaged asset"}
+        </span>
+      </figcaption>
+    </motion.figure>
   );
 }

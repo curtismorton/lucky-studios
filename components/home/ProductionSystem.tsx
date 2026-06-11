@@ -5,83 +5,99 @@ import { motion } from "framer-motion";
 const steps = [
   {
     label: "01",
-    title: "Record",
-    copy: "Multi-camera studio sessions built around personality, pace, and usable moments.",
+    title: "Shape",
+    copy: "Positioning, format, audience, segments, guest strategy and commercial angle.",
   },
   {
     label: "02",
-    title: "Edit",
-    copy: "Long-form episodes, short-form cutdowns, hooks, captions, and platform-specific versions.",
+    title: "Record",
+    copy: "Studio production, direction, cameras, audio, lighting and guest experience.",
   },
   {
     label: "03",
     title: "Package",
-    copy: "Cover art, thumbnails, titles, show notes, and a visual identity people recognise.",
+    copy: "Titles, thumbnails, clips, graphics, social hooks and platform native assets.",
   },
   {
     label: "04",
     title: "Distribute",
-    copy: "Spotify, YouTube, TikTok, socials, partners, and publishing rhythms handled together.",
+    copy: "YouTube, TikTok, Instagram, Spotify, Apple Podcasts and paid ready cutdowns.",
   },
   {
     label: "05",
     title: "Grow",
-    copy: "Analytics, audience feedback, sponsor readiness, and the next format decision.",
+    copy: "Analytics, retention, audience behaviour, clip performance and format optimisation.",
   },
-];
+] as const;
 
-export default function ProductionSystem() {
+interface ProductionSystemProps {
+  consultationHref: string;
+}
+
+export default function ProductionSystem({
+  consultationHref,
+}: ProductionSystemProps) {
+  const external = /^https?:\/\//i.test(consultationHref);
+
   return (
-    <section className="relative overflow-hidden px-4 py-24 md:py-32">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(245,158,11,0.08),transparent)]" />
+    <section className="relative px-4 py-16 sm:px-6 md:py-28 lg:px-8">
+      <div className="pointer-events-none absolute inset-x-0 top-1/4 h-96 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.12),transparent_58%)]" />
       <div className="relative mx-auto max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 grid gap-6 md:grid-cols-[0.9fr_1.1fr] md:items-end"
+          transition={{ duration: 0.55 }}
+          className="mb-12 max-w-4xl md:mb-16"
         >
-          <div>
-            <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
-              The Lucky System
-            </p>
-            <h2 className="font-heading text-4xl font-bold leading-tight text-white md:text-6xl">
-              One studio. One pipeline. Every asset a show needs.
-            </h2>
-          </div>
-          <p className="font-body text-lg leading-relaxed text-text-secondary">
-            The site should make the offer obvious: Lucky is not just a room
-            with microphones. It is the production, packaging, publishing, and
-            growth engine around the show.
+          <h2 className="mb-5 font-heading text-3xl font-bold leading-tight text-white sm:text-4xl md:text-6xl">
+            The Lucky System
+          </h2>
+          <p className="max-w-2xl font-heading text-xl font-medium leading-relaxed text-white/78 sm:text-2xl">
+            One studio. One pipeline. Every asset a show needs.
           </p>
         </motion.div>
 
-        <div className="grid gap-3 md:grid-cols-5">
+        <div className="relative grid gap-3 md:grid-cols-5">
+          <div className="absolute left-[10%] right-[10%] top-[31px] hidden h-px bg-gradient-to-r from-transparent via-accent-orange/45 to-transparent md:block" />
           {steps.map((step, index) => (
-            <motion.div
+            <motion.article
               key={step.title}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.06 }}
-              className="group relative overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(18,18,20,0.92))] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.28)] transition-colors hover:border-accent-orange/45"
+              transition={{ duration: 0.48, delay: index * 0.06 }}
+              className="group relative rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm transition-colors hover:border-accent-orange/35 md:border-transparent md:bg-transparent md:px-4 md:py-0 md:backdrop-blur-0"
             >
-              <div className="mb-12 flex items-center justify-between">
-                <span className="font-heading text-sm font-semibold text-accent-orange">
-                  {step.label}
-                </span>
-                <span className="h-px w-10 bg-white/20 transition-colors group-hover:bg-accent-orange/70" />
+              <div className="relative z-10 mb-8 inline-flex h-16 w-16 items-center justify-center rounded-full border border-accent-orange/35 bg-background text-sm font-semibold text-accent-orange shadow-[0_0_30px_rgba(245,158,11,0.12)]">
+                {step.label}
               </div>
-              <h3 className="mb-3 font-heading text-2xl font-bold text-white">
+              <h3 className="mb-3 font-heading text-2xl font-semibold text-white">
                 {step.title}
               </h3>
-              <p className="font-body text-sm leading-relaxed text-text-secondary">
+              <p className="text-sm leading-relaxed text-white/62">
                 {step.copy}
               </p>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45 }}
+          className="mt-12 md:mt-16"
+        >
+          <a
+            href={consultationHref}
+            target={external ? "_blank" : undefined}
+            rel={external ? "noopener noreferrer" : undefined}
+            className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+          >
+            Book a consultation
+          </a>
+        </motion.div>
       </div>
     </section>
   );

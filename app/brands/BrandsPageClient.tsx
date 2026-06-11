@@ -88,14 +88,16 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
                 <p className="mb-4 font-body text-sm text-text-secondary sm:mb-6 sm:text-base">
                   {service.description}
                 </p>
-                <motion.button
-                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {service.ctaLabel}
-                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                </motion.button>
+                <Link href="/contact" className="inline-block">
+                  <motion.span
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan touch-manipulation sm:px-6 sm:py-3 sm:text-sm"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {service.ctaLabel}
+                    <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                  </motion.span>
+                </Link>
               </motion.div>
             );
           })}
@@ -267,14 +269,16 @@ export default function BrandsPageClient({ content }: BrandsPageClientProps) {
               Bring the audience, category, or commercial brief. We will shape
               the format, talent route, production plan, and deliverables.
             </p>
-            <motion.button
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Talk Through the Brief
-              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-            </motion.button>
+            <Link href="/contact" className="inline-block">
+              <motion.span
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-cyan px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-cyan touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Talk Through the Brief
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+              </motion.span>
+            </Link>
             <p className="mt-4 font-body text-xs text-text-muted sm:text-sm">
               Or email us at{" "}
               <a href={`mailto:${page.cta.email}`} className="text-accent-cyan hover:underline">

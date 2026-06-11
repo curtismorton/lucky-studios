@@ -8,6 +8,7 @@ import MobileMenu from "./MobileMenu";
 import { buttonHover, buttonTap } from "@/lib/animations";
 import Logo from "@/components/ui/Logo";
 import { site } from "@/lib/data/site";
+import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
 const DEFAULT_NAV_LINKS = [
   { name: "Our Shows", href: "/shows" },
@@ -30,7 +31,7 @@ export default function Navbar({
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const bookingHref = bookingHrefProp || site.calendlyUrl || "/contact";
+  const bookingHref = resolveConsultationHref(bookingHrefProp || site.calendlyUrl);
   const isExternalBooking = /^https?:\/\//i.test(bookingHref);
   const bookingTarget = isExternalBooking ? "_blank" : undefined;
   const bookingRel = isExternalBooking ? "noopener noreferrer" : undefined;

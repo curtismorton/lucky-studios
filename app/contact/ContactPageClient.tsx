@@ -1,41 +1,92 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import {
-  Mail,
-  MapPin,
+  AlertTriangle,
   Calendar,
-  Twitter,
+  CheckCircle2,
+  Globe,
   Instagram,
   Linkedin,
-  Youtube,
-  Globe,
-  ChevronDown,
   Loader2,
-  CheckCircle2,
-  AlertTriangle,
+  Mail,
+  MapPin,
+  Twitter,
+  Youtube,
 } from "lucide-react";
-import Logo from "@/components/ui/Logo";
-import { site } from "@/lib/data/site";
+import { useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import {
   defaultMarketingPagesContent,
   type ContactPageContent,
 } from "@/lib/data/marketingContent";
 
+type AudienceType = "creator" | "brand" | "agency" | "platform" | "other";
+type ContactIntent = "creator" | "brand" | "agency" | "idea" | "consultation" | "";
+
 interface ContactFormData {
   name: string;
   email: string;
-  company: string;
-  interest: string;
-  message: string;
+  audienceType: AudienceType | "";
+  brief: string;
+  optionalLink: string;
 }
 
 interface ContactPageClientProps {
   content?: ContactPageContent;
   formEndpoint?: string;
+  consultationHref: string;
 }
+
+const audienceOptions: Array<{ value: AudienceType; label: string }> = [
+  { value: "creator", label: "Creator" },
+  { value: "brand", label: "Brand" },
+  { value: "agency", label: "Agency" },
+  { value: "platform", label: "Platform" },
+  { value: "other", label: "Other" },
+];
+
+const intentContent: Record<
+  Exclude<ContactIntent, "">,
+  { label: string; title: string; description: string; audienceType: AudienceType | "" }
+> = {
+  creator: {
+    label: "Creator enquiry",
+    title: "Let us build the show around your audience.",
+    description:
+      "Tell us what people already come to you for and what the show could unlock.",
+    audienceType: "creator",
+  },
+  brand: {
+    label: "Brand enquiry",
+    title: "Turn the objective into a content property.",
+    description:
+      "Share the audience, category and outcome you want a recurring show to own.",
+    audienceType: "brand",
+  },
+  agency: {
+    label: "Partner enquiry",
+    title: "Bring the brief. We will shape the format.",
+    description:
+      "Tell us about the talent, campaign or platform need behind the idea.",
+    audienceType: "agency",
+  },
+  idea: {
+    label: "Show idea",
+    title: "Tell us the show you cannot stop thinking about.",
+    description:
+      "A strong personality, community or point of view is enough to start.",
+    audienceType: "",
+  },
+  consultation: {
+    label: "Consultation",
+    title: "Tell us what you are trying to build.",
+    description:
+      "Share the useful context and we will find the right first conversation.",
+    audienceType: "",
+  },
+};
 
 function getSocialIcon(label: string) {
   const normalized = label.toLowerCase();
@@ -46,49 +97,69 @@ function getSocialIcon(label: string) {
   return Globe;
 }
 
+function normalizeIntent(value: string | null): ContactIntent {
+  if (
+    value === "creator" ||
+    value === "brand" ||
+    value === "agency" ||
+    value === "idea" ||
+    value === "consultation"
+  ) {
+    return value;
+  }
+  return "";
+}
+
+function isConfiguredFormEndpoint(endpoint: string): boolean {
+  const normalized = endpoint.trim().toLowerCase();
+  if (!normalized) return false;
+
+  // Keep template environment values from presenting a working submission flow.
+  return !normalized.includes("your_form_id") && !normalized.includes("your-form-id");
+}
+
 export default function ContactPageClient({
   content,
   formEndpoint = "",
+  consultationHref,
 }: ContactPageClientProps) {
   const page = content || defaultMarketingPagesContent.contact;
-  const hasFormEndpoint = formEndpoint.trim().length > 0;
-  const interestOptions = [
-    "Build a creator show",
-    "Brand partnership or sponsorship",
-    "Book the studio",
-    "Produce campaign assets",
-    "Something else",
-  ];
-
+  const searchParams = useSearchParams();
+  const intent = normalizeIntent(searchParams.get("intent"));
+  const entry = intent ? intentContent[intent] : intentContent.consultation;
+  const hasFormEndpoint = isConfiguredFormEndpoint(formEndpoint);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState("");
 
-  const bookingHref = site.calendlyUrl || "/contact";
-  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
-  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
+  const bookingExternal = /^https?:\/\//i.test(consultationHref);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ContactFormData>();
+    setValue,
+  } = useForm<ContactFormData>({
+    defaultValues: {
+      audienceType: entry.audienceType,
+    },
+  });
+
+  useEffect(() => {
+    setValue("audienceType", entry.audienceType);
+  }, [entry.audienceType, setValue]);
 
   const onSubmit = async (data: ContactFormData) => {
     setSubmitError("");
     setSubmitSuccess("");
-
     if (!hasFormEndpoint) {
-      setSubmitError(
-        "Contact form is not configured yet. Please email us directly and set CONTACT_FORM_ENDPOINT."
-      );
       return;
     }
 
     setIsSubmitting(true);
     try {
+      // CONTACT_FORM_ENDPOINT remains the external submission integration boundary.
       const response = await fetch(formEndpoint, {
         method: "POST",
         headers: {
@@ -96,7 +167,15 @@ export default function ContactPageClient({
           Accept: "application/json",
         },
         body: JSON.stringify({
-          ...data,
+          name: data.name,
+          email: data.email,
+          company: "",
+          interest: data.audienceType,
+          message: data.brief,
+          audienceType: data.audienceType,
+          brief: data.brief,
+          optionalLink: data.optionalLink,
+          entryIntent: intent || "contact",
           source: "luckystudios.com/contact",
         }),
       });
@@ -108,8 +187,8 @@ export default function ContactPageClient({
         );
       }
 
-      setSubmitSuccess("Message sent. We'll get back to you within 1-2 business days.");
-      reset();
+      setSubmitSuccess("Message sent. We will be in touch shortly.");
+      reset({ audienceType: entry.audienceType });
     } catch (error) {
       setSubmitError(
         error instanceof Error
@@ -121,189 +200,164 @@ export default function ContactPageClient({
     }
   };
 
+  const fieldClassName =
+    "w-full rounded-xl border border-white/10 bg-white/[0.045] px-4 py-3.5 font-body text-white placeholder:text-white/35 transition focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20";
+
   return (
-    <main className="min-h-screen bg-background">
-      <section className="relative mx-auto max-w-7xl px-4 pb-16 pt-32 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent-orange/10 via-transparent to-accent-cyan/10" />
+    <MotionConfig reducedMotion="user">
+      <main className="min-h-screen overflow-hidden bg-background">
+      <section className="relative px-4 pb-14 pt-32 sm:px-6 md:pb-20 lg:px-8">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[460px] w-full max-w-4xl -translate-x-1/2 bg-[radial-gradient(circle_at_50%_20%,rgba(245,158,11,0.17),transparent_58%)]" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto max-w-4xl text-center"
+          transition={{ duration: 0.55 }}
+          className="relative mx-auto max-w-4xl text-center"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-8 flex justify-center"
-          >
-            <Logo size="md" showLink={false} />
-          </motion.div>
-
-          <p className="mb-4 font-body text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
-            Start the Conversation
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-accent-orange">
+            {entry.label}
           </p>
-          <h1 className="mb-4 font-heading text-4xl font-bold leading-tight text-white sm:mb-6 sm:text-5xl md:text-6xl lg:text-7xl">
-            Tell us what you are trying to build.
+          <h1 className="mb-5 font-heading text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl">
+            {entry.title}
           </h1>
-          <p className="font-body text-base leading-relaxed text-text-secondary sm:text-lg md:text-xl">
-            Creator show, brand partnership, studio session, campaign asset
-            engine, or something in between. Send the useful context and we will
-            point the next step in the right direction.
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
+            {entry.description}
           </p>
         </motion.div>
       </section>
 
-      <section className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-2">
+      <section className="relative mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.04fr_0.72fr] lg:gap-16">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 sm:p-8"
           >
-            <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
-              Start with the idea.
+            <h2 className="mb-8 font-heading text-2xl font-semibold text-white sm:text-3xl">
+              Start with the useful details.
             </h2>
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-2 block font-body text-sm font-medium text-white"
-                >
-                  Name <span className="text-accent-orange">*</span>
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  {...register("name", { required: "Name is required" })}
-                  className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
-                  placeholder="Your name"
-                  aria-invalid={errors.name ? "true" : "false"}
-                />
-                {errors.name && (
-                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
-                    {errors.name.message}
-                  </p>
-                )}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-white">
+                    Name <span className="text-accent-orange">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    {...register("name", { required: "Name is required" })}
+                    className={fieldClassName}
+                    placeholder="Your name"
+                    aria-invalid={Boolean(errors.name)}
+                  />
+                  {errors.name ? (
+                    <p className="mt-2 text-sm text-accent-orange" role="alert">
+                      {errors.name.message}
+                    </p>
+                  ) : null}
+                </div>
+                <div>
+                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-white">
+                    Email <span className="text-accent-orange">*</span>
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Enter a valid email address",
+                      },
+                    })}
+                    className={fieldClassName}
+                    placeholder="you@example.com"
+                    aria-invalid={Boolean(errors.email)}
+                  />
+                  {errors.email ? (
+                    <p className="mt-2 text-sm text-accent-orange" role="alert">
+                      {errors.email.message}
+                    </p>
+                  ) : null}
+                </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="mb-2 block font-body text-sm font-medium text-white"
-                >
-                  Email <span className="text-accent-orange">*</span>
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address",
-                    },
-                  })}
-                  className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
-                  placeholder="your.email@example.com"
-                  aria-invalid={errors.email ? "true" : "false"}
-                />
-                {errors.email && (
-                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label
-                  htmlFor="company"
-                  className="mb-2 block font-body text-sm font-medium text-white"
-                >
-                  Company
-                </label>
-                <input
-                  id="company"
-                  type="text"
-                  {...register("company")}
-                  className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
-                  placeholder="Your company (optional)"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="interest"
-                  className="mb-2 block font-body text-sm font-medium text-white"
-                >
-                  I&apos;m interested in: <span className="text-accent-orange">*</span>
+                <label htmlFor="audienceType" className="mb-2 block text-sm font-medium text-white">
+                  I am a <span className="text-accent-orange">*</span>
                 </label>
                 <select
-                  id="interest"
-                  {...register("interest", {
-                    required: "Please select an option",
-                  })}
-                  className="min-h-[44px] w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
-                  aria-invalid={errors.interest ? "true" : "false"}
+                  id="audienceType"
+                  {...register("audienceType", { required: "Select one option" })}
+                  className={`${fieldClassName} min-h-[52px]`}
+                  aria-invalid={Boolean(errors.audienceType)}
                 >
-                  <option value="">Select an option</option>
-                  {interestOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
+                  <option value="">Select one option</option>
+                  {audienceOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
                     </option>
                   ))}
                 </select>
-                {errors.interest && (
-                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
-                    {errors.interest.message}
+                {errors.audienceType ? (
+                  <p className="mt-2 text-sm text-accent-orange" role="alert">
+                    {errors.audienceType.message}
                   </p>
-                )}
+                ) : null}
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="mb-2 block font-body text-sm font-medium text-white"
-                >
-                  Message <span className="text-accent-orange">*</span>
+                <label htmlFor="brief" className="mb-2 block text-sm font-medium text-white">
+                  What are you trying to build? <span className="text-accent-orange">*</span>
                 </label>
                 <textarea
-                  id="message"
+                  id="brief"
                   rows={6}
-                  {...register("message", {
-                    required: "Message is required",
+                  {...register("brief", {
+                    required: "Tell us what you are trying to build",
                     minLength: {
                       value: 10,
-                      message: "Message must be at least 10 characters",
+                      message: "Please add a little more detail",
                     },
                   })}
-                  className="w-full rounded-lg border border-background-tertiary bg-background-secondary/50 px-4 py-3 font-body text-white placeholder:text-text-muted focus:border-accent-orange focus:outline-none focus:ring-2 focus:ring-accent-orange/20"
-                  placeholder="Tell us about the show, audience, brand brief, studio session, timeline, or assets you need..."
-                  aria-invalid={errors.message ? "true" : "false"}
+                  className={fieldClassName}
+                  placeholder="Tell us about the idea, audience, brief, format or support you need."
+                  aria-invalid={Boolean(errors.brief)}
                 />
-                {errors.message && (
-                  <p className="mt-1 font-body text-sm text-accent-orange" role="alert">
-                    {errors.message.message}
+                {errors.brief ? (
+                  <p className="mt-2 text-sm text-accent-orange" role="alert">
+                    {errors.brief.message}
                   </p>
-                )}
+                ) : null}
+              </div>
+
+              <div>
+                <label htmlFor="optionalLink" className="mb-2 block text-sm font-medium text-white">
+                  Optional link
+                </label>
+                <input
+                  id="optionalLink"
+                  type="url"
+                  {...register("optionalLink")}
+                  className={fieldClassName}
+                  placeholder="Show, channel, brief or brand link"
+                />
               </div>
 
               <motion.button
                 type="submit"
                 disabled={isSubmitting || !hasFormEndpoint}
-                className="min-h-[44px] w-full rounded-full bg-accent-orange px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange disabled:cursor-not-allowed disabled:opacity-50 sm:px-8 sm:py-4 sm:text-lg"
-                whileHover={{ scale: isSubmitting || !hasFormEndpoint ? 1 : 1.05 }}
-                whileTap={{ scale: isSubmitting || !hasFormEndpoint ? 1 : 0.95 }}
+                className="flex min-h-[52px] w-full items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                whileTap={isSubmitting || !hasFormEndpoint ? undefined : { scale: 0.98 }}
               >
                 {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
+                  <span className="inline-flex items-center gap-2">
                     <Loader2 className="h-5 w-5 animate-spin" />
                     {page.form.sendingLabel}
                   </span>
                 ) : (
-                  "Send the Brief"
+                  "Send us your idea"
                 )}
               </motion.button>
 
@@ -311,23 +365,23 @@ export default function ContactPageClient({
                 {submitError ? (
                   <motion.p
                     key="error"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     className="flex items-center gap-2 text-sm text-red-300"
+                    role="alert"
                   >
                     <AlertTriangle className="h-4 w-4" />
                     {submitError}
                   </motion.p>
                 ) : null}
-
                 {submitSuccess ? (
                   <motion.p
                     key="success"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     className="flex items-center gap-2 text-sm text-emerald-300"
+                    role="status"
                   >
                     <CheckCircle2 className="h-4 w-4" />
                     {submitSuccess}
@@ -335,177 +389,87 @@ export default function ContactPageClient({
                 ) : null}
               </AnimatePresence>
 
-              {!hasFormEndpoint && !submitError && (
-                <p className="text-xs text-text-muted">
-                  Configure <code>CONTACT_FORM_ENDPOINT</code> to enable form submissions.
+              {!hasFormEndpoint ? (
+                <p className="rounded-xl border border-accent-orange/20 bg-accent-orange/[0.06] p-4 text-sm leading-relaxed text-white/65">
+                  Online submissions are not configured yet. Email{" "}
+                  <a className="text-white underline decoration-accent-orange" href={`mailto:${page.direct.email}`}>
+                    {page.direct.email}
+                  </a>{" "}
+                  to start the conversation.
                 </p>
-              )}
+              ) : null}
             </form>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+          <motion.aside
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            className="space-y-9 pt-2"
           >
-            <h2 className="mb-4 font-heading text-2xl font-bold sm:mb-6 sm:text-3xl md:text-4xl">
-              Prefer a direct route?
-            </h2>
-            <div className="space-y-6 sm:space-y-8">
-              <div>
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="rounded-lg bg-accent-orange/10 p-2">
-                    <Mail className="h-4 w-4 text-accent-orange sm:h-5 sm:w-5" />
-                  </div>
-                  <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
-                    Email
-                  </h3>
-                </div>
-                <a
-                  href={`mailto:${page.direct.email}`}
-                  className="font-body text-sm text-text-secondary transition-colors hover:text-accent-orange sm:text-base"
-                >
+            <div>
+              <h2 className="mb-6 font-heading text-2xl font-semibold text-white">
+                Prefer a direct route?
+              </h2>
+              <div className="space-y-6 text-sm text-white/65">
+                <a href={`mailto:${page.direct.email}`} className="flex items-center gap-3 transition hover:text-accent-orange">
+                  <Mail className="h-5 w-5 text-accent-orange" />
                   {page.direct.email}
                 </a>
-              </div>
-
-              <div>
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="rounded-lg bg-accent-purple/10 p-2">
-                    <MapPin className="h-4 w-4 text-accent-purple sm:h-5 sm:w-5" />
-                  </div>
-                  <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
-                    Address
-                  </h3>
-                </div>
-                <p className="font-body text-sm text-text-secondary sm:text-base">
-                  {page.direct.addressLines.map((line, index) => (
-                    <span key={`${line}-${index}`}>
-                      {line}
-                      {index < page.direct.addressLines.length - 1 ? <br /> : null}
-                    </span>
-                  ))}
-                </p>
-              </div>
-
-              <div>
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="rounded-lg bg-accent-cyan/10 p-2">
-                    <Calendar className="h-4 w-4 text-accent-cyan sm:h-5 sm:w-5" />
-                  </div>
-                  <h3 className="font-heading text-base font-semibold text-white sm:text-lg">
-                    Book a Working Session
-                  </h3>
-                </div>
-                <div className="rounded-2xl border border-background-tertiary bg-background-secondary/50 p-5 backdrop-blur-sm sm:p-6">
-                  <p className="mb-4 font-body text-xs text-text-muted sm:text-sm">
-                    Useful if you already have a creator, brand brief, or shoot
-                    window and need to pressure-test the plan quickly.
+                <div className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 h-5 w-5 text-accent-orange" />
+                  <p>
+                    {page.direct.addressLines.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
                   </p>
-                  <motion.a
-                    href={bookingHref}
-                    target={bookingTarget}
-                    rel={bookingRel}
-                    className="flex min-h-[44px] w-full items-center justify-center rounded-full border-2 border-accent-cyan bg-transparent px-4 py-2.5 font-heading text-xs font-semibold text-white transition-all duration-300 hover:bg-accent-cyan/10 hover:glow-cyan sm:px-6 sm:py-3 sm:text-sm"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Schedule a Working Session
-                  </motion.a>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="mb-3 font-heading text-base font-semibold text-white sm:mb-4 sm:text-lg">
-                  Follow Us
-                </h3>
-                <div className="flex flex-wrap gap-3 sm:gap-4">
-                  {page.direct.socials.map((social) => {
-                    const Icon = getSocialIcon(social.label);
-                    return (
-                      <motion.a
-                        key={`${social.label}-${social.href}`}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-background-tertiary bg-background-secondary/50 p-2.5 text-text-secondary transition-all duration-300 hover:border-accent-orange hover:text-accent-orange hover:glow-orange sm:p-3"
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.9 }}
-                        aria-label={social.label}
-                      >
-                        <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </motion.a>
-                    );
-                  })}
                 </div>
               </div>
             </div>
-          </motion.div>
+
+            <div className="rounded-2xl border border-accent-orange/20 bg-accent-orange/[0.055] p-6">
+              <div className="mb-4 flex items-center gap-3">
+                <Calendar className="h-5 w-5 text-accent-orange" />
+                <h3 className="font-heading text-lg font-semibold text-white">
+                  Book a consultation
+                </h3>
+              </div>
+              <p className="mb-6 text-sm leading-relaxed text-white/62">
+                Useful when you already have a creator, brand brief or format to discuss.
+              </p>
+              <a
+                href={consultationHref}
+                target={bookingExternal ? "_blank" : undefined}
+                rel={bookingExternal ? "noopener noreferrer" : undefined}
+                className="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-accent-orange/40 px-5 py-3 font-heading text-sm font-semibold text-white transition hover:bg-accent-orange/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+              >
+                Book a consultation
+              </a>
+            </div>
+
+            <div className="flex gap-3">
+              {page.direct.socials.map((social) => {
+                const Icon = getSocialIcon(social.label);
+                return (
+                  <a
+                    key={social.href}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white/65 transition hover:border-accent-orange hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                );
+              })}
+            </div>
+          </motion.aside>
         </div>
       </section>
-
-      <section className="relative mx-auto max-w-4xl px-4 pb-24 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="mb-8 text-center font-heading text-3xl font-bold sm:mb-12 sm:text-4xl md:text-5xl">
-            Useful things to <span className="text-gradient-accent">know first</span>
-          </h2>
-          <div className="space-y-3 sm:space-y-4">
-            {page.faq.items.map((faq, index) => (
-              <motion.div
-                key={`${faq.question}-${index}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="overflow-hidden rounded-2xl border border-background-tertiary bg-background-secondary/50 backdrop-blur-sm"
-              >
-                <button
-                  onClick={() =>
-                    setExpandedFaq(expandedFaq === index ? null : index)
-                  }
-                  className="flex min-h-[44px] w-full items-center justify-between p-5 text-left font-heading text-base font-semibold text-white transition-colors hover:text-accent-orange sm:p-6 sm:text-lg"
-                  aria-expanded={expandedFaq === index}
-                  aria-controls={`faq-answer-${index}`}
-                >
-                  <span>{faq.question}</span>
-                  <motion.div
-                    animate={{
-                      rotate: expandedFaq === index ? 180 : 0,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </motion.div>
-                </button>
-                <AnimatePresence>
-                  {expandedFaq === index && (
-                    <motion.div
-                      id={`faq-answer-${index}`}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-5 pb-5 sm:px-6 sm:pb-6">
-                        <p className="font-body text-sm text-text-secondary sm:text-base">
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-    </main>
+      </main>
+    </MotionConfig>
   );
 }

@@ -1,6 +1,9 @@
+import { Suspense } from "react";
 import ContactPageClient from "./ContactPageClient";
 import { getMarketingPagesContent } from "@/lib/services/marketingCms";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
+import { getSiteSettings } from "@/lib/services/cms/siteSettings";
+import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
 export const revalidate = 86400;
 
@@ -21,13 +24,20 @@ export async function generateMetadata() {
 }
 
 export default async function ContactPage() {
-  const content = await getMarketingPagesContent();
+  const [content, siteSettings] = await Promise.all([
+    getMarketingPagesContent(),
+    getSiteSettings(),
+  ]);
   const formEndpoint = process.env.CONTACT_FORM_ENDPOINT || "";
+  const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
 
   return (
-    <ContactPageClient
-      content={content.contact}
-      formEndpoint={formEndpoint}
-    />
+    <Suspense fallback={null}>
+      <ContactPageClient
+        content={content.contact}
+        formEndpoint={formEndpoint}
+        consultationHref={consultationHref}
+      />
+    </Suspense>
   );
 }

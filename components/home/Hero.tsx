@@ -1,12 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Play, Phone } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { buttonHover, buttonTap } from "@/lib/animations";
-import HeroUnicornBackground from "@/components/home/HeroUnicornBackground";
-import { site } from "@/lib/data/site";
+import HeroBackground from "@/components/home/HeroBackground";
+import Logo from "@/components/ui/Logo";
 import {
   defaultHomepageContent,
   type HeroContent,
@@ -14,187 +12,90 @@ import {
 
 interface HeroProps {
   content?: HeroContent;
+  consultationHref: string;
 }
 
-const rotatingProofLines = [
-  "15 million social views after launch.",
-  "Understanding the nuance of every platform after years of experience.",
-  "Sustained episode-to-episode growth.",
-];
-
-export default function Hero({ content }: HeroProps) {
+export default function Hero({ content, consultationHref }: HeroProps) {
   const heroContent = content || defaultHomepageContent.hero;
-  const proofStats =
-    heroContent.proofStats.length > 0
-      ? heroContent.proofStats
-      : defaultHomepageContent.hero.proofStats;
-  const bookingHref = site.calendlyUrl || "/contact";
-  const bookingTarget = site.calendlyUrl ? "_blank" : undefined;
-  const bookingRel = site.calendlyUrl ? "noopener noreferrer" : undefined;
-  const shouldReduceMotion = useReducedMotion();
-  const [proofIndex, setProofIndex] = useState(0);
-  const tapeItems = [
-    "Spotify Charting Shows",
-    "TikTok-First Growth",
-    "8-Camera Studio",
-    "London Bridge HQ",
-    "End-to-End Production",
-  ];
-
-  useEffect(() => {
-    if (shouldReduceMotion || rotatingProofLines.length < 2) {
-      return;
-    }
-
-    const interval = window.setInterval(() => {
-      setProofIndex((current) => (current + 1) % rotatingProofLines.length);
-    }, 3200);
-
-    return () => window.clearInterval(interval);
-  }, [shouldReduceMotion]);
-
-  const primaryCtaContent = (
-    <motion.span
-      className="group relative flex min-h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full bg-accent-amber px-8 py-4 font-heading text-base font-semibold text-white shadow-[0_4px_24px_rgba(245,158,11,0.28)] transition-all duration-300 hover:glow-amber touch-manipulation"
-      whileHover={buttonHover}
-      whileTap={buttonTap}
-    >
-      <Phone className="h-5 w-5" />
-      <span>Build a Show</span>
-    </motion.span>
-  );
-
-  const primaryCta = site.calendlyUrl ? (
-    <a
-      href={bookingHref}
-      target={bookingTarget}
-      rel={bookingRel}
-      className="inline-block"
-    >
-      {primaryCtaContent}
-    </a>
-  ) : (
-    <Link href={bookingHref} className="inline-block">
-      {primaryCtaContent}
-    </Link>
-  );
+  const consultationTarget = /^https?:\/\//i.test(consultationHref)
+    ? "_blank"
+    : undefined;
+  const consultationRel = consultationTarget ? "noopener noreferrer" : undefined;
 
   return (
-    <header className="relative min-h-screen overflow-hidden px-4 pb-28 pt-28 md:px-8 md:pt-32">
-      <div aria-hidden="true" className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-background" />
-        <HeroUnicornBackground />
-        <div className="absolute inset-0 bg-black/42" />
-        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(245,158,11,0.24),transparent_34%,rgba(6,182,212,0.12)_72%,transparent)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/58 via-black/34 to-background/86" />
-      </div>
+    <header className="relative flex min-h-[100svh] items-center overflow-hidden px-4 pb-8 pt-24 sm:px-6 lg:px-8">
+      <HeroBackground
+        mainImage={heroContent.mainBackground}
+        fallbackImage={heroContent.accentImage}
+      />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-12rem)] w-full max-w-6xl flex-col px-4 md:px-8">
-        <div className="mx-auto w-full max-w-5xl text-center">
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
+        <div className="max-w-[720px]">
           <motion.div
-            initial={false}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mb-6 flex justify-center"
+            transition={{ duration: 0.6, delay: 0.08, ease: "easeOut" }}
+            className="mb-7"
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/90 backdrop-blur-md">
-              Bermondsey, London <span className="text-white/60">•</span>{" "}
-              Podcast Production <span className="text-white/60">•</span>{" "}
-              Growth
-            </span>
+            <Logo size="md" showLink={false} className="max-w-[168px] sm:max-w-none" />
           </motion.div>
-
-          <div className="mb-5 flex min-h-[2.6rem] items-center justify-center">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.p
-                key={proofIndex}
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={shouldReduceMotion ? undefined : { opacity: 0, y: -12 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-                className="max-w-3xl text-sm font-semibold uppercase tracking-[0.12em] text-accent-amber md:text-base"
-              >
-                {rotatingProofLines[proofIndex]}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
           <motion.h1
-            initial={false}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.1, ease: "easeOut" }}
-            className="mx-auto mb-6 max-w-5xl font-heading text-5xl font-bold leading-none text-white sm:text-6xl md:text-7xl lg:text-8xl"
+            transition={{ duration: 0.72, delay: 0.14, ease: "easeOut" }}
+            className="mb-5 font-heading text-[clamp(2.45rem,5.7vw,4.7rem)] font-bold leading-[0.98] tracking-[-0.045em] text-white"
           >
             Build a show people actually come back to.
           </motion.h1>
-
           <motion.p
-            initial={false}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="mx-auto max-w-3xl font-body text-lg leading-relaxed text-white/88 md:text-xl"
+            transition={{ duration: 0.65, delay: 0.23, ease: "easeOut" }}
+            className="mb-4 max-w-2xl text-base leading-relaxed text-white/78 sm:text-lg"
           >
-            Lucky Studios turns raw conversations into polished shows, clips,
-            covers, campaigns, and audience momentum across every platform that
-            matters.
+            Lucky Studios creates, produces and grows creator led podcasts for
+            brands, talent and audiences that want more than another talking
+            heads show.
           </motion.p>
-        </div>
-
-        <div className="mx-auto mt-auto w-full max-w-5xl pb-6 text-center">
-          <motion.div
-            initial={false}
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="mb-8 flex flex-col flex-wrap items-stretch justify-center gap-4 sm:flex-row sm:items-center"
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="mb-6 text-sm font-medium tracking-wide text-accent-orange sm:text-base"
           >
-            {primaryCta}
-            <Link href="/shows" className="inline-block">
-              <motion.span
-                className="flex min-h-[44px] items-center justify-center gap-2 rounded-full border border-white/22 bg-black/46 px-8 py-4 font-heading text-base font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-white/38 hover:bg-black/58 touch-manipulation"
-                whileHover={buttonHover}
-                whileTap={buttonTap}
-              >
-                <Play className="h-5 w-5" />
-                <span>Explore Shows</span>
-              </motion.span>
+            Strategy. Studio production. Editing. Clips. Distribution. Growth.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.36, ease: "easeOut" }}
+            className="flex flex-col gap-3 sm:flex-row"
+          >
+            <a
+              href={consultationHref}
+              target={consultationTarget}
+              rel={consultationRel}
+              className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-accent-orange px-8 py-3.5 font-heading text-base font-semibold text-white shadow-[0_16px_45px_rgba(245,158,11,0.28)] transition hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+            >
+              Book a consultation
+            </a>
+            <Link
+              href="/shows"
+              className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/22 bg-black/25 px-8 py-3.5 font-heading text-base font-semibold text-white backdrop-blur-sm transition hover:border-accent-orange/45 hover:bg-accent-orange/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+            >
+              See the network
+              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
             </Link>
           </motion.div>
-
-          <motion.div
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.52, ease: "easeOut" }}
-            className="mx-auto grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-3"
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.65, delay: 0.48 }}
+            className="mt-5 text-sm text-white/60"
           >
-            {proofStats.slice(0, 3).map((stat) => (
-              <div
-                key={`${stat.value}-${stat.label}`}
-                className="rounded-2xl border border-white/22 bg-black/48 px-4 py-3 text-left backdrop-blur-md"
-              >
-                <p className="font-heading text-xl font-bold text-accent-amber">
-                  {stat.value}
-                </p>
-                <p className="text-xs uppercase tracking-wide text-white/80">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </motion.div>
+            From raw studio moments to full platform ready media systems.
+          </motion.p>
         </div>
-      </div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 border-y border-white/15 bg-black/52 backdrop-blur-md">
-        <motion.div
-          className="flex w-max gap-8 py-3 pl-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/72"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        >
-          {[...tapeItems, ...tapeItems, ...tapeItems].map((item, index) => (
-            <span key={`${item}-${index}`} className="whitespace-nowrap">
-              {item}
-            </span>
-          ))}
-        </motion.div>
       </div>
     </header>
   );

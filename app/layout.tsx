@@ -5,6 +5,7 @@ import SiteChrome from "@/components/layout/SiteChrome";
 import { OrganizationSchema } from "@/components/seo/StructuredData";
 import { site } from "@/lib/data/site";
 import { getNavFooterSettings, getSeoDefaults, getSiteSettings } from "@/lib/services/cms/siteSettings";
+import { resolveConsultationHref } from "@/lib/utils/consultationHref";
 
 const headingFont = Syne({
   subsets: ["latin"],
@@ -109,7 +110,7 @@ export default async function RootLayout({
     getSiteSettings(),
     getNavFooterSettings(),
   ]);
-  const bookingHref = siteSettings.calendlyUrl || "/contact";
+  const bookingHref = resolveConsultationHref(siteSettings.calendlyUrl);
 
   return (
     <html

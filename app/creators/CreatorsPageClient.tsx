@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Users, Video, DollarSign, ArrowRight, Check } from "lucide-react";
+import Link from "next/link";
 import {
   defaultMarketingPagesContent,
   type CreatorsPageContent,
@@ -55,13 +56,15 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
             captures the episodes, packages the assets, and helps the show move
             across every platform that matters.
           </p>
-          <motion.button
-            className="min-h-[44px] rounded-full bg-accent-orange px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Build a Show
-          </motion.button>
+          <Link href="/contact" className="inline-block">
+            <motion.span
+              className="inline-flex min-h-[44px] items-center rounded-full bg-accent-orange px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-orange touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Build a Show
+            </motion.span>
+          </Link>
         </motion.div>
       </section>
 
@@ -207,14 +210,16 @@ export default function CreatorsPageClient({ content }: CreatorsPageClientProps)
             We will help shape the format, production plan, launch assets, and
             first publishing rhythm before anything gets overcomplicated.
           </p>
-          <motion.button
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-purple px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-purple touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Start the Conversation
-            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-          </motion.button>
+          <Link href="/contact" className="inline-block">
+            <motion.span
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-accent-purple px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:glow-purple touch-manipulation sm:px-8 sm:py-4 sm:text-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Start the Conversation
+              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
+            </motion.span>
+          </Link>
         </motion.div>
       </section>
 

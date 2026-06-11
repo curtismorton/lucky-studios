@@ -1,178 +1,106 @@
 "use client";
 
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { User, Building2, ArrowRight } from "lucide-react";
-import { cardHover } from "@/lib/animations";
-import TiltCard from "@/components/ui/TiltCard";
 
-interface Pathway {
-  title: string;
-  description: string;
-  href: string;
-  icon: typeof User;
-  accentColor: "orange" | "purple" | "cyan";
-  features?: string[];
-}
-
-const pathways: Pathway[] = [
+const pathways = [
   {
     title: "For Creators",
-    description: "Turn the idea, personality, or audience you already have into a repeatable show format with production around it.",
-    href: "/creators",
-    icon: User,
-    accentColor: "orange",
-    features: [
-      "Full production in our Bermondsey studio",
-      "Format and episode structure",
-      "Clips, covers, and publishing assets",
-      "Audience growth and sponsor readiness",
+    headline: "You bring the audience. We build the show around it.",
+    href: "/contact?intent=creator",
+    cta: "Build my show",
+    items: [
+      "Creators ready to move beyond short form.",
+      "Talent with strong opinions, chemistry or a loyal community.",
+      "Creators who want production, structure and growth support.",
+      "Personalities who need a format brands can buy into.",
     ],
   },
   {
     title: "For Brands",
-    description: "Build media around your category or partner with shows that already have a reason for people to care.",
-    href: "/brands",
-    icon: Building2,
-    accentColor: "purple",
-    features: [
-      "Creator-led branded formats",
-      "Host-read and native integrations",
-      "Production without internal overhead",
-      "Cross-platform campaign assets",
+    headline: "You bring the objective. We build the content property.",
+    href: "/contact?intent=brand",
+    cta: "Create a branded show",
+    items: [
+      "Brands that want recurring content, not one off campaigns.",
+      "Agencies building creator led content formats.",
+      "Rights holders and publishers launching original shows.",
+      "Brands that want entertainment, not adverts in disguise.",
     ],
   },
-];
-
-const accentStyles = {
-  orange: {
-    bg: "bg-accent-orange/10",
-    text: "text-accent-orange",
-    border: "border-accent-orange/50",
-    glow: "hover:glow-orange",
+  {
+    title: "For Agencies and Platforms",
+    headline: "You bring the brief. We build the format that travels.",
+    href: "/contact?intent=agency",
+    cta: "Partner with Lucky",
+    items: [
+      "Campaign extensions.",
+      "Talent led content series.",
+      "Social first show formats.",
+      "Sponsored editorial formats.",
+    ],
   },
-  purple: {
-    bg: "bg-accent-purple/10",
-    text: "text-accent-purple",
-    border: "border-accent-purple/50",
-    glow: "hover:glow-purple",
-  },
-  cyan: {
-    bg: "bg-accent-cyan/10",
-    text: "text-accent-cyan",
-    border: "border-accent-cyan/50",
-    glow: "hover:glow-cyan",
-  },
-};
+] as const;
 
 export default function Pathways() {
-  const ref = useRef<HTMLElement | null>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const gridY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
-  const scanlineY = useTransform(scrollYProgress, [0, 1], ["10%", "-10%"]);
-  const clipTop = useTransform(scrollYProgress, [0, 0.2], ["100%", "0%"]);
-  const clipBottom = useTransform(scrollYProgress, [0.8, 1], ["0%", "100%"]);
-  const clipPath = useTransform(
-    [clipTop, clipBottom],
-    ([top, bottom]) => `inset(${top} 0% ${bottom} 0%)`
-  );
-
   return (
-    <section ref={ref} className="relative overflow-hidden px-4 py-24 md:py-32">
-      <motion.div
-        className="pointer-events-none absolute inset-0 bg-tech-grid opacity-15"
-        style={{ y: gridY }}
-      />
-      <motion.div
-        className="pointer-events-none absolute inset-0 bg-scanlines opacity-10"
-        style={{ y: scanlineY }}
-      />
-      <motion.div style={{ clipPath }} className="relative">
-        <div className="mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center sm:mb-16"
-          >
-            <h2 className="mb-4 font-heading text-2xl font-bold sm:text-3xl md:text-4xl">
-              Who We Work With
-            </h2>
-            <p className="mx-auto max-w-2xl font-body text-lg text-text-secondary">
-              Two routes into the same machine: build your own show, or use the
-              Lucky network to tell a better brand story.
-            </p>
-          </motion.div>
+    <section className="relative px-4 py-16 sm:px-6 md:py-28 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 max-w-3xl"
+        >
+          <h2 className="font-heading text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
+            Who we work with
+          </h2>
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-white/65 sm:text-lg">
+            Different starting points. One studio system built to turn ideas
+            into shows people remember.
+          </p>
+        </motion.div>
 
-          <div className="grid grid-cols-1 gap-8 sm:gap-12 md:grid-cols-2">
-            {pathways.map((pathway, index) => {
-              const Icon = pathway.icon;
-              const styles = accentStyles[pathway.accentColor];
-
-              return (
-                <motion.div
-                  key={pathway.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <TiltCard
-                    whileHover={cardHover}
-                    className={`group relative overflow-hidden rounded-3xl border border-background-tertiary bg-background-secondary p-8 md:p-12 transition-all duration-300 ${styles.border} hover:bg-background-tertiary ${styles.glow}`}
-                    glowClassName="rounded-3xl mix-blend-screen"
-                    maxTilt={8}
-                    glowSize={320}
-                  >
-                    {/* Gradient overlay on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${styles.bg} opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none`} />
-                    
-                    <div className="relative z-10">
-                      <div
-                        className={`mb-6 inline-flex rounded-2xl ${styles.bg} p-4 ${styles.text} transition-transform duration-300 group-hover:scale-110`}
-                      >
-                        <Icon className="h-7 w-7" />
-                      </div>
-                      <h3 className="mb-4 font-heading text-2xl font-bold md:text-3xl">
-                        {pathway.title}
-                      </h3>
-                      <p className="mb-6 font-body text-text-secondary leading-relaxed">
-                        {pathway.description}
-                      </p>
-                      
-                      {pathway.features && (
-                        <ul className="mb-8 space-y-3">
-                          {pathway.features.map((feature, fIndex) => (
-                            <li key={fIndex} className="flex items-center gap-3 font-body text-text-secondary">
-                              <span className={`${styles.text} font-bold`}>✓</span>
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      
-                      <Link href={pathway.href}>
-                        <motion.button
-                          className={`flex items-center gap-2 rounded-full border border-background-tertiary bg-background-secondary/50 px-6 py-3 font-heading text-base font-semibold text-white transition-all duration-300 hover:border-accent-orange/50 hover:bg-accent-orange/10 ${styles.border}`}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          {pathway.title === "For Creators" ? "Build a Show" : "Partner With Shows"}
-                          <ArrowRight className="h-4 w-4" />
-                        </motion.button>
-                      </Link>
-                    </div>
-                  </TiltCard>
-                </motion.div>
-              );
-            })}
-          </div>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {pathways.map((pathway, index) => (
+            <motion.article
+              key={pathway.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.06 }}
+              className="flex flex-col rounded-3xl border border-white/10 bg-white/[0.035] p-6 transition hover:border-accent-orange/35 sm:p-8"
+            >
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-accent-orange">
+                {pathway.title}
+              </p>
+              <h3 className="mb-8 font-heading text-2xl font-semibold leading-tight text-white">
+                {pathway.headline}
+              </h3>
+              <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/45">
+                Best for
+              </p>
+              <ul className="mb-9 space-y-3 text-sm leading-relaxed text-white/65">
+                {pathway.items.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-orange" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href={pathway.href}
+                className="group mt-auto inline-flex min-h-[48px] items-center gap-2 font-heading text-sm font-semibold text-white transition hover:text-accent-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-orange"
+              >
+                {pathway.cta}
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+              </Link>
+            </motion.article>
+          ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
