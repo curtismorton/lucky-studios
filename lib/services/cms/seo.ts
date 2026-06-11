@@ -8,6 +8,15 @@ function compact<T>(values: Array<T | undefined | null | false>): T[] {
   return values.filter(Boolean) as T[];
 }
 
+/**
+ * The root layout applies the "%s | Lucky Studios" template, so titles that
+ * already carry the suffix (legacy CMS rows, older fallbacks) would render
+ * "… | Lucky Studios | Lucky Studios". Strip one trailing suffix here.
+ */
+function stripTitleSuffix(title: string): string {
+  return title.replace(/\s*\|\s*Lucky Studios\s*$/i, "").trim();
+}
+
 export async function buildPageMetadata(input: {
   path: string;
   fallbackTitle: string;
@@ -27,8 +36,10 @@ export async function buildPageMetadata(input: {
   const canonicalUrl = await absoluteUrl(canonicalPath);
   const ogImage = seo.ogImage || site.ogImage;
 
+  const title = stripTitleSuffix(seo.title || input.fallbackTitle);
+
   return {
-    title: seo.title || input.fallbackTitle,
+    title,
     description: seo.description || input.fallbackDescription,
     keywords:
       seo.keywords && seo.keywords.length > 0
@@ -36,7 +47,7 @@ export async function buildPageMetadata(input: {
         : input.fallbackKeywords || [],
     robots: seo.noindex ? { index: false, follow: false } : undefined,
     openGraph: {
-      title: seo.title || input.fallbackTitle,
+      title,
       description: seo.description || input.fallbackDescription,
       type: "website",
       url: canonicalUrl,
