@@ -23,7 +23,7 @@ function isValidBundle(input: unknown): input is CmsExportBundle {
 export async function POST(request: NextRequest) {
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
-  const mfa = requireActiveMfa(request, auth.context.userId);
+  const mfa = await requireActiveMfa(request, auth.context.userId);
   if (!mfa.ok) return mfa.response;
 
   if (!isCmsV2WriteEnabled()) {

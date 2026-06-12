@@ -118,7 +118,7 @@ export function DashboardAuthProvider({
 
     const {
       data: { subscription },
-    } = client.auth.onAuthStateChange((_event, nextSession) => {
+    } = client.auth.onAuthStateChange((_event: unknown, nextSession: Session | null) => {
       setSession(nextSession || null);
       if (!nextSession) {
         setProfile(null);

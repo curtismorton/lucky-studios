@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAllowedCmsEmail } from "@/lib/cms/access";
 import { resolveRoleForUser } from "@/lib/cms/auth";
-import { clearMfaCookie } from "@/lib/cms/mfa";
-import {
-  createCmsSessionToken,
-  setCmsSessionCookie,
-} from "@/lib/cms/session";
-import { createPublicServerClient } from "@/lib/cms/supabase";
+import { createCmsRouteClient } from "@/lib/cms/supabase-ssr";
 
 export const dynamic = "force-dynamic";
+
 const CMS_LOGIN_NEXT_COOKIE_NAME = "cms_login_next";
 type OtpType = "email" | "recovery" | "invite" | "magiclink" | "email_change";
 
@@ -59,17 +55,13 @@ function mapOAuthErrorToLoginCode(request: NextRequest): string {
   const oauthDescription =
     request.nextUrl.searchParams.get("error_description")?.toLowerCase() ?? "";
 
-  if (oauthError === "access_denied") {
-    return "oauth_access_denied";
-  }
-
+  if (oauthError === "access_denied") return "oauth_access_denied";
   if (
     oauthErrorCode === "provider_disabled" ||
     (oauthDescription.includes("provider") && oauthDescription.includes("enabled"))
   ) {
     return "google_not_enabled";
   }
-
   if (
     oauthErrorCode === "redirect_url_not_allowed" ||
     (oauthDescription.includes("redirect") &&
@@ -79,7 +71,6 @@ function mapOAuthErrorToLoginCode(request: NextRequest): string {
   ) {
     return "oauth_redirect_mismatch";
   }
-
   return "oauth_failed";
 }
 
@@ -101,7 +92,8 @@ function renderHashBridgePage(): NextResponse {
             : "";
           var params = new URLSearchParams(hash);
           var accessToken = params.get("access_token");
-          if (!accessToken) {
+          var refreshToken = params.get("refresh_token");
+          if (!accessToken || !refreshToken) {
             window.location.replace("/cms/login?error=missing_token");
             return;
           }
@@ -109,7 +101,7 @@ function renderHashBridgePage(): NextResponse {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ accessToken: accessToken })
+            body: JSON.stringify({ accessToken: accessToken, refreshToken: refreshToken })
           });
           var payload = await response.json().catch(function() { return null; });
           if (!response.ok) {
@@ -157,81 +149,54 @@ export async function GET(request: NextRequest) {
       null
   );
 
+  // No code/token in query → must be a hash-fragment magic link; bridge to JS.
   if (!code && !tokenHash && !accessToken) {
     return renderHashBridgePage();
   }
 
   try {
-    const supabase = createPublicServerClient();
-    let user: { id: string; email?: string | null } | null = null;
+    const supabase = await createCmsRouteClient();
+    let userId: string | null = null;
+    let userEmail: string | null = null;
     let authError: string | null = null;
 
     if (code) {
-      const exchangeResult = await supabase.auth.exchangeCodeForSession(code);
-      authError = exchangeResult.error?.message ?? null;
-      const exchangeData = exchangeResult.data as
-        | {
-            user?: { id: string; email?: string | null } | null;
-            session?: {
-              user?: { id: string; email?: string | null } | null;
-            } | null;
-          }
-        | null;
-      const exchangeUser =
-        exchangeData?.user ?? exchangeData?.session?.user ?? null;
-      user = exchangeUser
-        ? {
-            id: exchangeUser.id,
-            email: exchangeUser.email ?? null,
-          }
-        : null;
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+      authError = error?.message ?? null;
+      userId = data?.user?.id ?? null;
+      userEmail = data?.user?.email ?? null;
     } else if (accessToken) {
+      // Legacy hash-fragment path hit server-side (rare). Delegate to exchange.
       const { data, error } = await supabase.auth.getUser(accessToken);
       authError = error?.message ?? null;
-      user = data?.user
-        ? {
-            id: data.user.id,
-            email: data.user.email ?? null,
-          }
-        : null;
+      userId = data?.user?.id ?? null;
+      userEmail = data?.user?.email ?? null;
     } else {
       const { data, error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash as string,
         type,
       });
       authError = error?.message ?? null;
-      user = data?.user
-        ? {
-            id: data.user.id,
-            email: data.user.email ?? null,
-          }
-        : null;
+      userId = data?.user?.id ?? null;
+      userEmail = data?.user?.email ?? null;
     }
 
-    if (authError || !user) {
+    if (authError || !userId) {
       return redirectWithError(request, "invalid_link");
     }
 
-    if (!isAllowedCmsEmail(user.email ?? null)) {
+    if (!isAllowedCmsEmail(userEmail)) {
       return redirectWithError(request, "email_not_allowed");
     }
 
-    const role = await resolveRoleForUser(user.id, user.email ?? null);
+    const role = await resolveRoleForUser(userId, userEmail);
     if (!role) {
       return redirectWithError(request, "no_role");
     }
 
-    const sessionToken = createCmsSessionToken({
-      userId: user.id,
-      email: user.email ?? null,
-      role,
-    });
-
     const response = NextResponse.redirect(
       new URL(nextPath, request.nextUrl.origin)
     );
-    setCmsSessionCookie(response, sessionToken);
-    clearMfaCookie(response);
     clearLoginNextCookie(response);
     return response;
   } catch (error) {

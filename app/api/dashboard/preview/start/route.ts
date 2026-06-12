@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
-  const mfa = requireActiveMfa(request, auth.context.userId);
+  const mfa = await requireActiveMfa(request, auth.context.userId);
   if (!mfa.ok) return mfa.response;
 
   const body = await parseJsonBody(request);

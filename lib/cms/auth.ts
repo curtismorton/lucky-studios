@@ -8,17 +8,13 @@ import {
 } from "@/lib/cms/access";
 import { getCmsFlags } from "@/lib/cms/flags";
 import { createServiceRoleClient } from "@/lib/cms/supabase";
-import {
-  getCmsSessionCookieName,
-  verifyCmsSessionToken,
-} from "@/lib/cms/session";
+import { createCmsRouteClient } from "@/lib/cms/supabase-ssr";
 import type { CmsRole } from "@/lib/cms/types";
 
 export type DashboardAuthContext = {
   userId: string;
   email: string | null;
   role: CmsRole;
-  accessToken: string;
 };
 
 const ROLE_ORDER: Record<CmsRole, number> = {
@@ -52,7 +48,7 @@ export async function resolveRoleForUser(
   email?: string | null
 ): Promise<CmsRole | null> {
   const client = createServiceRoleClient();
-  const { data, error } = await client
+  const { data } = await client
     .from("cms_user_roles")
     .select("role")
     .eq("user_id", userId)
@@ -77,31 +73,12 @@ export async function resolveRoleForUser(
   if (!provisionedRole) return null;
 
   const { error: upsertError } = await client.from("cms_user_roles").upsert(
-    {
-      user_id: userId,
-      role: provisionedRole,
-    },
+    { user_id: userId, role: provisionedRole },
     { onConflict: "user_id" }
   );
   if (upsertError) return null;
 
   return provisionedRole;
-}
-
-function resolveSessionContextFromCookie(
-  request: NextRequest
-): { userId: string; email: string | null; role: CmsRole } | null {
-  const token = request.cookies.get(getCmsSessionCookieName())?.value;
-  if (!token) return null;
-
-  const payload = verifyCmsSessionToken(token);
-  if (!payload) return null;
-
-  return {
-    userId: payload.sub,
-    email: payload.email,
-    role: payload.role,
-  };
 }
 
 export async function getDashboardAuthContext(
@@ -114,10 +91,10 @@ export async function getDashboardAuthContext(
       userId: "dev-bypass-user",
       email: "dev-bypass@local",
       role: "admin",
-      accessToken: "dev-bypass-token",
     };
   }
 
+  // Bearer token path — used by programmatic API clients.
   const token = parseBearerToken(request);
   if (token) {
     const user = await resolveUserFromToken(token);
@@ -126,29 +103,22 @@ export async function getDashboardAuthContext(
     const role = await resolveRoleForUser(user.id, user.email ?? null);
     if (!role) return null;
 
-    return {
-      userId: user.id,
-      email: user.email ?? null,
-      role,
-      accessToken: token,
-    };
+    return { userId: user.id, email: user.email ?? null, role };
   }
 
-  const cookieContext = resolveSessionContextFromCookie(request);
-  if (!cookieContext) return null;
+  // Cookie path — browser sessions managed by @supabase/ssr.
+  const supabase = await createCmsRouteClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-  const liveRole = await resolveRoleForUser(
-    cookieContext.userId,
-    cookieContext.email
-  );
-  if (!liveRole) return null;
+  if (error || !user) return null;
 
-  return {
-    userId: cookieContext.userId,
-    email: cookieContext.email,
-    role: liveRole,
-    accessToken: "cookie-session",
-  };
+  const role = await resolveRoleForUser(user.id, user.email ?? null);
+  if (!role) return null;
+
+  return { userId: user.id, email: user.email ?? null, role };
 }
 
 export async function requireDashboardRole(

@@ -14,7 +14,7 @@ export async function PUT(request: NextRequest, props: { params: Promise<{ userI
   const params = await props.params;
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
-  const mfa = requireActiveMfa(request, auth.context.userId);
+  const mfa = await requireActiveMfa(request, auth.context.userId);
   if (!mfa.ok) return mfa.response;
 
   const userId = params.userId;

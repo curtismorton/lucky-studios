@@ -1,188 +1,110 @@
 import "server-only";
 
-import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
-import { NextResponse } from "next/server";
-import type { NextRequest, NextResponse as NextResponseType } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createCmsRouteClient } from "@/lib/cms/supabase-ssr";
 
-type CmsMfaPayload = {
-  sub: string;
-  exp: number;
+export type MfaChallengeResult = {
+  factorId: string;
+  challengeId: string;
 };
 
-type CmsMfaChallengePayload = {
-  sub: string;
-  nonce: string;
-  exp: number;
-};
-
-const CMS_MFA_COOKIE_NAME = "cms_mfa";
-const CMS_MFA_CHALLENGE_COOKIE_NAME = "cms_mfa_challenge";
-const MFA_MAX_AGE_SECONDS = 15 * 60;
-const MFA_CHALLENGE_MAX_AGE_SECONDS = 5 * 60;
-
-function encodeBase64Url(input: Buffer | string): string {
-  const raw = Buffer.isBuffer(input) ? input : Buffer.from(input, "utf8");
-  return raw
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
+// Returns true when the current Supabase session is at AAL2 (TOTP verified).
+export async function isMfaActive(): Promise<boolean> {
+  const supabase = await createCmsRouteClient();
+  const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (error || !data) return false;
+  return data.currentLevel === "aal2";
 }
 
-function decodeBase64Url(value: string): Buffer {
-  const base64 = value.replace(/-/g, "+").replace(/_/g, "/");
-  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
-  return Buffer.from(padded, "base64");
+// Returns the first enrolled TOTP factor for the current session user, or null.
+export async function getTotpFactor(): Promise<{ id: string; friendlyName: string | null } | null> {
+  const supabase = await createCmsRouteClient();
+  const { data, error } = await supabase.auth.mfa.listFactors();
+  if (error || !data) return null;
+  const factor = data.totp[0] ?? null;
+  if (!factor) return null;
+  return { id: factor.id, friendlyName: factor.friendly_name ?? null };
 }
 
-function getMfaSecret(): string {
-  const secret =
-    process.env.CMS_MFA_SECRET ||
-    process.env.CMS_PREVIEW_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!secret) {
-    // Fail closed: without a configured secret MFA tokens cannot be issued.
-    throw new Error("CMS MFA secret is not configured (set CMS_MFA_SECRET).");
+// Issues a TOTP challenge and returns factorId + challengeId for the client.
+export async function startMfaChallenge(): Promise<
+  | { ok: true; factorId: string; challengeId: string }
+  | { ok: false; error: string; code?: "no_factor" }
+> {
+  const factor = await getTotpFactor();
+  if (!factor) {
+    return { ok: false, error: "No TOTP factor enrolled.", code: "no_factor" };
   }
-  return secret;
-}
 
-function signPayload(value: string): string {
-  return createHmac("sha256", getMfaSecret()).update(value).digest("hex");
-}
+  const supabase = await createCmsRouteClient();
+  const { data, error } = await supabase.auth.mfa.challenge({
+    factorId: factor.id,
+  });
 
-function createSignedToken(payload: CmsMfaPayload | CmsMfaChallengePayload): string {
-  const encodedPayload = encodeBase64Url(JSON.stringify(payload));
-  const signature = signPayload(encodedPayload);
-  return `${encodedPayload}.${signature}`;
-}
-
-function verifySignedToken<TPayload>(token: string): TPayload | null {
-  const [encodedPayload, signature] = token.split(".");
-  if (!encodedPayload || !signature) return null;
-
-  const expectedSignature = signPayload(encodedPayload);
-  const expectedBuffer = Buffer.from(expectedSignature, "utf8");
-  const signatureBuffer = Buffer.from(signature, "utf8");
-
-  if (expectedBuffer.length !== signatureBuffer.length) return null;
-  if (!timingSafeEqual(expectedBuffer, signatureBuffer)) return null;
-
-  try {
-    const parsed = JSON.parse(decodeBase64Url(encodedPayload).toString("utf8"));
-    return parsed as TPayload;
-  } catch {
-    return null;
+  if (error || !data) {
+    return { ok: false, error: error?.message ?? "Failed to start MFA challenge." };
   }
+
+  return { ok: true, factorId: factor.id, challengeId: data.id };
 }
 
-function getAdminMfaCode(): string | null {
-  const code = process.env.CMS_ADMIN_MFA_CODE?.trim();
-  if (!code) return null;
-  return code;
-}
-
-export function isMfaCodeConfigured(): boolean {
-  return Boolean(getAdminMfaCode());
-}
-
-export function getCmsMfaCookieName(): string {
-  return CMS_MFA_COOKIE_NAME;
-}
-
-export function getCmsMfaChallengeCookieName(): string {
-  return CMS_MFA_CHALLENGE_COOKIE_NAME;
-}
-
-export function createMfaChallengeToken(userId: string): string {
-  return createSignedToken({
-    sub: userId,
-    nonce: randomUUID(),
-    exp: Math.floor(Date.now() / 1000) + MFA_CHALLENGE_MAX_AGE_SECONDS,
+// Verifies a TOTP code against an active challenge, upgrading the session to AAL2.
+export async function verifyMfaChallenge(
+  factorId: string,
+  challengeId: string,
+  code: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = await createCmsRouteClient();
+  const { error } = await supabase.auth.mfa.verify({
+    factorId,
+    challengeId,
+    code: code.trim(),
   });
-}
 
-export function setMfaChallengeCookie(response: NextResponse, token: string) {
-  response.cookies.set(CMS_MFA_CHALLENGE_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: MFA_CHALLENGE_MAX_AGE_SECONDS,
-  });
-}
-
-export function clearMfaChallengeCookie(response: NextResponse) {
-  response.cookies.set(CMS_MFA_CHALLENGE_COOKIE_NAME, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
-}
-
-export function verifyMfaChallenge(request: NextRequest, userId: string): boolean {
-  const token = request.cookies.get(CMS_MFA_CHALLENGE_COOKIE_NAME)?.value;
-  if (!token) return false;
-
-  const payload = verifySignedToken<CmsMfaChallengePayload>(token);
-  if (!payload) return false;
-  if (payload.sub !== userId) return false;
-  if (typeof payload.exp !== "number" || payload.exp < Math.floor(Date.now() / 1000)) {
-    return false;
+  if (error) {
+    return { ok: false, error: error.message ?? "Invalid TOTP code." };
   }
-  return typeof payload.nonce === "string" && payload.nonce.length > 0;
+
+  return { ok: true };
 }
 
-export function setMfaCookie(response: NextResponse, userId: string) {
-  const token = createSignedToken({
-    sub: userId,
-    exp: Math.floor(Date.now() / 1000) + MFA_MAX_AGE_SECONDS,
+// Enrolls a new TOTP factor. Returns a QR code URI and the factor ID.
+export async function enrollTotpFactor(friendlyName: string): Promise<
+  | { ok: true; factorId: string; qrCode: string; secret: string }
+  | { ok: false; error: string }
+> {
+  const supabase = await createCmsRouteClient();
+  const { data, error } = await supabase.auth.mfa.enroll({
+    factorType: "totp",
+    friendlyName,
+    issuer: "Lucky Studios CMS",
   });
 
-  response.cookies.set(CMS_MFA_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: MFA_MAX_AGE_SECONDS,
-  });
+  if (error || !data) {
+    return { ok: false, error: error?.message ?? "Failed to enroll TOTP factor." };
+  }
+
+  return {
+    ok: true,
+    factorId: data.id,
+    qrCode: data.totp.qr_code,
+    secret: data.totp.secret,
+  };
 }
 
-export function clearMfaCookie(response: NextResponse) {
-  response.cookies.set(CMS_MFA_COOKIE_NAME, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
+// Unenrolls a TOTP factor by ID.
+export async function unenrollTotpFactor(
+  factorId: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = await createCmsRouteClient();
+  const { error } = await supabase.auth.mfa.unenroll({ factorId });
+  if (error) {
+    return { ok: false, error: error.message ?? "Failed to remove TOTP factor." };
+  }
+  return { ok: true };
 }
 
-export function isMfaActiveForUser(request: NextRequest, userId: string): boolean {
-  const token = request.cookies.get(CMS_MFA_COOKIE_NAME)?.value;
-  if (!token) return false;
-
-  const payload = verifySignedToken<CmsMfaPayload>(token);
-  if (!payload) return false;
-  if (payload.sub !== userId) return false;
-  return typeof payload.exp === "number" && payload.exp >= Math.floor(Date.now() / 1000);
-}
-
-export function verifyMfaCode(code: string): boolean {
-  const configuredCode = getAdminMfaCode();
-  if (!configuredCode) return false;
-
-  const candidate = code.trim();
-  const expected = Buffer.from(configuredCode, "utf8");
-  const actual = Buffer.from(candidate, "utf8");
-
-  if (expected.length !== actual.length) return false;
-  return timingSafeEqual(expected, actual);
-}
-
-export function buildMfaRequiredResponse(): NextResponseType<{
+export function buildMfaRequiredResponse(): NextResponse<{
   error: string;
   code: string;
 }> {
@@ -195,16 +117,16 @@ export function buildMfaRequiredResponse(): NextResponseType<{
   );
 }
 
-export function requireActiveMfa(
-  request: NextRequest,
-  userId: string
-): { ok: true } | { ok: false; response: NextResponseType<{ error: string; code: string }> } {
-  if (isMfaActiveForUser(request, userId)) {
-    return { ok: true };
-  }
-
-  return {
-    ok: false,
-    response: buildMfaRequiredResponse(),
-  };
+// Used by route handlers that require an AAL2 session before proceeding.
+// The request and userId params are kept for backward-compatible call sites.
+export async function requireActiveMfa(
+  _request: NextRequest,
+  _userId: string
+): Promise<
+  | { ok: true }
+  | { ok: false; response: NextResponse<{ error: string; code: string }> }
+> {
+  const active = await isMfaActive();
+  if (active) return { ok: true };
+  return { ok: false, response: buildMfaRequiredResponse() };
 }

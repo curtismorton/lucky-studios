@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const mfa = requireActiveMfa(request, auth.context.userId);
+  const mfa = await requireActiveMfa(request, auth.context.userId);
   if (!mfa.ok) return mfa.response;
 
   const body = await parseJsonBody(request);

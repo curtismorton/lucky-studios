@@ -13,6 +13,7 @@
     "extract:spotify-id": "node scripts/extract-spotify-id.js"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.97.0",
     "lucide-react": "^0.400.0",
     "motion": "^12.40.0",

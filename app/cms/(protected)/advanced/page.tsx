@@ -133,13 +133,15 @@ function MfaModal({
       <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-5">
         <h3 className="text-lg font-semibold text-slate-100">Admin Verification</h3>
         <p className="mt-2 text-sm text-slate-400">
-          Enter your admin MFA code to continue.
+          Enter the 6-digit code from your authenticator app.
         </p>
         <input
           value={code}
           onChange={(event) => onCodeChange(event.target.value)}
           className="mt-4 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100"
-          placeholder="MFA code"
+          placeholder="000000"
+          inputMode="numeric"
+          maxLength={6}
         />
         {status ? <p className="mt-3 text-sm text-amber-200">{status}</p> : null}
         <div className="mt-4 flex justify-end gap-2">
@@ -192,6 +194,8 @@ export default function CmsAdvancedPage() {
   const [mfaCode, setMfaCode] = useState("");
   const [mfaStatus, setMfaStatus] = useState("");
   const [mfaPending, setMfaPending] = useState(false);
+  const [mfaFactorId, setMfaFactorId] = useState("");
+  const [mfaChallengeId, setMfaChallengeId] = useState("");
 
   const [exportStatus, setExportStatus] = useState("");
   const [exportJson, setExportJson] = useState("");
@@ -340,13 +344,23 @@ export default function CmsAdvancedPage() {
       credentials: "include",
     });
     const payload = (await response.json().catch(() => null)) as {
+      ok?: boolean;
+      factorId?: string;
+      challengeId?: string;
       error?: string;
     } | null;
     if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(
+          "No authenticator app enrolled. Ask an admin to set up TOTP MFA first."
+        );
+      }
       throw new Error(payload?.error || "Failed to start MFA challenge.");
     }
+    setMfaFactorId(payload?.factorId ?? "");
+    setMfaChallengeId(payload?.challengeId ?? "");
     setShowMfaModal(true);
-    setMfaStatus("Challenge started. Enter your admin MFA code.");
+    setMfaStatus("Open your authenticator app and enter the 6-digit code.");
   };
 
   const publish = async () => {
@@ -402,11 +416,13 @@ export default function CmsAdvancedPage() {
     try {
       const response = await fetch("/api/cms/mfa/verify", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ code: mfaCode.trim() }),
+        body: JSON.stringify({
+          factorId: mfaFactorId,
+          challengeId: mfaChallengeId,
+          code: mfaCode.trim(),
+        }),
       });
       const payload = (await response.json().catch(() => null)) as {
         error?: string;
@@ -418,6 +434,8 @@ export default function CmsAdvancedPage() {
       await refreshSession();
       setShowMfaModal(false);
       setMfaCode("");
+      setMfaFactorId("");
+      setMfaChallengeId("");
       setMfaStatus("");
       setShowPublishModal(true);
     } catch (err) {

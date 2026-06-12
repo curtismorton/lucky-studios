@@ -11,7 +11,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ enti
   const params = await props.params;
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
-  const mfa = requireActiveMfa(request, auth.context.userId);
+  const mfa = await requireActiveMfa(request, auth.context.userId);
   if (!mfa.ok) return mfa.response;
 
   if (!isCmsV2WriteEnabled()) {

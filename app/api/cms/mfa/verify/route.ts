@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withDashboardRole, parseJsonBody } from "@/lib/cms/api";
-import {
-  clearMfaChallengeCookie,
-  setMfaCookie,
-  verifyMfaChallenge,
-  verifyMfaCode,
-} from "@/lib/cms/mfa";
+import { verifyMfaChallenge } from "@/lib/cms/mfa";
 
 export const dynamic = "force-dynamic";
 
@@ -13,31 +8,28 @@ export async function POST(request: NextRequest) {
   const auth = await withDashboardRole(request, "admin");
   if (!auth.ok) return auth.response;
 
-  if (!verifyMfaChallenge(request, auth.context.userId)) {
+  const body = await parseJsonBody(request);
+  const obj = body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+
+  const factorId = typeof obj.factorId === "string" ? obj.factorId.trim() : "";
+  const challengeId = typeof obj.challengeId === "string" ? obj.challengeId.trim() : "";
+  const code = typeof obj.code === "string" ? obj.code.trim() : "";
+
+  if (!factorId || !challengeId || !code) {
     return NextResponse.json(
-      { error: "MFA challenge expired. Start a new challenge." },
-      { status: 428 }
+      { error: "factorId, challengeId, and code are required." },
+      { status: 400 }
     );
   }
 
-  const body = await parseJsonBody(request);
-  const code =
-    body && typeof body === "object" && typeof (body as { code?: unknown }).code === "string"
-      ? (body as { code: string }).code
-      : "";
+  const result = await verifyMfaChallenge(factorId, challengeId, code);
 
-  if (!verifyMfaCode(code)) {
-    return NextResponse.json({ error: "Invalid MFA code." }, { status: 401 });
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 401 });
   }
 
-  const response = NextResponse.json({
+  return NextResponse.json({
     ok: true,
-    mfa: {
-      active: true,
-      expiresInSeconds: 15 * 60,
-    },
+    mfa: { active: true, expiresInSeconds: 900 },
   });
-  clearMfaChallengeCookie(response);
-  setMfaCookie(response, auth.context.userId);
-  return response;
 }

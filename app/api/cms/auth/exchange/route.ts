@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAllowedCmsEmail } from "@/lib/cms/access";
 import { resolveRoleForUser } from "@/lib/cms/auth";
-import { clearMfaCookie } from "@/lib/cms/mfa";
-import {
-  createCmsSessionToken,
-  setCmsSessionCookie,
-} from "@/lib/cms/session";
-import { createPublicServerClient } from "@/lib/cms/supabase";
+import { createCmsRouteClient } from "@/lib/cms/supabase-ssr";
 
 export const dynamic = "force-dynamic";
 
@@ -31,26 +26,33 @@ function clearLoginNextCookie(response: NextResponse) {
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const accessToken =
-    body &&
-    typeof body === "object" &&
-    typeof (body as { accessToken?: unknown }).accessToken === "string"
+    body && typeof body === "object" && typeof (body as { accessToken?: unknown }).accessToken === "string"
       ? (body as { accessToken: string }).accessToken.trim()
       : "";
+  const refreshToken =
+    body && typeof body === "object" && typeof (body as { refreshToken?: unknown }).refreshToken === "string"
+      ? (body as { refreshToken: string }).refreshToken.trim()
+      : "";
   const nextPath = toSafeRedirectPath(
-    body &&
-      typeof body === "object" &&
-      typeof (body as { next?: unknown }).next === "string"
+    body && typeof body === "object" && typeof (body as { next?: unknown }).next === "string"
       ? (body as { next: string }).next
       : request.cookies.get(CMS_LOGIN_NEXT_COOKIE_NAME)?.value ?? null
   );
 
-  if (!accessToken) {
+  if (!accessToken || !refreshToken) {
     return NextResponse.json({ error: "missing_token" }, { status: 400 });
   }
 
   try {
-    const supabase = createPublicServerClient();
-    const { data, error } = await supabase.auth.getUser(accessToken);
+    const supabase = await createCmsRouteClient();
+
+    // Set the session from the hash-fragment tokens; this writes auth cookies
+    // via the SSR cookie adapter.
+    const { data, error } = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+
     if (error || !data?.user) {
       return NextResponse.json({ error: "invalid_link" }, { status: 401 });
     }
@@ -64,15 +66,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "no_role" }, { status: 403 });
     }
 
-    const sessionToken = createCmsSessionToken({
-      userId: data.user.id,
-      email: data.user.email ?? null,
-      role,
-    });
-
     const response = NextResponse.json({ ok: true, redirectTo: nextPath });
-    setCmsSessionCookie(response, sessionToken);
-    clearMfaCookie(response);
     clearLoginNextCookie(response);
     return response;
   } catch (error) {
