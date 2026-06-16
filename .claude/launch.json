@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "lucky-studios",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
+    },
+    {
       "name": "prototype-landing",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8123", "--directory", "prototypes"],
