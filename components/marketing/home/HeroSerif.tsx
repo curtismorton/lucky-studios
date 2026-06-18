@@ -156,28 +156,6 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
           </Link>
         </motion.div>
 
-        {/* Glass stat cards */}
-        {stats && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 1.1 }}
-            className="mt-10 flex items-stretch gap-4"
-          >
-            {[MicIcon, HeadphonesIcon].map((Icon, i) => (
-              <div
-                key={i}
-                className="liquid-glass flex w-[190px] flex-col justify-between rounded-[1.25rem] p-5 text-left md:w-[220px]"
-              >
-                <Icon />
-                <div className="mt-8">
-                  <p className="type-serif text-4xl italic leading-none">{stats[i].value}</p>
-                  <p className="mt-2 font-barlow text-xs font-light text-bone/75">{stats[i].note}</p>
-                </div>
-              </div>
-            ))}
-          </motion.div>
-        )}
       </div>
 
       {/* Platform strip — glass pill label + spread serif italic names */}

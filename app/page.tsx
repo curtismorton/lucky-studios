@@ -1,12 +1,7 @@
 import HeroSerif from "@/components/marketing/home/HeroSerif";
-import Ticker from "@/components/marketing/home/Ticker";
-import ProductionCards from "@/components/marketing/home/ProductionCards";
-import CountUpStats from "@/components/marketing/home/CountUpStats";
-import Stations from "@/components/marketing/home/Stations";
-import NetworkSerif from "@/components/marketing/home/NetworkSerif";
-import FinalCtaSerif from "@/components/marketing/home/FinalCtaSerif";
+import HowWeGetLucky from "@/components/marketing/home/HowWeGetLucky";
+import TwoDoors from "@/components/marketing/home/TwoDoors";
 import { getCmsRuntimePayload } from "@/lib/cms/runtime";
-import { getShows } from "@/lib/services/cms/shows";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
 import { getSiteSettings } from "@/lib/services/cms/siteSettings";
 import { resolveConsultationHref } from "@/lib/utils/consultationHref";
@@ -43,9 +38,8 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const [home, shows, siteSettings] = await Promise.all([
+  const [home, siteSettings] = await Promise.all([
     getCmsRuntimePayload("homepage"),
-    getShows(),
     getSiteSettings(),
   ]);
   const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
@@ -55,14 +49,9 @@ export default async function Home() {
       <HeroSerif
         consultationHref={consultationHref}
         content={home.coldOpen}
-        stats={home.proofReel.stats.slice(0, 2) as unknown as [{ value: string; note: string }, { value: string; note: string }]}
       />
-      <Ticker />
-      <ProductionCards />
-      <CountUpStats content={home.proofReel} />
-      <Stations content={home.system} />
-      <NetworkSerif shows={shows} content={home.network} />
-      <FinalCtaSerif consultationHref={consultationHref} content={home.finalCta} />
+      <HowWeGetLucky />
+      <TwoDoors />
     </main>
   );
 }
