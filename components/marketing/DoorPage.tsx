@@ -66,14 +66,14 @@ export default function DoorPage({ content, consultationHref }: DoorPageProps) {
       <section className="border-y border-bone/10 bg-carbon">
         <div className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">
           <Reveal>
-            <h2 className="type-display max-w-4xl text-[clamp(2rem,5vw,3.75rem)]">
+            <h2 className="type-serif max-w-4xl text-[clamp(2rem,5vw,3.75rem)]">
               {content.problem.lede}
             </h2>
           </Reveal>
-          <div className="mt-16 grid gap-px border border-bone/15 bg-bone/15 md:grid-cols-3">
+          <div className="mt-16 grid gap-4 md:grid-cols-3">
             {content.problem.points.map((point, index) => (
               <Reveal key={point.id} delay={index * 0.08} className="h-full">
-                <div className="h-full bg-carbon p-8 md:p-10">
+                <div className="liquid-glass h-full rounded-2xl p-8 md:p-10">
                   <span className="tc-label text-tally">{point.id}</span>
                   <h3 className="mt-4 text-xl font-bold">{point.title}</h3>
                   <p className="mt-4 text-sm leading-relaxed text-bone/65">{point.copy}</p>
@@ -87,7 +87,7 @@ export default function DoorPage({ content, consultationHref }: DoorPageProps) {
       {/* The offer */}
       <section className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">
         <Reveal>
-          <h2 className="type-display text-[clamp(2rem,5vw,3.75rem)] uppercase">
+          <h2 className="type-serif text-[clamp(2rem,5vw,3.75rem)]">
             {content.offer.headline}
           </h2>
         </Reveal>
@@ -99,7 +99,7 @@ export default function DoorPage({ content, consultationHref }: DoorPageProps) {
                   <span className="tc-label tabular-nums text-tally">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="type-display text-2xl uppercase md:text-3xl">{item.name}</h3>
+                  <h3 className="type-serif text-2xl md:text-3xl">{item.name}</h3>
                   <p className="max-w-xl leading-relaxed text-bone/65">{item.copy}</p>
                 </div>
               </Reveal>
@@ -113,7 +113,7 @@ export default function DoorPage({ content, consultationHref }: DoorPageProps) {
         <div className="mx-auto grid max-w-7xl gap-16 px-6 py-24 md:px-10 md:py-32 lg:grid-cols-2 lg:px-16">
           <Reveal>
             <div>
-              <h2 className="type-display text-3xl uppercase md:text-4xl">
+              <h2 className="type-serif text-3xl md:text-4xl">
                 {content.fit.headline}
               </h2>
               <ul className="mt-9 space-y-4">
@@ -129,7 +129,7 @@ export default function DoorPage({ content, consultationHref }: DoorPageProps) {
             </div>
           </Reveal>
           <Reveal delay={0.1}>
-            <figure className="flex h-full flex-col justify-between border-l-2 border-tally bg-carbon p-8 md:p-10">
+            <figure className="liquid-glass flex h-full flex-col justify-between rounded-2xl border-l-4 border-tally p-8 md:p-10">
               <blockquote className="text-2xl font-bold leading-snug md:text-3xl">
                 {content.proof.quoteLine}
               </blockquote>

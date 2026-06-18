@@ -70,7 +70,7 @@ export default async function AboutPage() {
                   <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
                   <span className="tc-label text-bone/55">{stat.meter}</span>
                 </div>
-                <p className="type-display mt-5 text-5xl tabular-nums md:text-6xl">
+                <p className="type-serif mt-5 text-5xl tabular-nums md:text-6xl">
                   {stat.value}
                 </p>
                 <p className="mt-4 text-sm leading-relaxed text-bone/55">{stat.note}</p>
@@ -85,7 +85,7 @@ export default async function AboutPage() {
         <div className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">
           <Slate scene="SCENE 03" title="THE NETWORK BEHIND US" className="mb-14" />
           <Reveal>
-            <h2 className="type-display max-w-3xl text-[clamp(2rem,5vw,3.75rem)]">
+            <h2 className="type-serif max-w-3xl text-[clamp(2rem,5vw,3.75rem)]">
               {aboutPage.backing.headline}
             </h2>
           </Reveal>

@@ -49,7 +49,7 @@ export default async function StudioPage() {
                   <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
                   <span className="tc-label text-bone/55">{spec.meter}</span>
                 </div>
-                <p className="type-display mt-4 text-3xl leading-tight md:text-4xl">
+                <p className="type-serif mt-4 text-3xl leading-tight md:text-4xl">
                   {spec.value}
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-bone/55">{spec.note}</p>
@@ -86,7 +86,7 @@ export default async function StudioPage() {
       {/* A session, start to finish */}
       <section className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">
         <Reveal>
-          <h2 className="type-display text-[clamp(2rem,5vw,3.75rem)] uppercase">
+          <h2 className="type-serif text-[clamp(2rem,5vw,3.75rem)]">
             {studioPage.day.headline}
           </h2>
         </Reveal>
@@ -96,7 +96,7 @@ export default async function StudioPage() {
               <Reveal amount={0.4}>
                 <div className="grid gap-3 py-9 md:py-11 lg:grid-cols-[90px_360px_1fr] lg:gap-8">
                   <span className="tc-label tabular-nums text-tally">ST {step.id}</span>
-                  <h3 className="type-display text-2xl uppercase md:text-3xl">{step.name}</h3>
+                  <h3 className="type-serif text-2xl md:text-3xl">{step.name}</h3>
                   <p className="max-w-xl leading-relaxed text-bone/65">{step.copy}</p>
                 </div>
               </Reveal>

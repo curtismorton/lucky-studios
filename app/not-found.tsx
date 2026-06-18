@@ -12,7 +12,7 @@ export default function NotFound() {
         SCENE MISSING
         <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
       </p>
-      <h1 className="type-display mt-8 text-[clamp(4rem,18vw,12rem)] leading-none">
+      <h1 className="type-serif mt-8 text-[clamp(4rem,18vw,12rem)] leading-none">
         4<span className="text-tally">0</span>4
       </h1>
       <p className="mt-6 max-w-md text-lg leading-relaxed text-bone/65">

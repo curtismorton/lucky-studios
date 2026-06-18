@@ -53,7 +53,7 @@ export default async function WorkPage() {
             <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
               <div>
                 <Reveal>
-                  <h2 className="type-display text-[clamp(2rem,4.5vw,3.5rem)]">
+                  <h2 className="type-serif text-[clamp(2rem,4.5vw,3.5rem)]">
                     {caseStudy.headline}
                   </h2>
                 </Reveal>
@@ -109,7 +109,7 @@ export default async function WorkPage() {
                           <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
                           <span className="tc-label text-bone/55">{result.meter}</span>
                         </div>
-                        <p className="type-display mt-4 text-xl leading-tight md:text-2xl">
+                        <p className="type-serif mt-4 text-xl leading-tight md:text-2xl">
                           {result.value}
                         </p>
                         <p className="mt-2 text-xs leading-relaxed text-bone/55">

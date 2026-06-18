@@ -56,7 +56,7 @@ export default async function ShowsPage() {
             >
               <span className="tc-label text-bone/50">Slot open</span>
               <span>
-                <span className="type-display block text-2xl leading-none text-bone/80 transition-colors duration-300 group-hover:text-bone">
+                <span className="type-serif block text-2xl italic leading-none text-bone/80 transition-colors duration-300 group-hover:text-bone">
                   Your show here.
                 </span>
                 <span className="link-underline tc-label mt-4 inline-block text-tally">

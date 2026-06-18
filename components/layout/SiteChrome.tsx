@@ -55,7 +55,6 @@ export default function SiteChrome({
         <>
           <Grain />
           <Navbar
-            links={links}
             bookingHref={bookingHref}
             bookingLabel={bookingLabel}
           />

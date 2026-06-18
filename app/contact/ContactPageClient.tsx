@@ -207,13 +207,22 @@ export default function ContactPageClient({
       <section className="mx-auto max-w-7xl px-6 pb-14 pt-36 md:px-10 md:pt-44 lg:px-16">
         <Slate scene="CONTACT" title={entry.label} className="mb-12" />
         <Reveal>
-          <h1 className="type-display text-[clamp(2.75rem,7vw,6.5rem)] uppercase">
-            {entry.title.map((line) => (
-              <span key={line} className="block">
-                {line.replace(/\.$/, "")}
-                {line.endsWith(".") && <span className="text-tally">.</span>}
-              </span>
-            ))}
+          <h1 className="type-serif text-[clamp(2.75rem,7vw,6.5rem)]">
+            {entry.title.map((line, index) => {
+              const isLast = index === entry.title.length - 1;
+              if (!isLast) return <span key={line} className="block">{line}</span>;
+              const stripped = line.replace(/\.$/, "");
+              const words = stripped.split(" ");
+              const lastWord = words.pop() ?? "";
+              const head = words.join(" ");
+              return (
+                <span key={line} className="block">
+                  {head ? `${head} ` : ""}
+                  <em className="italic text-tally">{lastWord}</em>
+                  {line.endsWith(".") && <span className="text-tally">.</span>}
+                </span>
+              );
+            })}
           </h1>
         </Reveal>
         <Reveal delay={0.12}>

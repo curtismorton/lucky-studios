@@ -1,13 +1,9 @@
-import ColdOpen from "@/components/marketing/home/ColdOpen";
-import ProofReel from "@/components/marketing/home/ProofReel";
-import Thesis from "@/components/marketing/home/Thesis";
-import SystemPipeline from "@/components/marketing/home/SystemPipeline";
-import Network from "@/components/marketing/home/Network";
-import Receipts from "@/components/marketing/home/Receipts";
-import TwoDoors from "@/components/marketing/home/TwoDoors";
-import TheRoom from "@/components/marketing/home/TheRoom";
-import HomeFaq from "@/components/marketing/home/HomeFaq";
-import FinalCta from "@/components/marketing/home/FinalCta";
+import HeroSerif from "@/components/marketing/home/HeroSerif";
+import Ticker from "@/components/marketing/home/Ticker";
+import CountUpStats from "@/components/marketing/home/CountUpStats";
+import Stations from "@/components/marketing/home/Stations";
+import NetworkSerif from "@/components/marketing/home/NetworkSerif";
+import FinalCtaSerif from "@/components/marketing/home/FinalCtaSerif";
 import { getCmsRuntimePayload } from "@/lib/cms/runtime";
 import { getShows } from "@/lib/services/cms/shows";
 import { buildPageMetadata } from "@/lib/services/cms/seo";
@@ -54,17 +50,13 @@ export default async function Home() {
   const consultationHref = resolveConsultationHref(siteSettings.calendlyUrl);
 
   return (
-    <main>
-      <ColdOpen consultationHref={consultationHref} content={home.coldOpen} />
-      <ProofReel content={home.proofReel} />
-      <Thesis content={home.thesis} />
-      <SystemPipeline content={home.system} />
-      <Network shows={shows} content={home.network} />
-      <Receipts content={home.receipts} />
-      <TwoDoors content={home.twoDoors} />
-      <TheRoom content={home.theRoom} />
-      <HomeFaq content={home.faq} />
-      <FinalCta consultationHref={consultationHref} content={home.finalCta} />
+    <main className="font-barlow">
+      <HeroSerif consultationHref={consultationHref} content={home.coldOpen} />
+      <Ticker />
+      <CountUpStats content={home.proofReel} />
+      <Stations content={home.system} />
+      <NetworkSerif shows={shows} content={home.network} />
+      <FinalCtaSerif consultationHref={consultationHref} content={home.finalCta} />
     </main>
   );
 }

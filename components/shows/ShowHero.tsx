@@ -23,7 +23,7 @@ export default function ShowHero({ show, spotifyShow }: ShowHeroProps) {
       <div className="grid items-end gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <div>
           <Reveal>
-            <h1 className="type-display text-[clamp(2.5rem,6.5vw,5.5rem)] uppercase">
+            <h1 className="type-serif text-[clamp(2.5rem,6.5vw,5.5rem)]">
               {show.title}
             </h1>
           </Reveal>

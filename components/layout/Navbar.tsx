@@ -52,10 +52,16 @@ const SCENES = [
   },
 ];
 
+const PILL_NAV = [
+  { name: "Shows", href: "/shows" },
+  { name: "Studio", href: "/studio" },
+  { name: "Work", href: "/work" },
+  { name: "About", href: "/about" },
+];
+
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 interface NavbarProps {
-  links?: Array<{ name: string; href: string }>;
   bookingHref?: string;
   bookingLabel?: string;
 }
@@ -65,15 +71,7 @@ export default function Navbar({
   bookingLabel = "Book a call",
 }: NavbarProps) {
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -97,16 +95,16 @@ export default function Navbar({
   const bookingExternal = bookingHref.startsWith("http");
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
-        scrolled && !open
-          ? "border-b border-bone/10 bg-ink/90 backdrop-blur-md"
-          : "border-b border-transparent"
-      }`}
-    >
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 md:h-[4.5rem] md:px-10 lg:px-16">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-40">
+      <div className="mx-auto flex max-w-7xl items-start justify-between px-4 pt-4 md:px-6 md:pt-5">
         {/* Logo */}
-        <Link href="/" aria-label="Lucky Studios — home" className="relative z-50 shrink-0">
+        <Link
+          href="/"
+          aria-label="Lucky Studios — home"
+          className={`shrink-0 transition-opacity duration-200 ${
+            open ? "pointer-events-none opacity-0" : "pointer-events-auto"
+          }`}
+        >
           <Image
             src="/images/LOGO-WHITE.png"
             alt="Lucky Studios"
@@ -117,36 +115,67 @@ export default function Navbar({
           />
         </Link>
 
-        {/* Menu trigger */}
+        {/* Desktop glass pill nav */}
+        <nav
+          aria-label="Main navigation"
+          className={`liquid-glass hidden items-center rounded-full px-1.5 py-1.5 transition-opacity duration-200 md:flex ${
+            open ? "pointer-events-none opacity-0" : "pointer-events-auto"
+          }`}
+        >
+          {PILL_NAV.map((link) => {
+            const active =
+              pathname === link.href ||
+              (link.href !== "/" && pathname?.startsWith(`${link.href}/`));
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`rounded-full px-4 py-2 font-barlow text-sm transition-colors duration-200 ${
+                  active ? "bg-white/10 text-bone" : "text-bone/70 hover:text-bone"
+                }`}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
+          <Link
+            href={bookingHref}
+            {...(bookingExternal
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
+            className="ml-1 rounded-full bg-bone px-4 py-2 font-barlow text-sm font-medium text-ink transition-colors duration-200 hover:bg-tally hover:text-bone"
+          >
+            {bookingLabel}
+          </Link>
+        </nav>
+
+        {/* Hamburger / close */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? "Close menu" : "Open menu"}
-          className="relative z-50 flex h-11 items-center gap-3"
+          className="liquid-glass pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full"
         >
-          <span className="tc-label text-bone/50 transition-colors duration-200 hover:text-bone select-none">
-            {open ? "CLOSE" : "MENU"}
-          </span>
-          <div className="flex flex-col items-end gap-[5px]">
+          <span className="flex flex-col items-center gap-[5px]">
             <span
-              className={`block h-px w-5 bg-bone transition-all duration-300 origin-center ${
-                open ? "translate-y-[7px] -rotate-45" : ""
+              className={`block h-px w-4 bg-bone transition-all duration-300 origin-center ${
+                open ? "translate-y-[9px] -rotate-45" : ""
               }`}
             />
             <span
               className={`block h-px bg-bone transition-all duration-300 ${
-                open ? "w-0 opacity-0" : "w-3.5"
+                open ? "w-0 opacity-0" : "w-3"
               }`}
             />
             <span
-              className={`block h-px w-5 bg-bone transition-all duration-300 origin-center ${
-                open ? "-translate-y-[7px] rotate-45" : ""
+              className={`block h-px w-4 bg-bone transition-all duration-300 origin-center ${
+                open ? "-translate-y-[9px] rotate-45" : ""
               }`}
             />
-          </div>
+          </span>
         </button>
-      </nav>
+      </div>
 
       {/* Scene-select overlay */}
       <AnimatePresence>
@@ -156,10 +185,10 @@ export default function Navbar({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 z-40 flex flex-col bg-ink overflow-y-auto"
+            className="pointer-events-auto fixed inset-0 z-40 flex flex-col overflow-y-auto bg-ink"
           >
             {/* Scene grid */}
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-16 md:mt-[4.5rem]">
+            <div className="mt-20 flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {SCENES.map((scene, i) => {
                 const active =
                   pathname === scene.href ||
@@ -175,33 +204,24 @@ export default function Navbar({
                   >
                     <Link
                       href={scene.href}
-                      className={`group relative flex h-full min-h-[180px] flex-col gap-3 p-8 md:p-10 transition-colors duration-200 hover:bg-carbon/60 ${
+                      className={`group relative flex h-full min-h-[180px] flex-col gap-3 p-8 transition-colors duration-200 hover:bg-carbon/60 md:p-10 ${
                         active
                           ? "border-l-2 border-tally pl-[calc(2rem-2px)] md:pl-[calc(2.5rem-2px)]"
                           : "border-l-2 border-transparent hover:border-tally/30 pl-[calc(2rem-2px)] md:pl-[calc(2.5rem-2px)]"
                       }`}
                     >
-                      {/* Scene number + genre */}
                       <div className="flex items-center justify-between">
-                        <span className="tc-label text-tally">
-                          SCENE {scene.scene}
-                        </span>
+                        <span className="tc-label text-tally">SCENE {scene.scene}</span>
                         <span className="tc-label text-bone/30 transition-colors duration-200 group-hover:text-bone/50">
                           {scene.genre}
                         </span>
                       </div>
-
-                      {/* Title */}
-                      <h2 className="type-display text-[clamp(2rem,4vw,3.5rem)] uppercase text-bone leading-none mt-1">
+                      <h2 className="type-serif mt-1 text-[clamp(2rem,4vw,3.5rem)] leading-none text-bone">
                         {scene.name}
                       </h2>
-
-                      {/* Logline */}
-                      <p className="tc-label text-bone/40 mt-auto transition-colors duration-200 group-hover:text-bone/65">
+                      <p className="tc-label mt-auto text-bone/40 transition-colors duration-200 group-hover:text-bone/65">
                         {scene.logline}
                       </p>
-
-                      {/* Active indicator */}
                       {active && (
                         <div className="absolute right-8 top-8">
                           <RecBadge />
