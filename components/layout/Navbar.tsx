@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -97,7 +96,7 @@ export default function Navbar({
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40">
       <div className="mx-auto flex max-w-7xl items-start justify-between px-4 pt-4 md:px-6 md:pt-5">
-        {/* Logo */}
+        {/* Logo glass circle */}
         <Link
           href="/"
           aria-label="Lucky Studios — home"
@@ -105,14 +104,9 @@ export default function Navbar({
             open ? "pointer-events-none opacity-0" : "pointer-events-auto"
           }`}
         >
-          <Image
-            src="/images/LOGO-WHITE.png"
-            alt="Lucky Studios"
-            width={120}
-            height={28}
-            className="h-6 w-auto md:h-7"
-            priority
-          />
+          <div className="liquid-glass flex h-12 w-12 items-center justify-center rounded-full">
+            <span className="font-serif text-2xl italic text-bone">L</span>
+          </div>
         </Link>
 
         {/* Desktop glass pill nav */}

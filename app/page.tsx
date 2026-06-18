@@ -1,5 +1,6 @@
 import HeroSerif from "@/components/marketing/home/HeroSerif";
 import Ticker from "@/components/marketing/home/Ticker";
+import ProductionCards from "@/components/marketing/home/ProductionCards";
 import CountUpStats from "@/components/marketing/home/CountUpStats";
 import Stations from "@/components/marketing/home/Stations";
 import NetworkSerif from "@/components/marketing/home/NetworkSerif";
@@ -51,8 +52,13 @@ export default async function Home() {
 
   return (
     <main className="font-barlow">
-      <HeroSerif consultationHref={consultationHref} content={home.coldOpen} />
+      <HeroSerif
+        consultationHref={consultationHref}
+        content={home.coldOpen}
+        stats={home.proofReel.stats.slice(0, 2) as unknown as [{ value: string; note: string }, { value: string; note: string }]}
+      />
       <Ticker />
+      <ProductionCards />
       <CountUpStats content={home.proofReel} />
       <Stations content={home.system} />
       <NetworkSerif shows={shows} content={home.network} />
