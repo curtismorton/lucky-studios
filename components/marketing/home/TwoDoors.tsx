@@ -36,7 +36,6 @@ export default function TwoDoors() {
           onMouseLeave={() => setHovered(null)}
           className="group relative flex min-h-[65vh] flex-col justify-end overflow-hidden p-10 md:min-h-svh md:p-16 lg:p-24"
           style={{
-            background: door.bg,
             borderLeft: i === 1 ? "1px solid rgba(236,233,226,0.06)" : undefined,
             opacity: hovered && hovered !== door.id ? 0.45 : 1,
             transition: "opacity 0.5s ease",

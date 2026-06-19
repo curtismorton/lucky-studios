@@ -60,7 +60,7 @@ export default async function Home() {
             src={SCENE_VIDEO}
             className="h-full w-full object-cover film-grade-deep"
           />
-          <div className="absolute inset-0 bg-ink/65" />
+          <div className="absolute inset-0 bg-ink/50" />
           <div className="vignette absolute inset-0" />
         </div>
 

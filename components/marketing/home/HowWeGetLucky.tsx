@@ -78,7 +78,7 @@ export default function HowWeGetLucky() {
           <section
             key={p.num}
             className="relative overflow-hidden"
-            style={{ background: `${p.glow}, ${p.bg}` }}
+            style={{ background: p.glow }}
           >
             <div className="grid grid-cols-1 md:grid-cols-2">
               {p.flip ? contentCol : numCol}
