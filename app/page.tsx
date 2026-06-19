@@ -1,5 +1,4 @@
 import HeroSerif from "@/components/marketing/home/HeroSerif";
-import HowWeGetLucky from "@/components/marketing/home/HowWeGetLucky";
 import TwoDoors from "@/components/marketing/home/TwoDoors";
 import FadingVideo from "@/components/cinema/FadingVideo";
 import { getCmsRuntimePayload } from "@/lib/cms/runtime";
@@ -65,7 +64,6 @@ export default async function Home() {
         </div>
 
         <div className="relative z-10">
-          <HowWeGetLucky />
           <TwoDoors />
         </div>
       </div>
