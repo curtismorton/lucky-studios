@@ -27,7 +27,7 @@ export default function TwoDoors() {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2">
+    <section id="paths" className="grid grid-cols-1 md:grid-cols-2">
       {DOORS.map((door, i) => (
         <Link
           key={door.id}
