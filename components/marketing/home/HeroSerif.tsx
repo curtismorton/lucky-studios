@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import RecBadge from "@/components/cinema/RecBadge";
-import Timecode from "@/components/cinema/Timecode";
 import type { HomeContent } from "@/lib/content/home";
 
 const PLATFORMS = ["Spotify", "Apple Podcasts", "YouTube", "Amazon Music", "TikTok"];
@@ -48,22 +46,6 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
 
   return (
     <section className="relative flex min-h-svh flex-col">
-      {/* Cinema telemetry */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.1 }}
-        className="absolute inset-x-0 top-5 z-10 md:top-8"
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-20 md:px-10 lg:px-16">
-          <span className="tc-label hidden text-bone/50 md:block">{content.slate}</span>
-          <span className="flex items-center gap-6">
-            <RecBadge />
-            <Timecode className="hidden sm:block" />
-          </span>
-        </div>
-      </motion.div>
-
       {/* Main content */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-40 text-center md:px-10">
         {/* Glass "Now Booking" badge */}
@@ -168,6 +150,30 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
             </span>
           ))}
         </div>
+      </motion.div>
+
+      {/* Scroll hint — invites the bare landing downward */}
+      <motion.div
+        aria-hidden
+        animate={{ opacity: scrolled ? 0 : 1 }}
+        transition={{ duration: 0.4 }}
+        className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center md:bottom-8"
+      >
+        <motion.svg
+          width="26"
+          height="26"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-bone/55"
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <path d="M6 9l6 6 6-6" />
+        </motion.svg>
       </motion.div>
     </section>
   );
