@@ -163,7 +163,7 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 1.3 }}
-        className="relative z-10 flex flex-col items-center gap-5 pb-7 md:pb-9"
+        className="relative z-10 flex flex-col items-center gap-5 pb-12 md:pb-16"
       >
         <span className="liquid-glass rounded-full px-3.5 py-1.5 font-barlow text-xs text-bone/75">
           Distributed everywhere your audience already listens
@@ -175,32 +175,6 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
             </span>
           ))}
         </div>
-
-        {/* Scroll cue into the talent/brand split */}
-        <a
-          href="#paths"
-          aria-label="Scroll to choose your path"
-          className="group mt-2 flex flex-col items-center gap-1.5"
-        >
-          <span className="tc-label text-bone/45 transition-colors duration-200 group-hover:text-bone/75">
-            Choose your path
-          </span>
-          <motion.svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-bone/50 transition-colors duration-200 group-hover:text-tally"
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <path d="M6 9l6 6 6-6" />
-          </motion.svg>
-        </a>
       </motion.div>
     </section>
   );
