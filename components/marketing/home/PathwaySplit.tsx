@@ -3,9 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
-import FadingVideo from "@/components/cinema/FadingVideo";
 
-const VIDEO = "https://assets.mixkit.co/videos/44047/44047-1080.mp4";
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 const PATHS = [
@@ -46,14 +44,7 @@ export default function PathwaySplit() {
   const promptY = useTransform(scrollYProgress, [0.02, 0.16], [70, 0]);
 
   return (
-    <section ref={ref} className="relative isolate overflow-hidden bg-black">
-      {/* Continuous cinematic plate */}
-      <div className="absolute inset-0 z-0">
-        <FadingVideo src={VIDEO} className="h-full w-full object-cover film-grade-deep" />
-        <div className="absolute inset-0 bg-ink/60" />
-        <div className="vignette absolute inset-0" />
-      </div>
-
+    <section ref={ref} className="relative">
       <div className="relative z-10">
         {/* ── The pathway runway ──────────────────────────────── */}
         <div className="relative flex h-[90vh] flex-col items-center justify-center px-6 text-center md:h-screen">

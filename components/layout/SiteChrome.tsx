@@ -48,6 +48,8 @@ export default function SiteChrome({
 }: SiteChromeProps) {
   const pathname = usePathname();
   const hideSiteChrome = shouldHideSiteChrome(pathname);
+  // The homepage funnel ends on the talent/brand split — no footer to break it.
+  const hideFooter = hideSiteChrome || pathname === "/";
 
   return (
     <>
@@ -61,7 +63,7 @@ export default function SiteChrome({
         </>
       )}
       {children}
-      {hideSiteChrome ? null : (
+      {hideFooter ? null : (
         <Footer
           links={footerLinks}
           email={email}

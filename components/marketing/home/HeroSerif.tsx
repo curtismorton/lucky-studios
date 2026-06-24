@@ -4,10 +4,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import RecBadge from "@/components/cinema/RecBadge";
 import Timecode from "@/components/cinema/Timecode";
-import FadingVideo from "@/components/cinema/FadingVideo";
 import type { HomeContent } from "@/lib/content/home";
-
-const VIDEO_HERO = "https://assets.mixkit.co/videos/2948/2948-1080.mp4";
 
 const PLATFORMS = ["Spotify", "Apple Podcasts", "YouTube", "Amazon Music", "TikTok"];
 
@@ -40,21 +37,7 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
   const isExternal = consultationHref.startsWith("http");
 
   return (
-    <section className="relative flex min-h-svh flex-col overflow-hidden bg-black">
-      {/* Video plate */}
-      <FadingVideo
-        src={VIDEO_HERO}
-        poster={content.plate}
-        className="absolute left-1/2 top-1/2 z-0 max-w-none -translate-x-1/2 -translate-y-1/2 object-cover film-grade-deep"
-        style={{ width: "120%", height: "120%" }}
-      />
-      <div className="scrim-b absolute inset-0 z-[1]" />
-      <div className="vignette absolute inset-0 z-[1]" />
-
-      {/* Letterbox bars */}
-      <div className="absolute inset-x-0 top-0 z-10 h-5 bg-ink md:h-8" aria-hidden />
-      <div className="absolute inset-x-0 bottom-0 z-10 h-5 bg-ink md:h-8" aria-hidden />
-
+    <section className="relative flex min-h-svh flex-col">
       {/* Cinema telemetry */}
       <motion.div
         initial={{ opacity: 0 }}
