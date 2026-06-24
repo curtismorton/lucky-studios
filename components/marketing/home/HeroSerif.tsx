@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import RecBadge from "@/components/cinema/RecBadge";
@@ -36,6 +37,15 @@ type HeroSerifProps = {
 export default function HeroSerif({ consultationHref, content, stats }: HeroSerifProps) {
   const isExternal = consultationHref.startsWith("http");
 
+  // Badge + CTAs hold back until the first scroll, so the landing opens bare.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <section className="relative flex min-h-svh flex-col">
       {/* Cinema telemetry */}
@@ -59,8 +69,8 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
         {/* Glass "Now Booking" badge */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
+          animate={{ opacity: scrolled ? 1 : 0, y: scrolled ? 0 : 12 }}
+          transition={{ duration: 0.6, ease: EASE }}
           className="liquid-glass mb-8 flex items-center rounded-full"
         >
           <span className="m-1.5 rounded-full bg-bone px-3 py-1.5 font-barlow text-[11px] font-semibold uppercase tracking-wider text-ink">
@@ -114,8 +124,8 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
         {/* CTAs — glass primary, plain secondary */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: EASE, delay: 0.9 }}
+          animate={{ opacity: scrolled ? 1 : 0, y: scrolled ? 0 : 18 }}
+          transition={{ duration: 0.7, ease: EASE }}
           className="mt-8 flex flex-wrap items-center justify-center gap-6"
         >
           <Link

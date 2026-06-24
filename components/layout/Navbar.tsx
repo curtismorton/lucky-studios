@@ -91,6 +91,20 @@ export default function Navbar({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // On the homepage the chrome stays hidden until you scroll a little —
+  // the landing reads as a bare cinematic frame, then the nav arrives.
+  const isHome = pathname === "/";
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  const chromeShown = !isHome || scrolled;
+  const hiddenChrome = "pointer-events-none -translate-y-2 opacity-0";
+  const shownChrome = "pointer-events-auto translate-y-0 opacity-100";
+
   const bookingExternal = bookingHref.startsWith("http");
 
   return (
@@ -100,8 +114,8 @@ export default function Navbar({
         <Link
           href="/"
           aria-label="Lucky Studios — home"
-          className={`shrink-0 transition-opacity duration-200 ${
-            open ? "pointer-events-none opacity-0" : "pointer-events-auto"
+          className={`shrink-0 transition duration-500 ${
+            !chromeShown || open ? hiddenChrome : shownChrome
           }`}
         >
           <div className="liquid-glass flex h-12 w-12 items-center justify-center rounded-full">
@@ -112,8 +126,8 @@ export default function Navbar({
         {/* Desktop glass pill nav */}
         <nav
           aria-label="Main navigation"
-          className={`liquid-glass hidden items-center rounded-full px-1.5 py-1.5 transition-opacity duration-200 md:flex ${
-            open ? "pointer-events-none opacity-0" : "pointer-events-auto"
+          className={`liquid-glass hidden items-center rounded-full px-1.5 py-1.5 transition duration-500 md:flex ${
+            !chromeShown || open ? hiddenChrome : shownChrome
           }`}
         >
           {PILL_NAV.map((link) => {
@@ -149,7 +163,9 @@ export default function Navbar({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? "Close menu" : "Open menu"}
-          className="liquid-glass pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full"
+          className={`liquid-glass flex h-11 w-11 items-center justify-center rounded-full transition duration-500 ${
+            !chromeShown && !open ? hiddenChrome : shownChrome
+          }`}
         >
           <span className="flex flex-col items-center gap-[5px]">
             <span
