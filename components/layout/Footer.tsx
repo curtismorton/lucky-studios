@@ -55,8 +55,8 @@ export default function Footer({
               height={32}
               className="h-7 w-auto"
             />
-            <p className="type-display mt-6 text-2xl uppercase">
-              Make your own <span className="text-tally">luck</span>.
+            <p className="type-serif mt-6 text-2xl">
+              Make your own <em className="italic text-tally">luck</em>.
             </p>
             <p className="tc-label mt-6 text-bone/40">
               Podcast network &amp; production studio · London

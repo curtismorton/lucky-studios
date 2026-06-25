@@ -23,7 +23,7 @@ export default function ShowPoster({ show }: { show: Show }) {
         {show.genre}
       </span>
       <div className="absolute inset-x-0 bottom-0 p-5">
-        <h3 className="type-display text-2xl leading-none">{show.title}</h3>
+        <h3 className="type-serif text-2xl leading-none">{show.title}</h3>
         <p className="tc-label mt-3 text-bone/60">{show.stat}</p>
       </div>
       <span

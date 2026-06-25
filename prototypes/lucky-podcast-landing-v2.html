@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lucky Studios — A London Podcast Studio & Network</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["'Instrument Serif'", "serif"],
+            body: ["Barlow", "sans-serif"],
+            mono: ["'IBM Plex Mono'", "monospace"],
+          },
+          colors: {
+            ink: "#0b0907",
+            ink2: "#120d0a",
+            cream: "#f4ede1",
+            muted: "#9a8f80",
+            amber: "#f5a524",
+            ember: "#ff6b2c",
+            air: "#ff3b2f",
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --line: rgba(244, 237, 225, 0.12);
+      --line-strong: rgba(244, 237, 225, 0.22);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: #0b0907; color: #f4ede1; }
+    ::selection { background: #f5a524; color: #0b0907; }
+
+    /* Film grain overlay */
+    .grain {
+      position: fixed; inset: 0; z-index: 90; pointer-events: none;
+      opacity: 0.06; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain 0.7s steps(2) infinite;
+    }
+    @keyframes grain {
+      0% { transform: translate(0,0); } 50% { transform: translate(-4%, 3%); } 100% { transform: translate(2%, -3%); }
+    }
+
+    /* Cinematic grade for background video */
+    .filmic { filter: saturate(0.92) contrast(1.06) brightness(0.82); }
+
+    /* Vignette */
+    .vignette::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      box-shadow: inset 0 0 200px 40px rgba(0,0,0,0.75), inset 0 0 80px rgba(0,0,0,0.4);
+    }
+
+    /* Marquee */
+    .marquee { display: flex; width: max-content; animation: marquee 38s linear infinite; }
+    .marquee:hover { animation-play-state: paused; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* EQ bars */
+    .eq { display: flex; align-items: flex-end; gap: 3px; height: 22px; }
+    .eq span {
+      width: 3px; background: #f5a524; border-radius: 2px;
+      animation: eq 1.1s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+    @keyframes eq { 0%,100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+
+    /* Live dot pulse */
+    .pulse { animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,59,47,0.5); } 50% { opacity: 0.55; box-shadow: 0 0 0 6px rgba(255,59,47,0); } }
+
+    /* Hairline */
+    .rule { height: 1px; background: var(--line); }
+
+    /* Show card image fallback gradient */
+    .show-thumb { background:
+      radial-gradient(120% 80% at 20% 0%, rgba(245,165,36,0.22), transparent 60%),
+      linear-gradient(160deg, #1a130d, #0d0a08); }
+
+    .vtext { writing-mode: vertical-rl; }
+
+    /* Subtle reveal helper used by JS IntersectionObserver */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+    .reveal.in { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/framer-motion@11.11.17/dist/framer-motion.js"></script>
+  <script>window.Motion = window.Motion || window.FramerMotion;</script>
+
+  <script type="text/babel">
+    const { motion } = window.Motion;
+
+    const VIDEO_HERO = "https://assets.mixkit.co/videos/2948/2948-1080.mp4";   // two hosts, warm studio
+    const VIDEO_SYSTEM = "https://assets.mixkit.co/videos/44047/44047-1080.mp4"; // audio console close-up
+
+    /* ---------- FadingVideo (rAF crossfade, manual loop) ---------- */
+    const FADE_MS = 600, FADE_OUT_LEAD = 0.6;
+    function FadingVideo({ src, className, style }) {
+      const ref = React.useRef(null), raf = React.useRef(null), out = React.useRef(false);
+      React.useEffect(() => {
+        const v = ref.current; if (!v) return;
+        const fadeTo = (t, d = FADE_MS) => {
+          if (raf.current) cancelAnimationFrame(raf.current);
+          const s = parseFloat(v.style.opacity || "0"), t0 = performance.now();
+          const step = (n) => { const p = Math.min((n - t0) / d, 1); v.style.opacity = String(s + (t - s) * p); if (p < 1) raf.current = requestAnimationFrame(step); };
+          raf.current = requestAnimationFrame(step);
+        };
+        const onLoaded = () => { v.style.opacity = "0"; v.play().catch(() => {}); fadeTo(1); };
+        const onTime = () => { const r = v.duration - v.currentTime; if (!out.current && r <= FADE_OUT_LEAD && r > 0) { out.current = true; fadeTo(0); } };
+        const onEnded = () => { v.style.opacity = "0"; setTimeout(() => { v.currentTime = 0; v.play().catch(() => {}); out.current = false; fadeTo(1); }, 100); };
+        v.addEventListener("loadeddata", onLoaded); v.addEventListener("timeupdate", onTime); v.addEventListener("ended", onEnded);
+        if (v.readyState >= 2) onLoaded();
+        return () => { if (raf.current) cancelAnimationFrame(raf.current); v.removeEventListener("loadeddata", onLoaded); v.removeEventListener("timeupdate", onTime); v.removeEventListener("ended", onEnded); };
+      }, [src]);
+      return <video ref={ref} src={src} className={className} style={{ opacity: 0, ...style }} autoPlay muted playsInline preload="auto" />;
+    }
+
+    /* ---------- Scroll reveal ---------- */
+    function Reveal({ children, className = "", delay = 0 }) {
+      const ref = React.useRef(null);
+      React.useEffect(() => {
+        const el = ref.current; if (!el) return;
+        const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.style.transitionDelay = delay + "ms"; el.classList.add("in"); o.disconnect(); } }, { threshold: 0.15 });
+        o.observe(el); return () => o.disconnect();
+      }, [delay]);
+      return <div ref={ref} className={"reveal " + className}>{children}</div>;
+    }
+
+    /* ---------- Count-up ---------- */
+    function CountUp({ to, suffix = "", decimals = 0, prefix = "" }) {
+      const ref = React.useRef(null);
+      const [val, setVal] = React.useState(0);
+      React.useEffect(() => {
+        const el = ref.current; if (!el) return;
+        const o = new IntersectionObserver(([e]) => {
+          if (!e.isIntersecting) return; o.disconnect();
+          const dur = 1400, t0 = performance.now();
+          const tick = (n) => { const p = Math.min((n - t0) / dur, 1); const e2 = 1 - Math.pow(1 - p, 3); setVal(to * e2); if (p < 1) requestAnimationFrame(tick); };
+          requestAnimationFrame(tick);
+        }, { threshold: 0.4 });
+        o.observe(el); return () => o.disconnect();
+      }, [to]);
+      return <span ref={ref}>{prefix}{val.toFixed(decimals)}{suffix}</span>;
+    }
+
+    /* ---------- Icons ---------- */
+    const Arrow = ({ c }) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M7 7h10v10" /></svg>);
+    const Play = ({ c }) => (<svg className={c} viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4" /></svg>);
+    const EQ = () => (<span className="eq">{[0.0,0.2,0.45,0.1,0.3,0.6,0.15].map((d,i)=>(<span key={i} style={{height:"100%",animationDelay:d+"s"}} />))}</span>);
+
+    /* ---------- Nav ---------- */
+    const LINKS = ["Shows", "Creators", "Brands", "Studio", "About"];
+    function Nav() {
+      const [s, setS] = React.useState(false);
+      React.useEffect(() => { const h = () => setS(window.scrollY > 24); window.addEventListener("scroll", h); return () => window.removeEventListener("scroll", h); }, []);
+      return (
+        <nav className={"fixed top-0 inset-x-0 z-50 transition-all duration-500 " + (s ? "bg-ink/85 backdrop-blur-xl border-b border-[color:var(--line)]" : "border-b border-transparent")}>
+          <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6 py-4 lg:px-10">
+            <a href="#top" className="flex items-baseline gap-2.5">
+              <span className="font-display text-2xl tracking-tight text-cream">Lucky</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-muted">Studios</span>
+            </a>
+            <div className="hidden items-center gap-9 md:flex">
+              {LINKS.map((l) => (
+                <a key={l} href={"#" + l.toLowerCase()} className="group relative font-mono text-[11px] uppercase tracking-[0.22em] text-muted transition-colors hover:text-cream">
+                  {l}
+                  <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-amber transition-all duration-300 group-hover:w-full" />
+                </a>
+              ))}
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="hidden items-center gap-2 sm:flex">
+                <span className="pulse h-2 w-2 rounded-full bg-air" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-cream/80">On Air</span>
+              </span>
+              <a href="#book" className="group flex items-center gap-2 rounded-full bg-amber px-4 py-2 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-ink transition-all hover:bg-ember">
+                Book a session
+                <Arrow c="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          </div>
+        </nav>
+      );
+    }
+
+    /* ---------- Hero ---------- */
+    const ease = [0.16, 1, 0.3, 1];
+    const up = (d) => ({ initial: { opacity: 0, y: 26 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay: d, ease } });
+    function Hero() {
+      return (
+        <header id="top" className="vignette relative min-h-screen overflow-hidden">
+          <FadingVideo src={VIDEO_HERO} className="filmic absolute left-1/2 top-1/2 z-0 max-w-none -translate-x-1/2 -translate-y-1/2 object-cover" style={{ width: "118%", height: "118%" }} />
+          {/* scrims: darken left for text, anchor bottom */}
+          <div className="absolute inset-0 z-[1]" style={{ background: "linear-gradient(90deg, rgba(11,9,7,0.94) 0%, rgba(11,9,7,0.7) 38%, rgba(11,9,7,0.15) 70%, rgba(11,9,7,0.35) 100%)" }} />
+          <div className="absolute inset-x-0 bottom-0 z-[1] h-1/2" style={{ background: "linear-gradient(0deg, #0b0907 2%, transparent 100%)" }} />
+
+          {/* right rail */}
+          <div className="absolute right-6 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-center gap-5 lg:flex">
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted vtext">London · Est. 2023</span>
+            <span className="h-20 w-px bg-[color:var(--line-strong)]" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-amber vtext">Rec ●</span>
+          </div>
+
+          <div className="relative z-10 mx-auto flex min-h-screen max-w-[1320px] flex-col justify-center px-6 pt-28 pb-16 lg:px-10">
+            <motion.div {...up(0.15)} className="mb-7 flex items-center gap-3">
+              <span className="h-px w-10 bg-amber" />
+              <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-amber">London Podcast Studio &amp; Network</span>
+            </motion.div>
+
+            <h1 className="max-w-[16ch] font-display text-[clamp(3rem,8.5vw,7.2rem)] font-normal leading-[0.92] tracking-[-0.01em] text-cream">
+              <motion.span {...up(0.28)} className="block">Build a show people</motion.span>
+              <motion.span {...up(0.42)} className="block">actually <span className="italic text-amber">come back</span> to.</motion.span>
+            </h1>
+
+            <motion.p {...up(0.6)} className="mt-7 max-w-xl font-body text-lg font-light leading-relaxed text-cream/72">
+              Lucky Studios creates, produces and grows creator-led podcasts for brands and talent — strategy, studio production, editing, clips and distribution, all under one roof.
+            </motion.p>
+
+            <motion.div {...up(0.74)} className="mt-9 flex flex-wrap items-center gap-4">
+              <a href="#book" className="group flex items-center gap-2.5 rounded-full bg-amber px-7 py-3.5 font-mono text-xs font-medium uppercase tracking-[0.16em] text-ink transition-all hover:bg-ember">
+                Book a consultation <Arrow c="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a href="#shows" className="group flex items-center gap-3 font-mono text-xs uppercase tracking-[0.16em] text-cream">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--line-strong)] transition-colors group-hover:border-amber group-hover:text-amber"><Play c="h-3.5 w-3.5 translate-x-px" /></span>
+                Watch the reel
+              </a>
+            </motion.div>
+
+            <motion.div {...up(0.9)} className="mt-16 flex items-end gap-8 border-t border-[color:var(--line)] pt-7">
+              <div className="flex items-center gap-3"><EQ /><span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted">Now recording</span></div>
+              <div className="hidden gap-10 sm:flex">
+                <div><p className="font-display text-3xl text-cream">5M+</p><p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Organic views</p></div>
+                <div><p className="font-display text-3xl text-cream">1.1M</p><p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Unique reach</p></div>
+                <div><p className="font-display text-3xl text-cream">4.8★</p><p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">Spotify rating</p></div>
+              </div>
+            </motion.div>
+          </div>
+        </header>
+      );
+    }
+
+    /* ---------- Ticker ---------- */
+    const PLATFORMS = ["Spotify", "Apple Podcasts", "YouTube", "Amazon Music", "TikTok", "Instagram", "Pocket Casts"];
+    function Ticker() {
+      const row = [...PLATFORMS, ...PLATFORMS];
+      return (
+        <section className="border-y border-[color:var(--line)] bg-ink2 py-6 overflow-hidden">
+          <div className="marquee">
+            {row.map((p, i) => (
+              <span key={i} className="flex items-center whitespace-nowrap">
+                <span className="px-8 font-display text-3xl italic text-cream/85 md:text-4xl">{p}</span>
+                <span className="text-amber">✦</span>
+              </span>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ---------- Shows ---------- */
+    const SHOWS = [
+      { ep: "EP. 042", title: "Behind the Screens", host: "Alex Morgan & Sam Taylor", cat: "Film & TV", tone: "from-[#241a10]" },
+      { ep: "EP. 028", title: "Back Post", host: "Jamie Wright", cat: "Football", tone: "from-[#10201f]" },
+      { ep: "EP. 035", title: "Don't Get Me Started", host: "Abby Boom", cat: "Culture & Life", tone: "from-[#22121d]" },
+    ];
+    function Shows() {
+      return (
+        <section id="shows" className="mx-auto max-w-[1320px] px-6 py-24 lg:px-10 lg:py-32">
+          <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.3em] text-amber">// On the network</p>
+              <h2 className="font-display text-[clamp(2.4rem,5vw,4.2rem)] leading-[0.95] tracking-[-0.01em] text-cream">Shows worth<br/><span className="italic">pressing play</span> on.</h2>
+            </div>
+            <a href="#" className="group flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted transition-colors hover:text-cream">See the full network <Arrow c="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></a>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {SHOWS.map((sh, i) => (
+              <Reveal key={sh.title} delay={i * 90}>
+                <a href="#" className="group block">
+                  <div className={"show-thumb relative mb-5 aspect-[4/5] overflow-hidden rounded-2xl border border-[color:var(--line)] bg-gradient-to-b " + sh.tone + " to-ink"}>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-30 transition-opacity duration-500 group-hover:opacity-60">
+                      <span className="eq" style={{ height: "64px" }}>{[0.1,0.4,0.0,0.5,0.2,0.6,0.3,0.45].map((d,j)=>(<span key={j} style={{ width:"6px", height:"100%", animationDelay:d+"s" }} />))}</span>
+                    </div>
+                    <div className="absolute left-5 top-5 flex items-center gap-2">
+                      <span className="h-1.5 w-1.5 rounded-full bg-air" />
+                      <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-cream/80">{sh.ep}</span>
+                    </div>
+                    <div className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--line-strong)] text-cream transition-all duration-300 group-hover:bg-amber group-hover:text-ink"><Play c="h-3.5 w-3.5 translate-x-px" /></div>
+                    <span className="absolute bottom-5 left-5 font-mono text-[10px] uppercase tracking-[0.22em] text-amber">{sh.cat}</span>
+                  </div>
+                  <h3 className="font-display text-3xl leading-none text-cream transition-colors group-hover:text-amber">{sh.title}</h3>
+                  <p className="mt-2 font-body text-sm text-muted">{sh.host}</p>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ---------- System (Production evolved) ---------- */
+    const STEPS = [
+      { n: "01", t: "Studio Sessions", tags: ["4K multi-cam", "SM7B audio", "Broadcast lighting"], b: "Three-camera 4K capture with broadcast-grade audio and lighting. Walk in with an idea, walk out with an episode." },
+      { n: "02", t: "Edit & Clips", tags: ["Full episode edit", "Shorts & clips", "Captions"], b: "Every session cut into full episodes and platform-native clips — captioned, formatted and ready to post the same week." },
+      { n: "03", t: "Distribution & Growth", tags: ["Every platform", "Clip strategy", "Audience data"], b: "Strategy, publishing and growth across Spotify, YouTube and social. We read the data so your show compounds." },
+    ];
+    function System() {
+      return (
+        <section id="studio" className="vignette relative overflow-hidden border-y border-[color:var(--line)]">
+          <FadingVideo src={VIDEO_SYSTEM} className="filmic absolute inset-0 z-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 z-[1] bg-ink/82" />
+          <div className="relative z-10 mx-auto max-w-[1320px] px-6 py-24 lg:px-10 lg:py-32">
+            <div className="mb-16 max-w-2xl">
+              <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.3em] text-amber">// The Lucky system</p>
+              <h2 className="font-display text-[clamp(2.6rem,6vw,5.2rem)] leading-[0.9] tracking-[-0.01em] text-cream">Production, <span className="italic text-amber">evolved.</span></h2>
+              <p className="mt-5 font-body text-lg font-light text-cream/70">One roof, one team, one pipeline — from the first idea to the clip that finds your next thousand listeners.</p>
+            </div>
+
+            <div className="grid gap-px overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--line)] md:grid-cols-3">
+              {STEPS.map((st, i) => (
+                <Reveal key={st.n} delay={i * 100} className="bg-ink2/90 backdrop-blur-sm">
+                  <div className="group flex h-full flex-col p-8 transition-colors duration-500 hover:bg-ink2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-display text-5xl italic text-amber/90">{st.n}</span>
+                      <span className="h-px flex-1 mx-5 bg-[color:var(--line)]" />
+                      <Arrow c="h-5 w-5 text-muted transition-all duration-300 group-hover:text-amber group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </div>
+                    <h3 className="mt-8 font-display text-3xl leading-none text-cream">{st.t}</h3>
+                    <p className="mt-4 font-body text-sm font-light leading-relaxed text-cream/72">{st.b}</p>
+                    <div className="mt-7 flex flex-wrap gap-2 border-t border-[color:var(--line)] pt-6">
+                      {st.tags.map((tg) => (<span key={tg} className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{tg}</span>)).reduce((acc, el, idx) => idx === 0 ? [el] : [...acc, <span key={"d"+idx} className="text-amber/50">·</span>, el], [])}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ---------- Stats ---------- */
+    const STATS = [
+      { v: 5, suffix: "M+", label: "Organic views", sub: "Across studio formats" },
+      { v: 10, suffix: "+", label: "Digital shows", sub: "Produced or packaged" },
+      { v: 1.1, suffix: "M", decimals: 1, label: "Unique reach", sub: "Across the network" },
+      { v: 4.8, suffix: "★", decimals: 1, label: "Spotify rating", sub: "Across flagship shows" },
+    ];
+    function Stats() {
+      return (
+        <section className="mx-auto max-w-[1320px] px-6 py-20 lg:px-10">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--line)] lg:grid-cols-4">
+            {STATS.map((s) => (
+              <div key={s.label} className="bg-ink p-8">
+                <p className="font-display text-[clamp(2.8rem,5vw,4rem)] leading-none text-cream"><CountUp to={s.v} suffix={s.suffix} decimals={s.decimals || 0} /></p>
+                <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-amber">{s.label}</p>
+                <p className="mt-1 font-body text-sm text-muted">{s.sub}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ---------- CTA ---------- */
+    function CTA() {
+      return (
+        <section id="book" className="relative overflow-hidden px-6 py-28 lg:py-40">
+          <div className="absolute left-1/2 top-1/2 -z-10 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber/15 blur-[120px]" />
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="mb-7 inline-flex items-center gap-2"><span className="pulse h-2 w-2 rounded-full bg-air" /><span className="font-mono text-[11px] uppercase tracking-[0.3em] text-cream/80">Studio sessions open — Summer 2026</span></span>
+            <h2 className="font-display text-[clamp(2.6rem,7vw,5.6rem)] leading-[0.92] tracking-[-0.01em] text-cream">Let's make something<br/>worth <span className="italic text-amber">pressing play</span> on.</h2>
+            <p className="mx-auto mt-7 max-w-xl font-body text-lg font-light text-cream/70">Tell us about your show or your brand. We'll map the format, the studio days and the growth plan — no fluff.</p>
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <a href="#" className="group flex items-center gap-2.5 rounded-full bg-amber px-8 py-4 font-mono text-xs font-medium uppercase tracking-[0.16em] text-ink transition-all hover:bg-ember">Book a consultation <Arrow c="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></a>
+              <a href="#shows" className="rounded-full border border-[color:var(--line-strong)] px-8 py-4 font-mono text-xs uppercase tracking-[0.16em] text-cream transition-colors hover:border-amber hover:text-amber">Hear the network</a>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ---------- Footer ---------- */
+    function Footer() {
+      return (
+        <footer className="border-t border-[color:var(--line)] px-6 py-12 lg:px-10">
+          <div className="mx-auto flex max-w-[1320px] flex-col items-center justify-between gap-6 md:flex-row">
+            <a href="#top" className="flex items-baseline gap-2.5"><span className="font-display text-2xl text-cream">Lucky</span><span className="font-mono text-[10px] uppercase tracking-[0.34em] text-muted">Studios</span></a>
+            <div className="flex gap-7">{LINKS.map((l) => (<a key={l} href={"#"+l.toLowerCase()} className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted transition-colors hover:text-cream">{l}</a>))}</div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">© 2026 Lucky Studios · London</p>
+          </div>
+        </footer>
+      );
+    }
+
+    function App() {
+      return (<main className="bg-ink"><Nav /><Hero /><Ticker /><Shows /><System /><Stats /><CTA /><Footer /></main>);
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

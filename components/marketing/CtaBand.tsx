@@ -20,8 +20,8 @@ export default function CtaBand({
   secondaryHref,
 }: CtaBandProps) {
   return (
-    <section className="border-t border-bone/10 bg-carbon">
-      <div className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32 lg:px-16">
+    <section className="border-t border-bone/10 px-6 py-24 md:px-10 md:py-32">
+      <div className="liquid-glass-strong mx-auto max-w-5xl rounded-3xl px-8 py-14 md:px-14 md:py-20">
         <Reveal>
           <p className="tc-label flex items-center gap-4 text-bone/50">
             <span className="h-1.5 w-1.5 bg-tally" aria-hidden />
@@ -29,8 +29,19 @@ export default function CtaBand({
           </p>
         </Reveal>
         <Reveal delay={0.1}>
-          <h2 className="type-display mt-8 max-w-4xl text-[clamp(2.25rem,5.5vw,4.5rem)] uppercase">
-            {headline}
+          <h2 className="type-serif mt-8 max-w-4xl text-[clamp(2.25rem,5.5vw,4.5rem)]">
+            {(() => {
+              const words = headline.replace(/\.$/, "").split(" ");
+              const lastWord = words.pop() ?? "";
+              const head = words.join(" ");
+              return (
+                <>
+                  {head ? `${head} ` : ""}
+                  <em className="italic text-tally">{lastWord}</em>
+                  {headline.endsWith(".") && <span className="text-tally">.</span>}
+                </>
+              );
+            })()}
           </h2>
         </Reveal>
         {sub && (

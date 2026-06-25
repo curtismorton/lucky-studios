@@ -48,21 +48,18 @@ export default function SiteChrome({
 }: SiteChromeProps) {
   const pathname = usePathname();
   const hideSiteChrome = shouldHideSiteChrome(pathname);
+  // The homepage opens bare — no top nav, and no footer to break the funnel.
+  const hideFooter = hideSiteChrome || pathname === "/";
+  const hideNav = hideSiteChrome || pathname === "/";
 
   return (
     <>
-      {hideSiteChrome ? null : (
-        <>
-          <Grain />
-          <Navbar
-            links={links}
-            bookingHref={bookingHref}
-            bookingLabel={bookingLabel}
-          />
-        </>
+      {hideSiteChrome ? null : <Grain />}
+      {hideNav ? null : (
+        <Navbar bookingHref={bookingHref} bookingLabel={bookingLabel} />
       )}
       {children}
-      {hideSiteChrome ? null : (
+      {hideFooter ? null : (
         <Footer
           links={footerLinks}
           email={email}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono, Instrument_Serif, Barlow } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/layout/SiteChrome";
 import { OrganizationSchema } from "@/components/seo/StructuredData";
@@ -17,6 +17,20 @@ const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-plex-mono",
   weight: ["400", "500", "600"],
+});
+
+// Rebuild type identity: serif display + Barlow body (Plex Mono stays for telemetry).
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--ff-instrument",
+});
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--ff-barlow",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -115,7 +129,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${archivo.variable} ${plexMono.variable}`}
+      className={`dark ${archivo.variable} ${plexMono.variable} ${instrumentSerif.variable} ${barlow.variable}`}
     >
       <head>
         <OrganizationSchema siteSettings={siteSettings} />
