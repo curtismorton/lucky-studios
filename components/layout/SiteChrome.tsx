@@ -48,19 +48,15 @@ export default function SiteChrome({
 }: SiteChromeProps) {
   const pathname = usePathname();
   const hideSiteChrome = shouldHideSiteChrome(pathname);
-  // The homepage funnel ends on the talent/brand split — no footer to break it.
+  // The homepage opens bare — no top nav, and no footer to break the funnel.
   const hideFooter = hideSiteChrome || pathname === "/";
+  const hideNav = hideSiteChrome || pathname === "/";
 
   return (
     <>
-      {hideSiteChrome ? null : (
-        <>
-          <Grain />
-          <Navbar
-            bookingHref={bookingHref}
-            bookingLabel={bookingLabel}
-          />
-        </>
+      {hideSiteChrome ? null : <Grain />}
+      {hideNav ? null : (
+        <Navbar bookingHref={bookingHref} bookingLabel={bookingLabel} />
       )}
       {children}
       {hideFooter ? null : (

@@ -62,8 +62,14 @@ export default function PathwaySplit() {
       {/* Two floating "pick one" boxes */}
       <div
         id="paths"
-        className="mt-12 grid w-full max-w-4xl grid-cols-1 gap-5 md:mt-14 md:grid-cols-2"
+        className="relative mt-12 grid w-full max-w-4xl grid-cols-1 gap-5 md:mt-14 md:grid-cols-2"
       >
+        {/* "or" — signals these are two alternative options, pick one */}
+        <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
+          <span className="liquid-glass flex h-12 w-12 items-center justify-center rounded-full font-barlow text-xs uppercase tracking-[0.15em] text-bone/80">
+            or
+          </span>
+        </div>
         {PATHS.map((p, i) => (
           <motion.div
             key={p.id}
@@ -77,9 +83,7 @@ export default function PathwaySplit() {
               className="liquid-glass-strong group relative flex h-full flex-col rounded-[1.5rem] p-7 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)] transition-transform duration-500 ease-out hover:-translate-y-2 md:p-9"
             >
               <div className="flex items-center justify-between">
-                <span className="tc-label text-bone/55 transition-colors duration-300 group-hover:text-bone/80">
-                  {p.kicker}
-                </span>
+                <span className="tc-label text-tally">{p.kicker}</span>
                 <span className="type-serif text-xl italic text-tally">{p.index}</span>
               </div>
 

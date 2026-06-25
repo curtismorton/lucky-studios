@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
+import LuckyDoodles from "@/components/marketing/home/LuckyDoodles";
 import type { HomeContent } from "@/lib/content/home";
 
 const PLATFORMS = ["Spotify", "Apple Podcasts", "YouTube", "Amazon Music", "TikTok"];
@@ -46,6 +47,8 @@ export default function HeroSerif({ consultationHref, content, stats }: HeroSeri
 
   return (
     <section className="relative flex min-h-svh flex-col">
+      <LuckyDoodles />
+
       {/* Main content */}
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-40 text-center md:px-10">
         {/* Glass "Now Booking" badge */}
