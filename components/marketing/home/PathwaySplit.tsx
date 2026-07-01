@@ -42,18 +42,24 @@ export default function PathwaySplit() {
         {/* Soft scrim so the heading reads over the busy plate */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[170%] w-[160%] -translate-x-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[200%] w-[175%] -translate-x-1/2 -translate-y-1/2"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(10,10,11,0.7) 0%, rgba(10,10,11,0.35) 48%, transparent 74%)",
+              "radial-gradient(ellipse at center, rgba(10,10,11,0.92) 0%, rgba(10,10,11,0.72) 38%, rgba(10,10,11,0.32) 62%, transparent 80%)",
           }}
         />
         <div className="relative">
           <p className="tc-label mb-5 text-tally">The Lucky Path</p>
-          <h2 className="type-serif text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02] text-bone">
+          <h2
+            className="type-serif text-[clamp(2.5rem,6vw,4.5rem)] leading-[1.02] text-bone"
+            style={{ textShadow: "0 2px 26px rgba(0,0,0,0.85)" }}
+          >
             One studio. Two ways <em className="italic text-tally">in</em>.
           </h2>
-          <p className="mx-auto mt-5 max-w-md font-barlow text-base leading-relaxed text-bone/70">
+          <p
+            className="mx-auto mt-5 max-w-md font-barlow text-base leading-relaxed text-bone/80"
+            style={{ textShadow: "0 1px 16px rgba(0,0,0,0.85)" }}
+          >
             What looks like luck is a process. Pick the door that&apos;s yours.
           </p>
         </div>
