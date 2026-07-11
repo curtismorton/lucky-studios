@@ -58,9 +58,9 @@ type Doodle = {
 
 const DOODLES: Doodle[] = [
   { Icon: Clover, top: "16%", left: "8%", size: 72, rotate: -14, rate: 140, dur: 7, delay: 0, tone: "text-bone/25" },
-  { Icon: Horseshoe, top: "21%", left: "83%", size: 66, rotate: 13, rate: 95, dur: 8, delay: 0.6, tone: "text-tally/35" },
+  { Icon: Horseshoe, top: "21%", left: "78%", size: 66, rotate: 13, rate: 95, dur: 8, delay: 0.6, tone: "text-tally/35" },
   { Icon: Die, top: "63%", left: "6%", size: 60, rotate: -9, rate: 190, dur: 6.5, delay: 0.3, tone: "text-bone/22" },
-  { Icon: Percent, top: "57%", left: "87%", size: 62, rotate: 16, rate: 155, dur: 7.5, delay: 0.9, tone: "text-bone/25" },
+  { Icon: Percent, top: "57%", left: "79%", size: 62, rotate: 16, rate: 155, dur: 7.5, delay: 0.9, tone: "text-bone/25" },
   { Icon: Clover, top: "80%", left: "33%", size: 46, rotate: 22, rate: 230, dur: 6, delay: 0.4, tone: "text-tally/30" },
   { Icon: Die, top: "11%", left: "57%", size: 42, rotate: -19, rate: 110, dur: 8.5, delay: 1.1, tone: "text-bone/20" },
 ];
